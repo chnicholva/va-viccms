@@ -1,8 +1,12 @@
+using System.Runtime.Serialization;
+
 namespace PersonSearch.Plugin.Entities.Person
 {
-	internal class SensitivityInfo
+    [DataContract]
+    public class SensitivityInfo
 	{
-		public string SensityFlag
+        [DataMember]
+        public string SensityFlag
 		{
 			get;
 			set;

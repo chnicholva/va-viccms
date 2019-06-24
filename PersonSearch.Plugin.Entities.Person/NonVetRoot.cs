@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using VEIS.Plugins.Messages;
 
 namespace PersonSearch.Plugin.Entities.Person
 {

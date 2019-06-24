@@ -1,7 +1,11 @@
+using System.Runtime.Serialization;
+
 namespace PersonSearch.Plugin.Entities.Person
 {
-	internal class PrimaryEligibility
+    [DataContract]
+    public class PrimaryEligibility
 	{
+        [DataMember]
 		public string Type
 		{
 			get;

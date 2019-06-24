@@ -1,32 +1,40 @@
+using System.Runtime.Serialization;
+
 namespace PersonSearch.Plugin.Entities.Person
 {
-	internal class ESRSensitiveObject
+    [DataContract]
+    public class ESRSensitiveObject
 	{
+        [DataMember]
 		public bool ErrorOccurred
 		{
 			get;
 			set;
 		}
 
-		public object ErrorMessage
+        [DataMember]
+        public object ErrorMessage
 		{
 			get;
 			set;
 		}
 
-		public object Status
+        [DataMember]
+        public object Status
 		{
 			get;
 			set;
 		}
 
-		public object DebugInfo
+        [DataMember]
+        public object DebugInfo
 		{
 			get;
 			set;
 		}
 
-		public Data Data
+        [DataMember]
+        public Data Data
 		{
 			get;
 			set;

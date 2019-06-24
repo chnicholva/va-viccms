@@ -111,7 +111,6 @@
     <Compile Include="PersonSearch.Plugin.Entities.Person\MVILog2.cs" />
     <Compile Include="PersonSearch.Plugin.Entities.Person\NonVet.cs" />
     <Compile Include="PersonSearch.Plugin.Entities.Person\NonVetRoot.cs" />
-    <Compile Include="PersonSearch.Plugin.Entities.Person\NVDatum.cs" />
     <Compile Include="PersonSearch.Plugin.Entities.Person\PrimaryEligibility.cs" />
     <Compile Include="PersonSearch.Plugin.Entities.Person\SensitiveInfo.cs" />
     <Compile Include="PersonSearch.Plugin.Entities.Person\SensitiveLog.cs" />

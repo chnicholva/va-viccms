@@ -38,8 +38,6 @@ namespace PersonSearch.Plugin.Entities.Person
 
         private Uri uri = null;
 
-        private bool getSensitiveInfo = false;
-
         private bool enableAuditing = false;
 
         private string auditUrl = "";
@@ -52,7 +50,6 @@ namespace PersonSearch.Plugin.Entities.Person
 
         private string cssName = "";
 
-        private string prefFacility = "";
 
         public VAPersonRetrieveMultiplePostStageRunner(IServiceProvider serviceProvider)
             : base(serviceProvider)
@@ -376,7 +373,6 @@ namespace PersonSearch.Plugin.Entities.Person
             EntityCollection val3 = base.OrganizationService.RetrieveMultiple(val2);
             if (((Collection<Entity>)val3.Entities).Count > 0)
             {
-                //getSensitiveInfo = (bool)((Collection<Entity>)val3.Entities)[0]["bah_retrievesensitivitylevel"];
                 enableAuditing = (bool)((Collection<Entity>)val3.Entities)[0]["bah_enableauditing"];
                 _orgOverride = (((Collection<Entity>)val3.Entities)[0].Contains("mcs_unexpectedmessage") ? ((Collection<Entity>)val3.Entities)[0]["mcs_unexpectedmessage"].ToString() : string.Empty);
                 _uri = (((Collection<Entity>)val3.Entities)[0].Contains("crme_restendpointforvimt") ? ((Collection<Entity>)val3.Entities)[0]["crme_restendpointforvimt"].ToString() : string.Empty);
@@ -871,41 +867,6 @@ namespace PersonSearch.Plugin.Entities.Person
         }
 
 
-        private string getSensitivityLevelVHA(string url, string icn, string employee)
-        {
-            url = url.Replace("xml", "json");
-            if (url.Contains("{0}"))
-            {
-                url = url.Replace("{0}", "");
-            }
-            using (WebClient webClient = new WebClient())
-            {
-                string input = webClient.DownloadString(url + icn);
-                ESRSensitiveObject eSRSensitiveObject = JsonHelper.Deserialize<ESRSensitiveObject>(input);
-                prefFacility = ((eSRSensitiveObject.Data.Demographics != null) ? eSRSensitiveObject.Data.Demographics.PreferredFacility : "");
-                if (employee == string.Empty)
-                {
-                    if (orgName.Contains("VCL"))
-                    {
-                        if (eSRSensitiveObject.Data.EnrollmentDeterminationInfo != null && eSRSensitiveObject.Data.EnrollmentDeterminationInfo.PrimaryEligibility != null && eSRSensitiveObject.Data.EnrollmentDeterminationInfo.PrimaryEligibility.Type != null && (eSRSensitiveObject.Data.EnrollmentDeterminationInfo.PrimaryEligibility.Type.ToUpper() == "EMPLOYEE" || eSRSensitiveObject.Data.EnrollmentDeterminationInfo.Veteran.ToUpper() == "FALSE"))
-                        {
-                            return eSRSensitiveObject.Data.SensitivityInfo.SensityFlag.ToLower() + ":true";
-                        }
-                        return eSRSensitiveObject.Data.SensitivityInfo.SensityFlag.ToLower() + ":false";
-                    }
-                    if (eSRSensitiveObject.Data.EnrollmentDeterminationInfo != null && eSRSensitiveObject.Data.EnrollmentDeterminationInfo.PrimaryEligibility != null && eSRSensitiveObject.Data.EnrollmentDeterminationInfo.PrimaryEligibility.Type != null && eSRSensitiveObject.Data.EnrollmentDeterminationInfo.PrimaryEligibility.Type.ToUpper() == "EMPLOYEE")
-                    {
-                        return eSRSensitiveObject.Data.SensitivityInfo.SensityFlag.ToLower() + ":true";
-                    }
-                    return eSRSensitiveObject.Data.SensitivityInfo.SensityFlag.ToLower() + ":false";
-                }
-                if (employee == "YES")
-                {
-                    return "true:true";
-                }
-                return eSRSensitiveObject.Data.SensitivityInfo.SensityFlag.ToLower() + ":false";
-            }
-        }
 
         private string getSensitivityLevelVBA(string url, string pId, bool byPid)
         {
@@ -923,66 +884,6 @@ namespace PersonSearch.Plugin.Entities.Person
                 SensitiveObject sensitiveObject = JsonHelper.Deserialize<SensitiveObject>(input);
                 return (sensitiveObject.Data[0].Return1 == null) ? "" : sensitiveObject.Data[0].Return1.ScrtyLevelTypeCd;
             }
-        }
-
-        private List<KeyValuePair<string, string>> getVHAVeteranEmployeeFlags(string url, List<string> list)
-        {
-            string[] array = new string[list.Count];
-            for (int i = 0; i < list.Count; i++)
-            {
-                array[i] = list[i];
-            }
-            NonVet nonVet = new NonVet();
-            nonVet.ClientName = "VCCM";
-            nonVet.Format = "JSON";
-            nonVet.NationalIds = array;
-            NonVet obj = nonVet;
-            string value = JsonHelper.Serialize(obj);
-            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "POST";
-            using (StreamWriter streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-            {
-                streamWriter.Write(value);
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
-            HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            string input = "";
-            using (StreamReader streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
-            {
-                input = streamReader.ReadToEnd();
-                streamReader.Close();
-            }
-            List<KeyValuePair<string, string>> list2 = new List<KeyValuePair<string, string>>();
-            try
-            {
-                NonVetRoot nonVetRoot = JsonHelper.Deserialize<NonVetRoot>(input);
-                foreach (NVDatum datum in nonVetRoot.Data)
-                {
-                    if (datum.NationalId == null)
-                    {
-                        list2.Add(new KeyValuePair<string, string>("", "NO"));
-                    }
-                    else if (datum.Veteran == null || datum.Veteran == "" || datum.Veteran.ToUpper() == "YES")
-                    {
-                        list2.Add(new KeyValuePair<string, string>(datum.NationalId, "NO"));
-                    }
-                    else if (datum.Veteran.ToUpper() == "NO" && datum.NewPersonIndicator != null && datum.NewPersonIndicator.ToUpper() == "YES")
-                    {
-                        list2.Add(new KeyValuePair<string, string>(datum.NationalId, "YES"));
-                    }
-                    else if (datum.Veteran.ToUpper() == "NO" && datum.PrimaryEligibilityCode != null && datum.PrimaryEligibilityCode.ToUpper() == "EMPLOYEE")
-                    {
-                        list2.Add(new KeyValuePair<string, string>(datum.NationalId, "YES"));
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                base.Logger.WriteDebugMessage("ERROR::Error pulling NonVet info from HDR with the supplied ICNs." + ex.Message);
-            }
-            return list2;
         }
 
         private string getVHAVeteranEmployeeFlag(string url, string icn)
@@ -1182,7 +1083,7 @@ namespace PersonSearch.Plugin.Entities.Person
             sensitiveLog.SessionId = base.PluginExecutionContext.InitiatingUserId.ToString();
             sensitiveLog.Veteran = ((crmeFullName.Length > 30) ? crmeFullName.Substring(0, 30) : crmeFullName);
             sensitiveLog.Who_Accessed = userName;
-            sensitiveLog.SiteId = (orgName.ToUpper().Contains("VRE") ? stationNumber : ((prefFacility != null && prefFacility.Length > 20) ? prefFacility.Substring(0, 20) : prefFacility));
+            //sensitiveLog.SiteId = (orgName.ToUpper().Contains("VRE") ? stationNumber : ((prefFacility != null && prefFacility.Length > 20) ? prefFacility.Substring(0, 20) : prefFacility));
             SensitiveLog obj = sensitiveLog;
             string json = JsonHelper.Serialize(obj);
             handleRequest(kVPSetting, json, "Sensitivity_Log");
@@ -1233,7 +1134,7 @@ namespace PersonSearch.Plugin.Entities.Person
             {
                 foreach (PatientPerson p in response.Person)
                 {
-                    var ePatient = p.Map(base.OrganizationService, base.Logger);
+                    var ePatient = p.Map(base.OrganizationService, base.Logger, config);
                     eCol.Entities.Add(ePatient);
                 }
             }
@@ -1281,59 +1182,6 @@ namespace PersonSearch.Plugin.Entities.Person
             }
         }
 
-        private string isEmployee(string ICN, List<KeyValuePair<string, string>> empList)
-        {
-            for (int i = 0; i <= empList.Count; i++)
-            {
-                if (empList[i].Key == ICN)
-                {
-                    base.Logger.WriteDebugMessage("DEBUG::Employee ICN match found : " + empList[i].Key + " and " + ICN + " values match, returning: " + empList[i].Value);
-                    return empList[i].Value;
-                }
-            }
-            base.Logger.WriteDebugMessage("DEBUG::Employee ICN No match found for employee logic.");
-            return "";
-        }
-
-        private void HandleSensitivityMasking(PatientPerson person, Entity newPerson, string url, string employee)
-        {
-            if (getSensitiveInfo && newPerson.Contains("crme_icn") && newPerson["crme_icn"] != "" && url != "" && !orgName.ToUpper().Contains("VRE"))
-            {
-                newPerson["crme_veteransensitivitylevel"] = getSensitivityLevelVHA(url, newPerson["crme_icn"].ToString(), employee);
-                if (orgName.ToUpper().Contains("VCL") && (newPerson["crme_veteransensitivitylevel"].ToString() == "true:false" || newPerson["crme_veteransensitivitylevel"].ToString() == "true:true" || newPerson["crme_veteransensitivitylevel"] == "false:true"))
-                {
-                    newPerson["crme_dobstring"] = "XX/XX/XXXX";
-                    newPerson["crme_ssn"] = "XXXXXXXXX";
-                    newPerson["crme_primaryphone"] = "(XXX) XXX-XXXX";
-                    if (person.Address != null && person.Address.StreetAddressLine != "" && person.Address.State != "" && person.Address.City != "" && person.Address.State != "" && person.Address.PostalCode != "" && person.Address.StreetAddressLine != string.Empty)
-                    {
-                        string a = person.Address.StreetAddressLine + " " + person.Address.City + " " + person.Address.State + " " + person.Address.PostalCode;
-                        if (a != "   ")
-                        {
-                            newPerson["crme_fulladdress"] = "XXXXXXXXX  XXXX, XX  XXXXX";
-                            newPerson["crme_address1"] = "XXXXXXXXX";
-                            newPerson["crme_city"] = "XXXX";
-                            newPerson["crme_addressstate"] = "XX";
-                            newPerson["crme_addresszip"] = "XXXXX";
-                        }
-                        else
-                        {
-                            newPerson["crme_fulladdress"] = "";
-                        }
-                    }
-                }
-                else if (newPerson["crme_veteransensitivitylevel"].ToString() == "true:true" || newPerson["crme_veteransensitivitylevel"].ToString() == "false:true")
-                {
-                    newPerson["crme_dobstring"] = "XX/XX/XXXX";
-                    newPerson["crme_ssn"] = "XXXXXXXXX";
-                }
-            }
-            else
-            {
-                newPerson["crme_dobstring"] = person.BirthDate;
-                newPerson["crme_ssn"] = person.SocialSecurityNumber;
-            }
-        }
 
         private void auditPersonResponse(Entity person)
         {

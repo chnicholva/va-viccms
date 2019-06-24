@@ -1,20 +1,26 @@
+using System.Runtime.Serialization;
+
 namespace PersonSearch.Plugin.Entities.Person
 {
-	internal class Data
+    [DataContract]
+	public class Data
 	{
+        [DataMember]
 		public SensitivityInfo SensitivityInfo
 		{
 			get;
 			set;
 		}
 
-		public EnrollmentDeterminationInfo EnrollmentDeterminationInfo
+        [DataMember]
+        public EnrollmentDeterminationInfo EnrollmentDeterminationInfo
 		{
 			get;
 			set;
 		}
 
-		public Demographics Demographics
+        [DataMember]
+        public Demographics Demographics
 		{
 			get;
 			set;

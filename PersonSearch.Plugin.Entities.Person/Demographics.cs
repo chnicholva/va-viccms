@@ -1,8 +1,12 @@
+using System.Runtime.Serialization;
+
 namespace PersonSearch.Plugin.Entities.Person
 {
-	internal class Demographics
+    [DataContract]
+    public class Demographics
 	{
-		public string PreferredFacility
+        [DataMember]
+        public string PreferredFacility
 		{
 			get;
 			set;

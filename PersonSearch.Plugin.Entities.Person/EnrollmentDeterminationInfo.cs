@@ -1,14 +1,19 @@
+using System.Runtime.Serialization;
+
 namespace PersonSearch.Plugin.Entities.Person
 {
-	internal class EnrollmentDeterminationInfo
+    [DataContract]
+    public class EnrollmentDeterminationInfo
 	{
-		public PrimaryEligibility PrimaryEligibility
+        [DataMember]
+        public PrimaryEligibility PrimaryEligibility
 		{
 			get;
 			set;
 		}
 
-		public string Veteran
+        [DataMember]
+        public string Veteran
 		{
 			get;
 			set;
