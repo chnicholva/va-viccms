@@ -1,0 +1,170 @@
+﻿<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <script type="text/javascript" src="../../ClientGlobalContext.js.aspx"></script>
+    <script type="text/javascript" src="../JScript/SDK.REST.js"></script>
+    <script src="..\JScript\jquery.1.11.min.js" type="text/javascript"></script>
+    <script src="..\Veteran\JScript\charts.js" type="text/javascript"></script>
+    <script src="..\JScript\VCCM.USDHelper.js" type="text/javascript"></script>
+    <script src="..\JScript\VCCM.MHVHelper.js" type="text/javascript"></script>
+    <script src="..\WebServiceSecurityLib\js\WebServiceSecurityLibrary.js" type="text/javascript"></script>
+    <style>
+        body {
+            font-family: Segoe UI,Tahoma,Arial;
+        }
+
+        .sidebar {
+            background-color: #002050;
+            width: 8%;
+            height: 100%;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        .button {
+            margin-left: 5%;
+            margin-top: 5%;
+            width: 90%;
+            height: 6%;
+            font-family: 'Segoe UI';
+            cursor: pointer;
+        }
+
+        .frame {
+            display: none;
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 92%;
+            height: 100%;
+            z-index: 2000;
+        }
+
+        .iframe {
+            width: 100%;
+            height: 95%;
+            position: absolute;
+            top: 1%;
+            border: none;
+        }
+
+        #loadingGifDiv {
+            background-color: rgba(255,255,255,.8);
+            font-size: 15px;
+            margin-left: 8%;
+            z-index: 2020;
+            width: 92%;
+            height: 100%;
+            position: fixed;
+            display: none;
+            cursor: wait;
+        }
+
+        #errorContainer {
+            display: none;
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 92%;
+            height: 100%;
+            z-index: 2000;
+        }
+
+        #errorHeaderTitle {
+            color: red;
+        }
+
+        #medTrackingButtonsContainer {
+            display: none;
+            right: 0;
+            top: 0;
+            width: 92%;
+            z-index: 2010;
+            height: 6%;
+        }
+
+        #btn_showMedTracking {
+            font-size: 12px;
+            color: #fff;
+            margin: 5px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-color: #4cae4c;
+            border-radius: 3px;
+            background-color: #5cb85c;
+        }
+    </style>
+    <script>
+        function createCRMAddendum(pMessageContent) {
+            if (!!pMessageContent) {
+                //if(pMessageContent.origin = "notesFrameNewAddendum"){
+                //alert("got addendum message from notes frame: " + pMessageContent.data);
+
+
+                //TODO: open new ftp_addendum form
+                //this will be routed by USD to an 'Addendum' tab.
+                /*}
+                else{
+                    writeToConsole("message of unknown origin:");
+                    writeToConsole(pMessageContent);
+                }*/
+                var context = (typeof GetGlobalContext != "undefined") ? GetGlobalContext() : null;
+                var clientUrl = context.getClientUrl();
+                var newAddendumUrl = clientUrl + "/main.aspx?etn=ftp_addendum&pagetype=entityrecord";
+                var extraQs = "ftp_vistanoteid=" + pMessageContent.data;
+            }
+            else {
+                alert("message content is empty");
+            }
+        }
+
+        function writeToConsole(message) {
+            if (typeof console != 'undefined') console.log(message);
+        }
+    </script>
+</head>
+<body style="overflow-wrap: break-word;">
+    <div align="middle" id="loadingGifDiv" role="alert">
+        <table width="100%" height="100%">
+            <tbody>
+                <tr>
+                    <td align="middle">
+                        <img id="progressImg" alt="Loading, please wait" title="Loading, please wait" src="/_imgs/advfind/progress.gif">
+                        <div>
+                            <p id="progressText">Loading chart...</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="errorContainer">
+        <div id="error_tdDialogHeader">
+            <div id="errorHeaderTitle"></div>
+            <div id="errorHeaderDescription"></div>
+            <div id="errorButtonContainer">
+                <!-- <br/>
+                    <label>Click OK to end this session</label>
+                    <button tabindex="1" class="ms-crm-RefreshDialog-Button" id="btn_errorOK" style="margin-left: 8px;" onclick="btn_errorOK_click()" type="button">OK</button> -->
+            </div>
+        </div>
+    </div>
+    <div class="sidebar" id="sidebar">
+    </div>
+    <div class="frame" id="medTrackingButtonsContainer">
+        <button id="btn_showMedTracking" onclick="loadMedsWithTracking();">Show Tracking Information</button>
+        <!--<button id="btn_hideMedTracking">Hide tracking</button>-->
+    </div>
+    <div id="hiddenSecureWebpartFormContainer">
+        <form id="webpartform" method="post" target="displayframe">
+            <input name="token" type="hidden" id="token">
+        </form>
+    </div>
+    <div class="frame" id="framediv">
+        <iframe title="IFrame placeholder" class="iframe" name="displayframe" id="displayframe"></iframe>
+    </div>
+
+</body>
+</html>

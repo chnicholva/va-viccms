@@ -1,0 +1,408 @@
+﻿<html>
+<head>
+    <meta charset="utf-8">
+    <script src="ClientGlobalContext.js.aspx" type="text/javascript"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!--<link href="veo_bootstrap.css" rel="stylesheet" type="text/css">-->
+    <link href="veo_personsearchstyle.css" rel="stylesheet" type="text/css">
+    <!--<script src="veo_jquery1.4.1.min.js" type="text/javascript"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js" type="text/javascript"></script>
+    <script src="veo_SDK.REST.js" type="text/javascript"></script>
+    <script src="veo_json2.js" type="text/javascript"></script>
+    <script src="veo_mvisearch.js" type="text/javascript"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            veo.Search.Initialize();
+
+        });
+    </script>
+</head>
+<body style="-ms-word-wrap: break-word;">
+    ﻿
+
+
+
+    <!--<div class="container" id="searchByTraits">-->
+    <div class="search" id="searchByTraits" style="width: 100%;">
+        <h1>Veteran Search</h1>
+        <ul class="nav nav-tabs">
+            <li class="active"><a id="searchtab" href="#search" data-toggle="tab">SEARCH BY TRAITS</a></li>
+            <li><a id="edipitab" href="#searchedipi" data-toggle="tab">SEARCH BY EDIPI</a></li>
+            <li><a id="altsearchtab" href="#altsearch" data-toggle="tab">ALTERNATE SEARCH</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="search">
+                <fieldset>
+                    <legend>The search criteria for a search by traits includes the Social Security Number, First Name, Last Name, and Date of Birth in MM DD YYYY format</legend>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td class="auto-style1">
+                                    <label for="SocialSecurityTextBox">*SSN</label>
+                                </td>
+                                <td>
+                                    <label for="FirstNameTextBox">First</label>
+                                </td>
+                                <td>
+                                    <label for="LastNameTextBox">*Last</label>
+                                </td>
+                                <td>
+                                    <label for="BirthMonthTextBox">*Month</label>
+                                </td>
+                                <td>
+                                    <label for="BirthDayTextBox">*Day</label>
+                                </td>
+                                <td>
+                                    <label for="BirthYearTextBox">*Year</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="auto-style1">
+                                    <input name="ssn" tabindex="1" title="Social Security Number (9 char max)" class="formInputText" id="SocialSecurityTextBox" required="" onfocus="veo.Search.UI_ClearField(this)" type="text" size="16" maxlength="9">
+                                </td>
+                                <td>
+                                    <input name="firstName" tabindex="2" title="First Name (30 char max)" class="formInputText" id="FirstNameTextBox" onfocus="veo.Search.UI_ClearField(this)" type="text" size="16" maxlength="30">
+                                    <div id="FirstNameNotification" role="alert" aria-live="assertive"></div>
+                                </td>
+                                <td>
+                                    <input name="lastName" tabindex="3" title="Last Name (30 char max)" class="formInputText" id="LastNameTextBox" required="" onfocus="veo.Search.UI_ClearField(this)" onfocusout="CheckRequiredField('#LastNameTextBox', 'Last Name', 'LastNameNotification')" type="text" size="16" maxlength="30">
+                                    <div id="LastNameNotification" role="alert" aria-live="assertive"></div>
+                                </td>
+                                <td>
+                                    <input name="dateOfBirthMonth" tabindex="4" title="DOB Month in MM format" class="formInputText" id="BirthMonthTextBox" style="height: 30px;" required="" onkeyup="if($(this).val().length == 2) $('#BirthDayTextBox').focus()" onfocus="veo.Search.UI_ClearField(this)" type="text" size="2" maxlength="2" placeholder="MM" pattern="[0-9]*">
+                                    /
+                                </td>
+                                <td>
+                                    <input name="dateOfBirthDay" tabindex="5" title="DOB Day in DD format" class="formInputText" id="BirthDayTextBox" style="height: 30px;" required="" onkeyup="if ($(this).val().length == 2) $('#BirthYearTextBox').focus()" onfocus="veo.Search.UI_ClearField(this)" type="text" size="2" maxlength="2" placeholder="DD" pattern="[0-9]*">
+                                    /
+                                </td>
+                                <td>
+                                    <input name="dateOfBirthYear" tabindex="6" title="DOB Year in YYYY format" class="formInputText" id="BirthYearTextBox" style="height: 30px;" required="" onfocus="veo.Search.UI_ClearField(this)" type="text" size="4" maxlength="4" placeholder="YYYY" pattern="[0-9]*">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top: 10px;" colspan="4">
+                                    <button tabindex="7" id="SearchButton" aria-label="Search by Traits">Search</button>
+                                    <button tabindex="8" id="ClearButton" aria-label="Reset Search by Traits" type="reset">Reset</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+            </div>
+            <div class="tab-pane fade" id="searchedipi">
+                <fieldset>
+                    <legend>The search criteria for a search by EDIPI includes the EDIPI</legend>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <label for="EdipiTextBox">*EDIPI</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input name="edipi" tabindex="10" title="EDIPI (10 char max)" class="formInputText" id="EdipiTextBox" required="" onfocus="clearField(this)" type="text" size="16" maxlength="10">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top: 10px;">
+                                    <button tabindex="11" id="SearchByIdentifierButton" aria-label="Search by EDIPI">Search</button>
+                                    <button tabindex="12" id="clearIdentifierFieldsButton" aria-label="Reset Search by EDIPI" type="reset">Reset</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+            </div>
+            <div class="tab-pane fade" id="altsearch">
+                <fieldset id="birlsFieldset">
+                    <legend>Search</legend>
+                    <hr style="border: 1px solid gray; border-image: none;">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td class="auto-style1">
+                                    <label for="SocialSecurityBirlsTextBox">SSN</label>
+                                </td>
+                                <td>
+                                    <label for="FirstNameBirlsTextBox">First</label>
+                                </td>
+                                <td>
+                                    <label for="LastNameBirlsTextBox">Last</label>
+                                </td>
+                                <td>
+                                    <label for="DobBirlsTextBox">DOB</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="auto-style1">
+                                    <input name="ssn" tabindex="61" title="Social Security Number (9 char max)" class="formInputText" id="SocialSecurityBirlsTextBox" onfocus="clearField(this)" type="text" size="16" maxlength="50">
+                                </td>
+                                <td>
+                                    <input name="firstName" tabindex="62" title="First Name (30 char max)" class="formInputText" id="FirstNameBirlsTextBox" onfocus="clearField(this)" type="text" size="16" maxlength="30">
+                                </td>
+                                <td>
+                                    <input name="lastName" tabindex="63" title="Last Name (30 char max)" class="formInputText" id="LastNameBirlsTextBox" onfocus="clearField(this)" type="text" size="16" maxlength="30">
+                                </td>
+                                <td>
+                                    <input name="dateOfBirth" tabindex="64" title="Date of Birth in MM/DD/YYYY format" class="formInputText" id="DobBirlsTextBox" style="height: 30px;" onfocus="clearField(this)" type="text" size="10" maxlength="10" placeholder="MM/DD/YYYY" pattern="\d{1,2}/\d{1,2}/\d{4}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="auto-style1">
+                                    <label for="BranchOfServiceBirlsTextBox">Branch of Service</label>
+                                </td>
+                                <td>
+                                    <label for="ServiceNumberBirlsTextBox">Service Number</label>
+                                </td>
+                                <td>
+                                    <label for="InsuranceNumberBirlsTextBox">Insurance Number</label>
+                                </td>
+                                <td>
+                                    <label for="DateOfDeathBirlsTextBox">Date of Death</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="auto-style1">
+                                    <input name="branchOfService" tabindex="67" title="Branch of Service (11 char max)" class="formInputText" id="BranchOfServiceBirlsTextBox" onfocus="clearField(this)" type="text" size="16" maxlength="11">
+                                </td>
+                                <td>
+                                    <input name="serviceNumber" tabindex="68" title="Service Number (30 char max)" class="formInputText" id="ServiceNumberBirlsTextBox" onfocus="clearField(this)" type="text" size="16" maxlength="30">
+                                </td>
+                                <td>
+                                    <input name="InsuranceNumber" tabindex="69" title="Insurance Number (30 char max)" class="formInputText" id="InsuranceNumberBirlsTextBox" onfocus="clearField(this)" type="text" size="16" maxlength="30">
+                                </td>
+                                <td>
+                                    <input name="dateOfDeath" tabindex="70" title="Date of Death in MM/DD/YYYY format" class="formInputText" id="DateOfDeathBirlsTextBox" style="height: 30px;" onfocus="clearField(this)" type="text" size="10" maxlength="10" placeholder="MM/DD/YYYY" pattern="\d{1,2}/\d{1,2}/\d{4}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="EnteredOnDutyBirlsTextBox">Entered on Duty</label>
+                                </td>
+                                <td>
+                                    <label for="ReleasedActiveDutyBirlsTextBox">Released Active Duty</label>
+                                </td>
+                                <td>
+                                    <label for="SuffixBirlsTextBox">Suffix</label>
+                                </td>
+                                <td>
+                                    <label for="PayeeNumberBirlsTextBox">Payee Number</label>
+                                </td>
+                                <td>
+                                    <label for="FolderLocationBirlsTextBox">Folder Location</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input name="EnteredOnDuty" tabindex="71" title="Entered on Duty in MM/DD/YYYY format" class="formInputText" id="EnteredOnDutyBirlsTextBox" style="height: 30px;" onfocus="clearField(this)" type="text" size="10" maxlength="10" placeholder="MM/DD/YYYY" pattern="\d{1,2}/\d{1,2}/\d{4}">
+                                </td>
+                                <td>
+                                    <input name="ReleasedActiveDuty" tabindex="72" title="Released Active Duty in MM/DD/YYYY format" class="formInputText" id="ReleasedActiveDutyBirlsTextBox" style="height: 30px;" onfocus="clearField(this)" type="text" size="10" maxlength="10" placeholder="MM/DD/YYYY" pattern="\d{1,2}/\d{1,2}/\d{4}">
+                                </td>
+                                <td>
+                                    <input name="suffix" tabindex="73" title="Suffix (11 char max)" class="formInputText" id="SuffixBirlsTextBox" style="height: 30px;" onfocus="clearField(this)" type="text" size="2" maxlength="11">
+                                </td>
+                                <td>
+                                    <input name="payeeNumber" tabindex="74" title="Payee Number (2 digit max)" class="formInputText" id="PayeeNumberBirlsTextBox" style="height: 30px;" onfocus="clearField(this)" type="text" size="2" maxlength="2" pattern="[0-9]*">
+                                </td>
+                                <td>
+                                    <input name="folderLocation" tabindex="75" title="Folder Location (30 char max)" class="formInputText" id="FolderLocationBirlsTextBox" style="height: 30px;" onfocus="clearField(this)" type="text" size="16" maxlength="30">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top: 10px;" colspan="4">
+                                    <button tabindex="80" id="SearchBirlsButton" aria-label="Search BIRLS" type="submit">Search</button>
+                                    <button tabindex="81" id="ResetSearchBirlsButton" aria-label="Reset Search by BIRLS" type="reset">Reset Alternate Search</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+    <div class="search" id="validationFailedDiv" style="width: 100%; color: rgb(128, 0, 0); clear: both; font-size: 1em; font-weight: bold; display: none; position: relative;" aria-label="Search validation failed message">The search requires some additional information. Please follow the instructions above to execute your search.</div>
+    <div id="searchResults" style="width: 100%; position: relative;">
+        <div class="info" id="msgBoxWorking">
+            <table>
+                <tbody>
+                    <tr>
+                        <td title="Working on it.  This may take a few seconds..." class="message_box_image" rowspan="4"><img src="veo_mvi_loading"></td>
+                    </tr>
+                    <tr>
+                        <td class="infoText">Working on it. This may take a few seconds...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="info" id="msgBoxFailedValidation">
+            <br>
+            <table>
+                <tbody>
+                    <tr>
+                        <td title="Validation errors" class="message_box_image" rowspan="4"><img src="veo_mvi_error"></td>
+                    </tr>
+                    <tr>
+                        <td class="errorText">The information entered is not valid. Please make the corrections listed below.</td>
+                    </tr>
+                    <tr>
+                        <td class="header">Validation errors</td>
+                    </tr>
+                    <tr>
+                        <td><div id="validationErrors" aria-live="assertive"></div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="info" id="msgBoxSearchResultError">
+            <table>
+                <tbody>
+                    <tr>
+                        <td title="Error Details" class="message_box_image" rowspan="4"><img src="veo_mvi_error"></td>
+                    </tr>
+                    <tr>
+                        <td class="errorText">An error was returned from your search.</td>
+                    </tr>
+                    <tr>
+                        <td class="header">Error details</td>
+                    </tr>
+                    <tr>
+                        <td><span id="errorDetails" aria-live="assertive"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="info" id="msgBoxNoDataReturned">
+            <table>
+                <tbody>
+                    <tr>
+                        <td title="Warning. No Data Returned." class="message_box_image" rowspan="2"><img src="veo_mvi_warning"></td>
+                    </tr>
+                    <tr>
+                        <td class="infoText"><span id="warningDetails" aria-live="assertive"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="searchResultsGrid">
+            <h1>Search Results</h1>
+            <table id="personSearchResultsTable" aria-live="assertive"></table>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <button title="Identify Veteran and ID Proof Complete" class="button_normal_gradient" id="IdProofVeteranComplete">Identify Veteran and ID Proof Complete</button>
+                        </td>
+                        <td>
+                            <button title="ID Proof Complete" class="button_normal_gradient" id="IdProofComplete" style="width: 200px;">ID Proof Complete</button>
+                        </td>
+                        <td>
+                            <button title="ID Proof Failed" class="button_normal_gradient" id="IdProofFailed" style="width: 200px;">ID Proof Failed</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="CallerInfo" style="width: 100%; position: relative;">
+        <h1>Caller Information</h1>
+        <table>
+            <tbody>
+                <tr>
+                    <td><label for="CallerFirstNameTextBox">*Caller First Name</label></td>
+                    <td><input class="formInputText" id="CallerFirstNameTextBox" type="text"></td>
+                    <td><label for="CallerLastNameTextBox">*Caller Last Name</label></td>
+                    <td><input class="formInputText" id="CallerLastNameTextBox" type="text"></td>
+                    <td><label for="CallerRelationshipToVeteran">*Relationship</label></td>
+                    <td>
+                        <select name="CallerRelationshipToVeteran">
+                            <option value="752280000">Veteran(Self)</option>
+                            <option value="752280005">Spouse</option>
+                            <option value="752280001">Dependent</option>
+                            <option value="752280002">VSO/POA/AA</option>
+                            <option value="752280003">Authorized Third Party</option>
+                            <option value="752280004">Fiduciary</option>
+                            <option value="752280009">Private Attorney</option>
+                            <option value="752280010">Private Agent</option>
+                            <option value="752280007">Representative</option>
+                            <option value="752280006">Unknown</option>
+                            <option value="752280008">Other</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label>No Phone # Avail</label></td>
+                    <td><input type="checkbox"></td>
+                    <td><label for="CallerTelephoneTextBox">Phone Number</label></td>
+                    <td><input class="formInputText" id="CallerTelephoneTextBox" type="text"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>White House Veteran Hotiline</td>
+                    <td><input type="checkbox"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <hr>
+        <table id="callerinfobuttonTable">
+            <tbody>
+                <tr>
+                    <td class="td_left">
+                        <button class="button_normal_gradient" id="ReturnToSearchButton" style="width: 200px;">Back</button>
+                        <button tabindex="9" title="Create New Case" class="button_normal_gradient" id="CaseManagementButton" style="width: 200px;">Case Management</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2>Select Request Type / Sub-Type</h2>
+        <table width="100%">
+            <tbody>
+                <tr>
+                    <td style="width: 50%;">
+                        <div id="step1Section">
+                            <select tabindex="1" title="Select Request Type (Listbox)" id="requestTypeSelect" role="listbox" aria-label="Select Request Type" size="15"></select>
+                        </div>
+                    </td>
+                    <td style="width: 50%;">
+                        <div id="step2Section">
+                            <select tabindex="2" title="Select Request Sub Type (Listbox)" id="requestSubTypeSelect" role="listbox" aria-label="Select Request Sub Type" size="15"></select>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="align-content: flex-end;">
+                        <input tabindex="3" title="Create Request (Button)" disabled="disabled" id="createRequestButton" aria-label="Create Request" type="button" value="Create Request">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="info" id="CaseManagement">
+        <table id="casebuttonTable">
+            <tbody>
+                <tr>
+                    <td class="td_left">
+                        <button class="button_normal_gradient" id="ReturnToCallerInfoButton" style="width: 200px;">Back</button>
+                        <button tabindex="9" title="Create New Case" class="button_normal_gradient" id="CreateCaseButton" style="width: 200px;">Create New Case</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div id="existingCaseResultsGrid">
+            <h1>Case Management</h1>
+            <table id="contactCaseResultsTable" aria-live="assertive"></table>
+        </div>
+    </div>
+
+</body>
+</html>

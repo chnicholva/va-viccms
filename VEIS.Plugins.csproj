@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{2E57958D-01BE-4801-9BF5-CF7BCD72BF45}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Library</OutputType>
+    <LangVersion>7</LangVersion>
+    <AssemblyName>VCCM.VEIS.MVI.PersonSearch.Plugin</AssemblyName>
+    <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>VCCM.VEIS.MVI.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>PersonSearch.Plugin</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Crm.Sdk.Proxy, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.CrmSdk.CoreAssemblies.8.2.0\lib\net45\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.IdentityModel.6.1.7600.16394\lib\net35\Microsoft.IdentityModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=2.22.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.IdentityModel.Clients.ActiveDirectory.2.22.302111727\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms, Version=2.22.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.IdentityModel.Clients.ActiveDirectory.2.22.302111727\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Sdk, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.CrmSdk.CoreAssemblies.8.2.0\lib\net45\Microsoft.Xrm.Sdk.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Sdk.Workflow">
+      <HintPath>MVIPersonSearchPlugin.Tests\bin\Debug\Microsoft.Xrm.Sdk.Workflow.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System">
+      <HintPath>C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System\v4.0_4.0.0.0__b77a5c561934e089\System.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Activities" />
+    <Reference Include="System.Activities.Presentation" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Net.Http">
+      <HintPath>C:\WINDOWS\Microsoft.NET\assembly\GAC_MSIL\System.Net.Http\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel">
+      <HintPath>C:\WINDOWS\Microsoft.NET\assembly\GAC_MSIL\System.ServiceModel\v4.0_4.0.0.0__b77a5c561934e089\System.ServiceModel.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core">
+      <HintPath>C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System.Core\v4.0_4.0.0.0__b77a5c561934e089\System.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web.Extensions">
+      <HintPath>C:\WINDOWS\Microsoft.NET\assembly\GAC_MSIL\System.Web.Extensions\v4.0_4.0.0.0__31bf3856ad364e35\System.Web.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web">
+      <HintPath>C:\WINDOWS\Microsoft.NET\assembly\GAC_32\System.Web\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization">
+      <HintPath>C:\WINDOWS\Microsoft.NET\assembly\GAC_MSIL\System.Runtime.Serialization\v4.0_4.0.0.0__b77a5c561934e089\System.Runtime.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Workflow.Activities" />
+    <Reference Include="System.Workflow.ComponentModel" />
+    <Reference Include="System.Workflow.Runtime" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AuthExtensions.cs" />
+    <Compile Include="BaseAction.cs" />
+    <Compile Include="BasePluginContext.cs" />
+    <Compile Include="JsonHelper.cs" />
+    <Compile Include="MVI.PersonSearch.Plugin.Helpers\ILogger.cs" />
+    <Compile Include="MVI.PersonSearch.Plugin.Helpers\Logger.cs" />
+    <Compile Include="MVI.PersonSearch.Plugin.Helpers\Runner.cs" />
+    <Compile Include="MVI.PersonSearch.Plugin\EnrollmentEligibilityAction.cs" />
+    <Compile Include="MVI.PersonSearch.Plugin\Plugin.cs" />
+    <Compile Include="PersonSearch.Plugin.Entities.Person\Data.cs" />
+    <Compile Include="PersonSearch.Plugin.Entities.Person\Datum.cs" />
+    <Compile Include="PersonSearch.Plugin.Entities.Person\Demographics.cs" />
+    <Compile Include="PersonSearch.Plugin.Entities.Person\EnrollmentDeterminationInfo.cs" />
+    <Compile Include="PersonSearch.Plugin.Entities.Person\ESRSensitiveObject.cs" />
+    <Compile Include="PersonSearch.Plugin.Entities.Person\MVILog.cs" />
+    <Compile Include="PersonSearch.Plugin.Entities.Person\MVILog2.cs" />
+    <Compile Include="PersonSearch.Plugin.Entities.Person\NonVet.cs" />
+    <Compile Include="PersonSearch.Plugin.Entities.Person\NonVetRoot.cs" />
+    <Compile Include="PersonSearch.Plugin.Entities.Person\NVDatum.cs" />
+    <Compile Include="PersonSearch.Plugin.Entities.Person\PrimaryEligibility.cs" />
+    <Compile Include="PersonSearch.Plugin.Entities.Person\SensitiveInfo.cs" />
+    <Compile Include="PersonSearch.Plugin.Entities.Person\SensitiveLog.cs" />
+    <Compile Include="PersonSearch.Plugin.Entities.Person\SensitiveObject.cs" />
+    <Compile Include="PersonSearch.Plugin.Entities.Person\SensitivityInfo.cs" />
+    <Compile Include="PersonSearch.Plugin.Entities.Person\VAPersonRetrieveMultiplePostStage.cs" />
+    <Compile Include="PersonSearch.Plugin.Entities.Person\VAPersonRetrieveMultiplePostStageRunner.cs" />
+    <Compile Include="PersonSearch.Plugin.Helpers\AzureAccessToken.cs" />
+    <Compile Include="PersonSearch.Plugin.Helpers\CreateCRMLogEntryRequest.cs" />
+    <Compile Include="PersonSearch.Plugin.Helpers\CreateCRMLogEntryResponse.cs" />
+    <Compile Include="PersonSearch.Plugin.Helpers\LogSettings.cs" />
+    <Compile Include="PersonSearch.Plugin.Helpers\NameExtension.cs" />
+    <Compile Include="PersonSearch.Plugin.Helpers\NameListExtensions.cs" />
+    <Compile Include="PersonSearch.Plugin.Helpers\PatientAddressExtensions.cs" />
+    <Compile Include="PersonSearch.Plugin.Helpers\PatientPersonExtensions.cs" />
+    <Compile Include="PersonSearch.Plugin.Helpers\Query.cs" />
+    <Compile Include="PersonSearch.Plugin.Helpers\QueryExpressionExtensions.cs" />
+    <Compile Include="PersonSearch.Plugin.Helpers\Utility.cs" />
+    <Compile Include="PersonSearch.Plugin.Helpers\VeisConfig.cs" />
+    <Compile Include="PersonSearch.Plugin.Helpers\VEISUtility.cs" />
+    <Compile Include="PersonSearch.Plugin.Messages\CorrespondingIDs.cs" />
+    <Compile Include="PersonSearch.Plugin.Messages\CorrespondingIdsResponse.cs" />
+    <Compile Include="PersonSearch.Plugin.Messages\DeterministicSearchRequest.cs" />
+    <Compile Include="PersonSearch.Plugin.Messages\DeterministicSearchType.cs" />
+    <Compile Include="PersonSearch.Plugin.Messages\GetSensitivityLevelRequest.cs" />
+    <Compile Include="PersonSearch.Plugin.Messages\GetSensitivityLevelResponse.cs" />
+    <Compile Include="PersonSearch.Plugin.Messages\GetVeteranInfoMultipleResponse.cs" />
+    <Compile Include="PersonSearch.Plugin.Messages\GetVeteranInfoRequest.cs" />
+    <Compile Include="PersonSearch.Plugin.Messages\GetVeteranInfoResponse.cs" />
+    <Compile Include="PersonSearch.Plugin.Messages\HeaderInfo.cs" />
+    <Compile Include="PersonSearch.Plugin.Messages\Name.cs" />
+    <Compile Include="PersonSearch.Plugin.Messages\PatientAddress.cs" />
+    <Compile Include="PersonSearch.Plugin.Messages\PatientPerson.cs" />
+    <Compile Include="PersonSearch.Plugin.VistA\VistaPatientKey.cs" />
+    <Compile Include="PersonSearch.Plugin.VistA\VistaService.cs" />
+    <Compile Include="PersonSearch.Plugin.VistA\VistaSiteService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VEIS.Plugins.Messages\ContactFindCreateRequest.cs" />
+    <Compile Include="VEIS.Plugins.Messages\ContactFindCreateResponse.cs" />
+    <Compile Include="VEIS.Plugins.Messages\CorrespondingIDs.cs" />
+    <Compile Include="VEIS.Plugins.Messages\CorrespondingIdsResponse.cs" />
+    <Compile Include="VEIS.Plugins.Messages\DataMember.cs" />
+    <Compile Include="VEIS.Plugins.Messages\DeterministicSearchRequest.cs" />
+    <Compile Include="VEIS.Plugins.Messages\GetVeteranInfoRequest.cs" />
+    <Compile Include="VEIS.Plugins.Messages\GetVeteranInfoResponse.cs" />
+    <Compile Include="VEIS.Plugins.Messages\GISResponse.cs" />
+    <Compile Include="VEIS.Plugins.Messages\HeaderInfo.cs" />
+    <Compile Include="VEIS.Plugins.Messages\LegacyServiceHeaderInfo.cs" />
+    <Compile Include="VEIS.Plugins.Messages\MVISearchRequest.cs" />
+    <Compile Include="VEIS.Plugins.Messages\MVISearchResponse.cs" />
+    <Compile Include="VEIS.Plugins.Messages\Name.cs" />
+    <Compile Include="VEIS.Plugins.Messages\NonVetRequest.cs" />
+    <Compile Include="VEIS.Plugins.Messages\NonVetResponse.cs" />
+    <Compile Include="VEIS.Plugins.Messages\PatientAddress.cs" />
+    <Compile Include="VEIS.Plugins.Messages\PatientFlagsApiResponse.cs" />
+    <Compile Include="VEIS.Plugins.Messages\PatientPerson.cs" />
+    <Compile Include="VEIS.Plugins.Messages\PersonSearchRequest.cs" />
+    <Compile Include="VEIS.Plugins.Messages\PersonSearchResponse.cs" />
+    <Compile Include="VEIS.Plugins.Messages\SelectedPersonRequest.cs" />
+    <Compile Include="VEIS.Plugins.Messages\SharePointRemoveLOBReq.cs" />
+    <Compile Include="VEIS.Plugins.Messages\SharePointRemoveLOBRes.cs" />
+    <Compile Include="VEIS.Plugins.Messages\SharePointUploadLOBReq.cs" />
+    <Compile Include="VEIS.Plugins.Messages\SharePointUploadLOBRes.cs" />
+    <Compile Include="VEIS.Plugins.Messages\SharePointViewLOBReq.cs" />
+    <Compile Include="VEIS.Plugins.Messages\SharePointViewLOBRes.cs" />
+    <Compile Include="VEIS.Plugins.Messages\VASTRefreshResponse.cs" />
+    <Compile Include="VEIS.Plugins.Messages\VeisRequest.cs" />
+    <Compile Include="VEIS.Plugins.Models\AzureAccessToken.cs" />
+    <Compile Include="VEIS.Plugins.Models\CRMAuthTokenConfiguration.cs" />
+    <Compile Include="VEIS.Plugins.Models\Facility.cs" />
+    <Compile Include="VEIS.Plugins.Models\FacilityEndpoint.cs" />
+    <Compile Include="VEIS.Plugins.Models\GISStation.cs" />
+    <Compile Include="VEIS.Plugins.Models\GISStationAttributes.cs" />
+    <Compile Include="VEIS.Plugins.Models\ParentFacilityMappingMethod.cs" />
+    <Compile Include="VEIS.Plugins.Models\Person.cs" />
+    <Compile Include="VEIS.Plugins.Models\SubFacility.cs" />
+    <Compile Include="VEIS.Plugins.Models\VASTStation.cs" />
+    <Compile Include="VEIS.Plugins.Models\VeisConfiguration.cs" />
+    <Compile Include="VEIS.Plugins.Models\VEISFacility.cs" />
+    <Compile Include="VEIS.Plugins.Models\VEISSvcLOBConfiguration.cs" />
+    <Compile Include="VEIS.Plugins.Models\VEISVASTRefreshFacility.cs" />
+    <Compile Include="VEIS.Plugins.Models\VEISVASTRefreshSubFacility.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="VCCM.VEIS.MVI.snk" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

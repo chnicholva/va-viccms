@@ -1,0 +1,229 @@
+        fieldset {
+            color: rgb(0,0,0);
+            direction: ltr;
+            font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
+            font-size: 16px;
+            /*line-height: 20px;*/
+            /*font-weight: 100;*/
+            margin-bottom: 14px;
+            margin-left: 0;
+            margin-right: 0;
+            margin-top: 0;
+            background-color: rgb(255,255,255);
+            padding: 2px;
+            border: solid 0 #ffffff;
+            width: 100%;
+        }
+            /*fieldset legend {
+	position:absolute;
+	left:-10000px;
+	top:auto;
+	width:1px;
+	height:1px;
+	overflow: hidden;
+}*/
+            fieldset legend {
+                display: none;
+            }
+
+        table {
+            border-collapse: collapse;
+            font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
+            width: 705px;
+        }
+
+        th {
+            background-color: #ffffff;
+            color: black;
+            font-family: "Segoe UI Light","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
+            font-size: 16px;
+            /*line-height: 20px;*/
+            font-weight: 600;
+            white-space: nowrap;
+            text-align: left;
+            padding: 5px;
+        }
+
+        td {
+            padding: 5px;
+            white-space: nowrap;
+        }
+
+        tr:focus {
+            background-color: aliceblue;
+            color: #800000;
+        }
+
+        .odd {
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .even {
+            background-color: whitesmoke;
+            cursor: pointer;
+        }
+
+        .odd:hover {
+            background-color: #99ccff;
+            color: #600000;
+        }
+
+        .even:hover {
+            background-color: #99ccff;
+            color: #600000;
+        }
+
+        div#tmpDialog {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 250px;
+            height: 50px;
+            margin: -101px 0 0 -251px;
+            background: rgb(255, 255, 255);
+            border: 1px solid black;
+        }
+
+            div#tmpDialog img {
+                float: left;
+                height: 45px;
+                width: 45px;
+                padding: 5px 10px 5px 5px;
+                text-align: left;
+            }
+
+            div#tmpDialog p {
+                padding: 5px;
+                margin: 15px 5px 5px 5px;
+                text-align: left;
+            }
+
+        input.formInputText {
+            background-color: rgba(255,255,255,0);
+            border-color: rgb(186,186,186);
+            border-width: 1px;
+            border-style: solid;
+            color: rgb(0,0,0);
+            font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
+            font-size: 14.06px;
+            height: 30px;
+            /*line-height: normal;*/
+        }
+
+        div.search {
+            color: rgb(0,0,0);
+            direction: ltr;
+            float: left;
+            font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
+            font-size: 12.06px;
+            /*line-height: 17px;*/
+            padding-bottom: 4px;
+            padding-top: 0;
+            text-align: left;
+        }
+		
+        input.search {
+            color: rgb(0,0,0);
+            direction: ltr;
+            float: left;
+            font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
+            font-size: 12.06px;
+            /*line-height: 17px;*/
+            padding-bottom: 4px;
+            padding-top: 0;
+            text-align: left;
+        }
+
+        span.button,
+        button {
+            background-color: rgb(0,32,80);
+            border-color: rgb(255,255,255);
+            border-width: 0px;
+            color: rgb(255,255,255);
+            direction: ltr;
+            font-family: "Segoe UI Semibold","Segoe UI Web Semibold","Segoe UI Web Regular","Segoe UI","Segoe UI Symbol","HelveticaNeue-Medium","Helvetica Neue",Arial,sans-serif;
+            font-size: 14.06px;
+            /*height: 30px;*/
+            /*line-height: auto;*/ /*20px;*/
+            min-width: 84.4px;
+            padding-bottom: 5px;
+            padding-left: 12px;
+            padding-right: 12px;
+            padding-top: 5px;
+            margin-right: 6px;
+        }
+
+            /*
+		span.button:hover,
+		button:hover {
+			background-color: rgb(128,0,0);
+		}
+		*/
+
+            button:disabled {
+                background-color: gray;
+                color: white;
+            }
+
+        @media screen and (-ms-high-contrast: active) {
+            /*TODO: validate high contrast settings*/
+            button {
+                border-color: ActiveBorder;
+            }
+        }
+
+        h1 {
+            font-family: 'Segoe UI',Tahoma,Arial;
+            font-weight: 100;
+            color: #262626;
+            font-size: 36px;
+            /*line-height: 20px;*/
+            margin-bottom: 12px;
+        }
+
+        h2 {
+            font-family: 'Segoe UI',Tahoma,Arial;
+            font-weight: 100;
+            color: #262626;
+            font-size: 22px;
+            /*line-height: 10px;*/
+            white-space: nowrap;
+            margin-bottom: 12px;
+            margin-top: 8px;
+        }
+
+        /*h2 {
+            color: rgb(0,0,0);
+            direction: ltr;
+            font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
+            font-size: 14.06px;
+            font-weight: 100;
+            margin-bottom: 14px;
+            margin-left: 0px;
+            margin-right: 0px;
+            margin-top: 0px;
+        }*/
+
+        fieldset {
+            border: 0;
+        }
+        /*
+
+span {
+	color: red;
+	font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
+	font-size: 14.06px;
+	font-weight: 100;
+	display: none;
+}
+*/
+
+        .auto-style1 {
+            width: 142px;
+        }
+
+        form {
+            clear: both;
+        }

@@ -1,0 +1,417 @@
+<html>
+<head>
+<title>Patient Search</title>
+    <meta charset="utf-8">
+    <script src="../../ClientGlobalContext.js.aspx" type="text/javascript"></script>
+    <script src="../scripts/jquery.1.11.min.js" type="text/javascript"></script>
+    <script src="../scripts/bootstrap.min.js" type="text/javascript"></script>
+    <script src="../scripts/knockout.3.4.2.js" type="text/javascript"></script>
+    <script src="../scripts/SDK.REST.js" type="text/javascript"></script>
+    <script src="../scripts/json2.js" type="text/javascript"></script>
+    <script src="scripts/mvisearch.js" type="text/javascript"></script>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/mvisearch.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript">
+        $(document).ready(function () {
+			$('#FirstNameNotification').hide();
+			$('#LastNameNotification').hide();
+			$("#searchtab").focus();
+            ko.applyBindings(new SearchModel());
+        });
+    </script>
+</head>
+<body style="overflow-wrap: break-word;">
+    <div class="search" id="searchByTraits" style="width: 100%;">
+        <h2>Person Search</h2>
+        <ul class="nav nav-tabs">
+            <li class="active"><a id="searchtab" tabindex="1" href="#search" data-toggle="tab" data-bind="click: function() { showTab('search');}">SEARCH BY TRAITS</a></li>
+            <li><a id="edipitab" tabindex="2" href="#searchedipi" data-toggle="tab" data-bind="click: function() { showTab('searchedipi');}">SEARCH BY EDIPI</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="search">
+				<span>*You must supply the Last Name and 2 other fields.</span>
+                <fieldset>
+                    <legend>The criteria for a search by traits includes: First and Last Name, Social Security Number, and Date of Birth. At least 3 fields are required.</legend>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <label for="VetTextBox">SSN</label>
+                                </td>
+                                <td>
+                                    <label for="FirstNameTextBox">First</label>
+                                </td>
+                                <td>
+                                    <label for="LastNameTextBox">*Last</label>
+                                </td>
+                                <td>
+                                    <label for="BirthMonthTextBox">Month</label>
+                                </td>
+                                <td>
+                                    <label for="BirthDayTextBox">Day</label>
+                                </td>
+                                <td>
+                                    <label for="BirthYearTextBox">Year</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input name="vetnumber" tabindex="3" title="Social Security Number (9 char max)" class="formInputText" id="VetTextBox" data-bind="attr: { onfocus: clearField }, value: inputVetNumber" type="text" maxlength="9" size="15">
+                                </td>
+                                <td>
+                                    <input name="firstName" tabindex="4" title="First Name (30 char max)" class="formInputText" id="FirstNameTextBox" data-bind="value: inputFirstName" type="text" maxlength="30" size="35" onkeyup="if ($(this).val().length == 30) { $('#FirstNameNotification').show(); } else {$('#FirstNameNotification').hide();}">
+									<div id="FirstNameNotification" role="alert" aria-live="assertive" style="font-size:small">Maximum length reached for First Name</div>
+                                </td>
+                                <td>
+                                    <input name="lastName" tabindex="5" title="Last Name (30 char max)" class="formInputText" id="LastNameTextBox" data-bind="value: inputLastName" type="text" maxlength="30" size="35" onkeyup="if ($(this).val().length == 30) { $('#LastNameNotification').show(); } else {$('#LastNameNotification').hide();}">
+									<div id="LastNameNotification" role="alert" aria-live="assertive" style="font-size:small">Maximum length reached for Last Name.</div>
+                                </td>
+                                <td>
+                                    <input name="dateOfBirthMonth" tabindex="6" title="DOB Month in MM format" class="formInputText" id="BirthMonthTextBox" style="height: 30px;" data-bind="value: inputMonth" type="text" size="2" maxlength="2" placeholder="MM" pattern="[0-9]*">
+                                    /
+                                </td>
+                                <td>
+                                    <input name="dateOfBirthDay" tabindex="7" title="DOB Day in DD format" class="formInputText" id="BirthDayTextBox" style="height: 30px;"  data-bind="value: inputDay" type="text" size="2" maxlength="2" placeholder="DD" pattern="[0-9]*">
+                                    /
+                                </td>
+                                <td>
+                                    <input name="dateOfBirthYear" tabindex="8" title="DOB Year in YYYY format" class="formInputText" id="BirthYearTextBox" style="height: 30px;" data-bind="value: inputYear" type="text" size="4" maxlength="4" placeholder="YYYY" pattern="[0-9]*">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="6">
+									<span tabindex="9" style="font-size:small; cursor: pointer" data-bind="text: searchOptions, click: toggleSearchOptions, enterkey: toggleSearchOptions"></span>
+								</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                    <!-- ko if: searchOptionsVisible() -->
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <label for="AddMiddleNameTextBox">Middle</label>
+                                                </td>
+                                                <td>
+                                                    <label for="AddGenderTextBox">Sex</label>
+                                                </td>
+                                                <td>
+                                                    <label for="MotherMaidenBirlsTextBox">Mother's Maiden Name</label>
+                                                </td>
+                                                <td>
+                                                    <label for="AddPhoneNoTextBox">Home Phone</label>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="width:30%">
+                                                    <input name="middleName" tabindex="10" title="Middle Name" class="formInputText" id="AddMiddleNameTextBox" data-bind="value: inputMiddle" type="text" style="width:100%">
+                                                </td>
+                                                <td style="width:10%">
+                                                    <input name="personGender" tabindex="11" title="Sex" class="formInputText" id="AddGenderTextBox" data-bind="value: inputGender" type="text" style="width:100%">
+                                                </td>
+                                                <td style="width:30%">
+                                                    <input name="mothersMaiden" tabindex="12" title="Mother's Maiden Name" class="formInputText" id="MotherMaidenBirlsTextBox" data-bind="value: inputMothersMaiden" type="text" style="width:100%">
+                                                </td>
+                                                <td style="width:30%">
+                                                    <input name="phoneNo" tabindex="13" title="Phone Number" class="formInputText" id="AddPhoneNoTextBox" data-bind="value: inputPhoneNo" type="text" style="width:100%">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <label for="AddHomeStreetTextBox">Street</label>
+                                                </td>
+                                                <td>
+                                                    <label for="AddHomeCityTextBox">City</label>
+                                                </td>
+                                                <td>
+                                                    <label for="AddHomeStateTextBox">State</label>
+                                                </td>
+                                                <td>
+                                                    <label for="AddHomeZipTextBox">Zip</label>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="width:30%">
+                                                    <input name="homeStreet" tabindex="14" title="Home Address Street 1" class="formInputText" id="AddHomeStreetTextBox" data-bind="value: inputHomeStreet" type="text" style="width:100%">
+                                                </td>
+                                                <td style="width:30%">
+                                                    <input name="homeCity" tabindex="15" title="Home Address City" class="formInputText" id="AddHomeCityTextBox" data-bind="value: inputHomeCity" type="text" style="width:100%">
+                                                </td>
+                                                <td style="width:10%">
+                                                    <input name="homeState" tabindex="16" title="Home Address State" class="formInputText" id="AddHomeStateTextBox" data-bind="value: inputHomeState" type="text" style="width:100%">
+                                                </td>
+                                                <td style="width:30%">
+                                                    <input name="homeZip" tabindex="17" title="Home Address Zip" class="formInputText" id="AddHomeZipTextBox" data-bind="value: inputHomeZip" type="text" style="width:100%">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <label for="AddBirthCityTextBox">Birth City</label>
+                                                </td>
+                                                <td>
+                                                    <label for="AddBirthStateTextBox">State</label>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="width:90%">
+                                                    <input name="birthCity" tabindex="18" title="Birth City" class="formInputText" id="AddBirthCityTextBox" data-bind="value: inputBirthCity" type="text" style="width:100%">
+                                                </td>
+                                                <td style="width:10%">
+                                                    <input name="birthState" tabindex="19" title="State" class="formInputText" id="AddBirthStateTextBox" data-bind="value: inputBirthState" type="text" style="width:100%">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                    <!-- /ko -->
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td style="padding-top: 10px;" colspan="4">
+                                    <button tabindex="20" id="SearchButton" data-bind="click: function() { search(null);}" aria-label="Search by Traits">Search</button>
+                                    <!-- ko if: createCaseVisible() -->
+                                    <button tabindex="21" id="CreateButton" data-bind="click: function() { create('Create');}" aria-label="Create Patient">Create Patient</button>
+                                    <!-- /ko -->
+                                    <button tabindex="22" id="ClearButton" data-bind="click: resetTraits" aria-label="Reset Search by Traits" type="reset">Reset</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+            </div>
+            <div class="tab-pane fade" id="searchedipi">
+                <fieldset>
+                    <legend>The search criteria for a search by EDIPI includes the EDIPI</legend>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <label for="EdipiTextBox">*EDIPI</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input name="edipi" tabindex="30" title="EDIPI (10 char max)" class="formInputText" id="EdipiTextBox" data-bind="value: inputEDIPI" type="text" maxlength="10">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top: 10px;">
+                                    <button tabindex="31" id="SearchByIdentifierButton" data-bind="click: function() { search('EDIPI');}" aria-label="Search by EDIPI">Search</button>
+                                    <!-- ko if: createCaseVisible() -->
+                                    <button tabindex="32" id="CreateButton" data-bind="click: function() { create('Create');}" aria-label="Create Patient">Create Patient</button>
+                                    <!-- /ko -->
+                                    <button tabindex="33" id="clearIdentifierFieldsButton" data-bind="click: resetEdipi" aria-label="Reset Search by EDIPI" type="reset">Reset</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+    <div class="search" id="validationFailedDiv" style="width: 100%; color: rgb(128, 0, 0); clear: both; font-size: 1em; font-weight: bold; display: none; position: relative;" aria-label="Search validation failed message">The search requires some additional information. Please follow the instructions above to execute your search.</div>
+    <div id="searchResults" style="width: 100%;">
+        <!-- ko if: searching() -->
+        <div class="info" id="msgBoxWorking">
+            <table>
+                <tbody>
+                    <tr>
+                        <td title="Working on it.  This may take a few seconds..." class="message_box_image" rowspan="4"><img src="imgs/mvi_loading.gif"></td>
+                    </tr>
+                    <tr>
+                        <td class="infoText">Working on it. This may take a few seconds...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- /ko -->
+        <!-- ko if: validationErrors()-->
+        <div class="info" id="msgBoxFailedValidation">
+            <table>
+                <tbody>
+                    <tr>
+                        <td title="Validation errors" class="message_box_image" rowspan="4"><img src="imgs/mvi_error.png"></td>
+                    </tr>
+                    <tr>
+                        <td class="errorText">The information entered is not valid. Please make the corrections listed below.</td>
+                    </tr>
+                    <tr>
+                        <td class="header">Validation errors</td>
+                    </tr>
+					<!-- ko if: errorEDIPI() -->
+					<tr>
+						<td class="errorText">
+							<div id="validationErrors" aria-live="assertive" role="alert">
+                                <ul>
+                                    <li>EDIPI is missing.</li>
+                                </ul>
+                            </div>
+						</td>
+					</tr>
+					<!-- /ko -->
+					<!-- ko if: errorFirstName() -->
+					<tr>
+						<td class="errorText">
+							<div id="validationErrors" aria-live="assertive" role="alert">
+                                <ul>
+                                    <li>You must enter a first name to create a case.</li>
+                                </ul>
+                            </div>
+						</td>
+					</tr>
+					<!-- /ko -->
+					<!-- ko if: errorLastName() -->
+					<tr>
+						<td class="errorText">
+							<div id="validationErrors" aria-live="assertive" role="alert">
+                                <ul>
+                                    <li>You must enter a last name to create a case.</li>
+                                </ul>
+                            </div>
+						</td>
+					</tr>
+					<!-- /ko -->
+					<!-- ko if: errorFields() -->
+					<tr>
+						<td class="errorText">
+							<div id="validationErrors" aria-live="assertive" role="alert">
+                                <ul>
+                                    <li>You must supply the Last Name and 2 other fields.</li>
+                                </ul>
+                            </div>
+						</td>
+					</tr>
+					<!-- /ko -->
+					
+                    <tr>
+                        <td>
+                            <div id="validationErrors" aria-live="assertive" role="alert">
+                                <ul data-bind="foreach: validationErrors">
+                                    <li data-bind="text: $data"></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- /ko -->
+        <!-- ko if: searchError() != null -->
+        <div class="info" id="msgBoxSearchResultError">
+            <table>
+                <tbody>
+                    <tr>
+                        <td title="Error Details" class="message_box_image" rowspan="4"><img src="imgs/mvi_error.png"></td>
+                    </tr>
+                    <tr>
+                        <td class="errorText">An error was returned from your search.</td>
+                    </tr>
+                    <tr>
+                        <td class="header">Error details</td>
+                    </tr>
+                    <tr>
+                        <td><span id="errorDetails" data-bind="text: searchError" aria-live="assertive"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- /ko -->
+        <!-- ko if: noResults() -->
+        <div class="info" id="msgBoxNoDataReturned">
+            <table>
+                <tbody>
+                    <tr>
+                        <td title="Warning. No Data Returned." class="message_box_image" rowspan="2"><img src="imgs/mvi_warning.png"></td>
+                    </tr>
+                    <tr>
+                        <td class="infoText"><span id="warningDetails" aria-live="assertive">No matches where returned. Please refine your search and try again.</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- /ko -->
+        <!-- ko if: searchResults().length > 0  -->
+        <div id="searchResultsGrid">
+            <table id="personSearchResultsTable">
+                <thead>
+					<tr>
+						<td colspan="10"><h2>Search Results</h2></td>
+					</tr>
+                    <tr>
+                        <th></th>
+                        <th class="grid_title" id="th_Name" title="Name">Name</th>
+                        <th class="grid_title" id="th_DateofBirth" title="Date of Birth">Date of Birth</th>
+                        <th class="grid_title" id="th_DeceasedDate" title="Deceased Date">Deceased Date</th>
+                        <th class="grid_title" id="th_Gender" title="Sex">Sex</th>
+                        <th class="grid_title" id="th_Address" title="Address">Address</th>
+                        <th class="grid_title" id="th_Telephone" title="Telephone">Phone No.</th>
+                        <th class="grid_title" id="th_VetNumber" title="SSN">SSN</th>
+                        <th class="grid_title" id="th_EDIPI" title="EDIPI">EDIPI</th>
+                        <th class="grid_title" id="th_SensLevel" title="Sens. Level">Sens. Level</th>
+                        <th class="grid_title" id="th_Source" title="Source">Source</th>
+                        <th class="grid_title" id="th_BroofSvc" title="Br of Svc">Br. of Svc</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: searchResults">
+                    <tr>
+                        <td>
+							<!-- ko if: $parent.facilitiesLoaded() -->
+							<a href="#" id="selectVeteran" data-bind="click: $parent.selectVeteran, clickBubble: false">Select</a>
+							<!-- /ko -->
+						</td>
+                        <td><span data-bind="text: FullName"></span></td>
+                        <td><span data-bind="text: DOBString"></span></td>
+                        <td></td>
+                        <td><span data-bind="text: Gender"></span></td>
+                        <td><span data-bind="text: FullAddress"></span></td>
+                        <td><span data-bind="text: PrimaryPhone"></span></td>
+                        <td><span data-bind="text: VetNumber"></span></td>
+                        <td><span data-bind="text: EDIPI"></span></td>
+                        <td><span data-bind="text: isSensitive"></span></td>
+                        <td><span data-bind="text: RecordSource"></span></td>
+                        <td><span data-bind="text: BranchOfService"></span></td>
+                    </tr>
+
+                    <!-- ko if: selected() -->
+                    <tr>
+						<td></td>
+                        <td>
+                            <ul data-bind="foreach: Facilities" style="list-style:none">
+                                <li><a href="#" id="createInteraction" data-bind="text: FacilityName, click: $root.createInteraction, clickBubble: false"></a></li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <!-- /ko -->
+                </tbody>
+            </table>
+        </div>
+        <!-- /ko -->
+    </div>
+
+
+</body></html>

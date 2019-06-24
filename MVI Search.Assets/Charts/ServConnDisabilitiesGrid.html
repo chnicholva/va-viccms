@@ -1,0 +1,37 @@
+﻿<html>
+<head>
+</head>
+<body style="overflow-wrap: break-word;">
+    ﻿
+
+
+    <title>FTP Service Connected Disabilities</title>
+    <!-- NOTE: ClientGlobalContext.js.aspx URL below is set with ../../ because the web resource that needs it is installed in a 2 level folder structure -->
+    <script type="text/javascript" src="../../ClientGlobalContext.js.aspx"></script>
+
+    <!-- Service Connected Disabilities Grid Custom Stylesheet -->
+    <link href="../../patsr_/ServConnDisabilitiesGrid/css/kendo.common.min.css" rel="stylesheet">
+    <link href="../../patsr_/ServConnDisabilitiesGrid/css/kendo.default.min.css" rel="stylesheet">
+    <link href="../../patsr_/ServConnDisabilitiesGrid/css/ServConnDisabilitiesGridStyle.css" rel="stylesheet">
+    <!--Control Library /-->
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/ServConnDisabilitiesGridScriptLib.js"></script>
+    <script type="text/javascript" src="../../patsr_/ServConnDisabilitiesGrid/js/kendo.all.min.js"></script>
+
+    <div id="ServiceConnectedDisabilitiesForm" class="ServiceConnectedDisabilitiesForm">
+        <div id="ku_disabilitygrid" tabindex="-1"></div>
+        <div id="ku_disabilitydetailgrid" tabindex="-1"></div>
+        <script>
+            $(document).ready(function () {
+                try {
+                    scdg_FormLoad();
+                }
+                catch (err) {
+                    alert("Service Connected Disabilities Grid Web Resource Document Ready Error: " + err.message);
+                }
+            });
+        </script>
+    </div>
+
+</body>
+</html>
