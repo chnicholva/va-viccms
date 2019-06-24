@@ -1,3 +1,6 @@
+/// <reference path="../../JScript/VCCM.MHVHelper.js" />
+/// <reference path="../../JScript/VCCM.USDHelper.js" />
+/// <reference path="../../WebServiceSecurityLib/js/WebServiceSecurityScriptLib.js" />
 var configData = null,
     context = null,
     retrievedSettings = null,
@@ -39,114 +42,114 @@ function loadButtons() {
         btnProblems: {
             id: "btnProblems",
             title: "Problems",
-            unsecureURLFieldName: "patsr_ProblemChartURL",
-            secureURLFieldName: "patsr_ProblemChartSecureURL",
+            unsecureURLFieldName: "ftp_ProblemChartURL",
+            secureURLFieldName: "ftp_ProblemChartSecureURL",
             secure: false,
             url: ""
         },
         btnNotes: {
             id: "btnNotes",
             title: "Notes",
-            unsecureURLFieldName: "patsr_NoteChartURL",
-            secureURLFieldName: "patsr_NoteChartSecureURL",
+            unsecureURLFieldName: "ftp_NoteChartURL",
+            secureURLFieldName: "ftp_NoteChartSecureURL",
             secure: false,
             url: ""
         },
         btnOrders: {
             id: "btnOrders",
             title: "Orders",
-            unsecureURLFieldName: "patsr_OrderChartURL",
-            secureURLFieldName: "patsr_OrderChartSecureURL",
+            unsecureURLFieldName: "ftp_OrderChartURL",
+            secureURLFieldName: "ftp_OrderChartSecureURL",
             secure: false,
             url: ""
         },
         btnAppointments: {
             id: "btnAppointments",
             title: "Appointments",
-            unsecureURLFieldName: "patsr_AppointmentChartURL",
-            secureURLFieldName: "patsr_AppointmentChartSecureURL",
+            unsecureURLFieldName: "ftp_AppointmentChartURL",
+            secureURLFieldName: "ftp_AppointmentChartSecureURL",
             secure: false,
             url: ""
         },
         btnMedications: {
             id: "btnMedications",
             title: "Medications",
-            unsecureURLFieldName: "patsr_MedicationsChartURL",
-            secureURLFieldName: "patsr_MedicationsChartSecureURL",
+            unsecureURLFieldName: "ftp_MedicationsChartURL",
+            secureURLFieldName: "ftp_MedicationsChartSecureURL",
             secure: false,
             url: ""
         },
         btnPostings: {
             id: "btnPostings",
             title: "Postings",
-            unsecureURLFieldName: "patsr_PostingChartURL",
-            secureURLFieldName: "patsr_PostingChartSecureURL",
+            unsecureURLFieldName: "ftp_PostingChartURL",
+            secureURLFieldName: "ftp_PostingChartSecureURL",
             secure: false,
             url: ""
         },
         btnAllergies: {
             id: "btnAllergies",
             title: "Allergies",
-            unsecureURLFieldName: "patsr_AllergyChartURL",
-            secureURLFieldName: "patsr_AllergyChartSecureURL",
+            unsecureURLFieldName: "ftp_AllergyChartURL",
+            secureURLFieldName: "ftp_AllergyChartSecureURL",
             secure: false,
             url: ""
         },
         btnLabs: {
             id: "btnLabs",
             title: "Labs",
-            unsecureURLFieldName: "patsr_LabChartURL",
-            secureURLFieldName: "patsr_LabChartSecureURL",
+            unsecureURLFieldName: "ftp_LabChartURL",
+            secureURLFieldName: "ftp_LabChartSecureURL",
             secure: false,
             url: ""
         },
         btnConsults: {
             id: "btnConsults",
             title: "Consults",
-            unsecureURLFieldName: "patsr_ConsultChartURL",
-            secureURLFieldName: "patsr_ConsultChartSecureURL",
+            unsecureURLFieldName: "ftp_ConsultChartURL",
+            secureURLFieldName: "ftp_ConsultChartSecureURL",
             secure: false,
             url: ""
         },
         btnNonVAMeds: {
             id: "btnNonVAMeds",
             title: "Non-VA Meds",
-            unsecureURLFieldName: "patsr_NonVAChartURL",
-            secureURLFieldName: "patsr_NonVAChartSecureURL",
+            unsecureURLFieldName: "ftp_NonVAChartURL",
+            secureURLFieldName: "ftp_NonVAChartSecureURL",
             secure: false,
             url: ""
         },
         btnVitals: {
             id: "btnVitals",
             title: "Vitals",
-            unsecureURLFieldName: "patsr_VitalsChartURL",
-            secureURLFieldName: "patsr_VitalsChartSecureURL",
+            unsecureURLFieldName: "ftp_VitalsChartURL",
+            secureURLFieldName: "ftp_VitalsChartSecureURL",
             secure: false,
             url: ""
         },
         btnRadiology: {
             id: "btnRadiology",
             title: "Imaging",
-            unsecureURLFieldName: "patsr_RadiologyChartURL",
-            secureURLFieldName: "patsr_RadiologyChartSecureURL",
+            unsecureURLFieldName: "ftp_RadiologyChartURL",
+            secureURLFieldName: "ftp_RadiologyChartSecureURL",
             secure: false,
             url: ""
         },
         btnDischarges: {
             id: "btnDischarges",
             title: "Discharges",
-            unsecureURLFieldName: "patsr_DischargeURL",
-            secureURLFieldName: "patsr_DischargeChartSecureURL",
+            unsecureURLFieldName: "ftp_DischargeURL",
+            secureURLFieldName: "ftp_DischargeChartSecureURL",
             secure: false,
             url: ""
         }
     };
 
     retrievedSettings = null;
-    var queryString = "$select=*&$filter=patsr_name eq 'Active Settings'";
+    var queryString = "$select=*&$filter=mcs_name eq 'Active Settings'";
     if (!!configData && configData.hasOwnProperty("ICN") && !!configData.ICN) {
         SDK.REST.retrieveMultipleRecords(
-            "patsr_setting",
+            "mcs_setting",
             queryString,
             function (retrievedRecords) {
                 if (typeof retrievedRecords != "undefined" && !!retrievedRecords && retrievedRecords.length == 1) retrievedSettings = retrievedRecords[0];
@@ -164,34 +167,21 @@ function loadButtons() {
 }
 function initializeButtons() {
     if (!!retrievedSettings) {
-        if (retrievedSettings.hasOwnProperty("patsr_VEISPresentationUrl") && !!retrievedSettings.patsr_VEISPresentationUrl) {
+        if (retrievedSettings.hasOwnProperty("ftp_VEISPresentationUrl") && !!retrievedSettings.ftp_VEISPresentationUrl) {
             $("#sidebar").html("");
-            var filter = retrievedSettings.hasOwnProperty("patsr_Filter") && !!retrievedSettings.patsr_Filter ? retrievedSettings.patsr_Filter : "";
+            var filter = retrievedSettings.hasOwnProperty("ftp_Filter") && !!retrievedSettings.ftp_Filter ? retrievedSettings.ftp_Filter : "";
             //initialize buttons
             for (var thisButtonConfigId in buttonConfigurations) {
                 if (buttonConfigurations.hasOwnProperty(thisButtonConfigId)) {
                     var thisButtonConfig = buttonConfigurations[thisButtonConfigId];
-                    if (thisButtonConfig.secure == true) {
-                        if (!!thisButtonConfig.secureURLFieldName) {
-                            if (!!retrievedSettings[thisButtonConfig.secureURLFieldName]) {
-                                thisButtonConfig.url = retrievedSettings.patsr_VEISPresentationUrl + retrievedSettings[thisButtonConfig.secureURLFieldName];
-                            }
-                            else {
-                                thisButtonConfig.url = "";
-                            }
+                    if (!!thisButtonConfig.unsecureURLFieldName) {
+                        if (!!retrievedSettings[thisButtonConfig.unsecureURLFieldName]) {
+                            thisButtonConfig.url = retrievedSettings.ftp_VEISPresentationUrl + retrievedSettings[thisButtonConfig.unsecureURLFieldName] + configData.ICN + filter;
+                        }
+                        else {
+                            thisButtonConfig.url = "";
                         }
                     }
-                    else {
-                        if (!!thisButtonConfig.unsecureURLFieldName) {
-                            if (!!retrievedSettings[thisButtonConfig.unsecureURLFieldName]) {
-                                thisButtonConfig.url = retrievedSettings.patsr_VEISPresentationUrl + retrievedSettings[thisButtonConfig.unsecureURLFieldName] + configData.ICN + filter;
-                            }
-                            else {
-                                thisButtonConfig.url = "";
-                            }
-                        }
-                    }
-
                     //create html button w/ corresponding ID
                     $("#sidebar").append("<button class='button' id='" + thisButtonConfigId + "' onclick='setChartSource(this);'>" + thisButtonConfig.title + "</button>");
                 }
@@ -240,28 +230,28 @@ function setChartSourceFromButtonConfig(thisButtonConfig, additionalParams) {
                     url: thisButtonConfig.url + additionalParams,
                     type: "GET",
                     dataType: "text",
-                    beforeSend: function (xhr) { 
-						var subKeys = retrievedSettings.patsr_MVISubscriptionKey;
-						var keys = subKeys.split("|");
-						for(var i =0; i<keys.length;i = i+2) {
-							xhr.setRequestHeader(keys[i], keys[i+1]); 
-						}
-					},
+                    beforeSend: function (xhr) {
+                        var subKeys = retrievedSettings.ftp_MVISubscriptionKey;
+                        var keys = subKeys.split("|");
+                        for (var i = 0; i < keys.length; i = i + 2) {
+                            xhr.setRequestHeader(keys[i], keys[i + 1]);
+                        }
+                    },
                     success: function (data) {
-                        data = data.replace(new RegExp('/Content/', 'g'), retrievedSettings.patsr_VEISContentSiteURL + 'Content/');
-                        data = data.replace(new RegExp('/Scripts/', 'g'), retrievedSettings.patsr_VEISContentSiteURL + 'Scripts/');
+                        data = data.replace(new RegExp('/Content/', 'g'), retrievedSettings.ftp_VEISContentSiteURL + 'Content/');
+                        data = data.replace(new RegExp('/Scripts/', 'g'), retrievedSettings.ftp_VEISContentSiteURL + 'Scripts/');
                         data = data.replace(new RegExp('window.location.href', 'g'), "'" + thisButtonConfig.url + additionalParams + "'");
-                        data = data.replace("url: url,", "url: url,  beforeSend: function (xhr) { "+
-							"var subKeys = '"+ retrievedSettings.patsr_MVISubscriptionKey + "';"+
-							"var keys = subKeys.split(\"|\");"+
-							"for(var i =0; i<keys.length;i = i+2) { xhr.setRequestHeader(keys[i], keys[i+1]); }"+
-							"},"
-						);
+                        data = data.replace("url: url,", "url: url,  beforeSend: function (xhr) { " +
+                            "var subKeys = '" + retrievedSettings.ftp_MVISubscriptionKey + "';" +
+                            "var keys = subKeys.split(\"|\");" +
+                            "for(var i =0; i<keys.length;i = i+2) { xhr.setRequestHeader(keys[i], keys[i+1]); }" +
+                            "},"
+                        );
                         data = data.replace("\"btnCreateAddend\"", "\"btnCreateAddend\" style=\"display:none\"");
                         data = data.replace("\"btnNotesSigner\"", "\"btnNotesSigner\" style=\"display:none\"");
                         data = data.replace("\"btnAddSigner\"", "\"btnAddSigner\" style=\"display:none\"");
                         //inject our js into this doc
-                        data = data.replace(retrievedSettings.patsr_VEISContentSiteURL + "Scripts/Views/WidgetDateFilter.js", context.getClientUrl() + "/WebResources/patsr_/Veteran/JScript/datefilter.js");
+                        data = data.replace(retrievedSettings.ftp_VEISContentSiteURL + "Scripts/Views/WidgetDateFilter.js", context.getClientUrl() + "/WebResources/ftp_/Veteran/JScript/datefilter.js");
                         var iFrame = $('#thechart');
                         if (iFrame != null && iFrame !== undefined) {
                             iFrame.remove();
@@ -292,13 +282,13 @@ function setChartSourceFromButtonConfig(thisButtonConfig, additionalParams) {
 
 }
 function openNewAddendumForm(pNoteVistAId) {
-    //open patsr_addendum form to create new addendum attached to note in VistA
+    //open ftp_addendum form to create new addendum attached to note in VistA
     if (typeof pNoteVistAId == "string") {
-        var newAddendumUrl = context.getClientUrl() + "/main.aspx?etn=patsr_addendum&pagetype=entityrecord";
+        var newAddendumUrl = context.getClientUrl() + "/main.aspx?etn=ftp_addendum&pagetype=entityrecord";
         var extraQs = "&extraqs=";
-        extraQs += encodeURIComponent("patsr_vistanoteid=" + pNoteVistAId);
+        extraQs += encodeURIComponent("ftp_vistanoteid=" + pNoteVistAId);
         if (!!configData && configData.hasOwnProperty("contactid") && !!configData.contactid && configData.hasOwnProperty("fullname") && !!configData.fullname) {
-            extraQs += encodeURIComponent("&patsr_veteran=" + configData.contactid + "&patsr_veteranname=" + configData.fullname);
+            extraQs += encodeURIComponent("&ftp_veteran=" + configData.contactid + "&ftp_veteranname=" + configData.fullname);
         }
         window.open(newAddendumUrl + extraQs);
     }
@@ -308,7 +298,7 @@ function openCRMRecordForAdditionalSigners(pVistaRecordId, pEntitySchemaName, pV
     //deprecated
     return;
     if (!!pVistaRecordId && !!pEntitySchemaName && !!pVistaIdFieldName) {
-        showLoadingMessage("Searching for " + (pEntitySchemaName == "patsr_progressnote" ? "note" : "addendum") + " in CRM...");
+        showLoadingMessage("Searching for " + (pEntitySchemaName == "ftp_progressnote" ? "note" : "addendum") + " in CRM...");
         var retrievedRecord = null;
         var queryString = "$select=ActivityId&$filter=" + pVistaIdFieldName + " eq '" + pVistaRecordId + "'";
         SDK.REST.retrieveMultipleRecords(
@@ -359,7 +349,7 @@ function openCRMRecordForAdditionalSigners(pVistaRecordId, pEntitySchemaName, pV
 }
 
 function openNewAdditionalSignerForm(pVistaRecordId, pVistaRecordType) {
-    //create placeholder patsr_additionalsigner record, then open it to give user an interface for selecting usrs and adding them to the current note/addendum
+    //create placeholder ftp_additionalsigner record, then open it to give user an interface for selecting usrs and adding them to the current note/addendum
     if (typeof pVistaRecordId == "string" && typeof pVistaRecordType == "string") {
         var newRecord = {
             Subject: ("Additional Signers for existing VistA " + pVistaRecordType + ": " + pVistaRecordId.toString()),
@@ -406,10 +396,10 @@ function loadMedsWithTracking() {
         /*as of 3/26/18, all MHV functionality has been deprecated.  configData.MHVID will always be empty.*/
         if (!!configData.MHVID) {
             if (!!configData.ICN) {
-                //if (!!retrievedSettings.patsr_VEISPresentationUrl && !!retrievedSettings.ftp_MHVSessionAPIURL && !!retrievedSettings.ftp_MedicationsChartURL) {
-                if (!!retrievedSettings.patsr_VEISPresentationUrl && !!retrievedSettings.ftp_MHVSessionAPIURL && !!retrievedSettings.ftp_MedicationsChartPOSTURL && !!retrievedSettings.ftp_POSTAPIClientName) {
+                //if (!!retrievedSettings.ftp_VEISPresentationUrl && !!retrievedSettings.ftp_MHVSessionAPIURL && !!retrievedSettings.ftp_MedicationsChartURL) {
+                if (!!retrievedSettings.ftp_VEISPresentationUrl && !!retrievedSettings.ftp_MHVSessionAPIURL && !!retrievedSettings.ftp_MedicationsChartPOSTURL && !!retrievedSettings.ftp_POSTAPIClientName) {
                     VCCM.MHVHelper.GetSessionToken(
-                        retrievedSettings.patsr_VEISPresentationUrl + retrievedSettings.ftp_MHVSessionAPIURL,
+                        retrievedSettings.ftp_VEISPresentationUrl + retrievedSettings.ftp_MHVSessionAPIURL,
                         [configData.MHVID],
                         function (pMHVObject) {
                             if (!!pMHVObject && !!pMHVObject.Token) {
@@ -425,14 +415,14 @@ function loadMedsWithTracking() {
                                 $.ajax({
                                     type: "POST",
                                     data: postData,
-                                    //url: retrievedSettings.patsr_VEISPresentationUrl + medcharturlForPost,
-                                    url: retrievedSettings.patsr_VEISPresentationUrl + retrievedSettings.ftp_MedicationsChartPOSTURL,
+                                    //url: retrievedSettings.ftp_VEISPresentationUrl + medcharturlForPost,
+                                    url: retrievedSettings.ftp_VEISPresentationUrl + retrievedSettings.ftp_MedicationsChartPOSTURL,
                                     error: function (jqXHR, textStatus, pError) {
                                         showErrorMessage(pError.message, "", "Error getting medication tracking data.");
                                     },
                                     success: function (pResponse) {
                                         console.log("got POST response from med chart url.");
-                                        var escapedDACURL = retrievedSettings.patsr_VEISPresentationUrl.replace(/\//g, "\/");
+                                        var escapedDACURL = retrievedSettings.ftp_VEISPresentationUrl.replace(/\//g, "\/");
                                         //var newResponse = pResponse.replace(/\/Webparts\//g, escapedDACURL);
                                         var newResponse = pResponse.replace(/link href=\"\/WebParts\//g, "link href=\"" + escapedDACURL);
                                         var newResponse2 = newResponse.replace(/script src=\"\/WebParts\//g, "script src=\"" + escapedDACURL);
@@ -558,9 +548,9 @@ function parseDataParametersFromUrl(pQueryString) {
             var customerid = window.parent.Xrm.Page.getAttribute("customerid").getValue()[0].id;
 
             if (customerid !== undefined && customerid != null && customerid != '') {
-                Xrm.WebApi.retrieveRecord("contact", customerid.replace('{', '').replace('}', ''), "?$select=veo_edipi,patsr_icn").then(
+                Xrm.WebApi.retrieveRecord("contact", customerid.replace('{', '').replace('}', ''), "?$select=veo_edipi,ftp_icn").then(
                     function success(result) {
-                        configObject["ICN"] = result.patsr_icn;
+                        configObject["ICN"] = result.ftp_icn;
                         configObject["EDIPI"] = result.veo_edipi;
                         configData = configObject;
                         loadButtons("");
@@ -572,9 +562,9 @@ function parseDataParametersFromUrl(pQueryString) {
         }
         else if (typename == "contact") {
             var contactId = window.parent.Xrm.Page.data.entity.getId();
-            Xrm.WebApi.retrieveRecord("contact", contactId.replace('{', '').replace('}', ''), "?$select=veo_edipi,patsr_icn").then(
+            Xrm.WebApi.retrieveRecord("contact", contactId.replace('{', '').replace('}', ''), "?$select=veo_edipi,ftp_icn").then(
                 function success(result) {
-                    configObject["ICN"] = result.patsr_icn;
+                    configObject["ICN"] = result.ftp_icn;
                     configObject["EDIPI"] = result.veo_edipi;
                     configData = configObject;
                     loadButtons("");

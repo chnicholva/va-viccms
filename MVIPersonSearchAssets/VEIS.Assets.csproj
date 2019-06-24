@@ -52,6 +52,7 @@
     <Content Include="Charts\kendo.all.min.js" />
     <Content Include="Charts\kendo.common.min.css" />
     <Content Include="Charts\kendo.default.min.css" />
+    <Content Include="Charts\loading_image.gif" />
     <Content Include="Charts\on-prem\Charts.html" />
     <Content Include="Charts\on-prem\charts.js" />
     <Content Include="Charts\on-prem\ServConnDisabilitiesGrid.html" />

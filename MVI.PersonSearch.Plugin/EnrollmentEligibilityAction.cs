@@ -24,7 +24,7 @@ namespace MVI.PersonSearch.Plugin
                 // To use a specific early bound entity replace the 'Entity' below with the appropriate class type
                 using (var localContext = new ActionContext(context))
                 {
-                    Entity settings = localContext.RetrieveActiveSettings("patsr_esrenrollmenteligibilitysummaryapiurl", "patsr_veisservicebaseurl", "patsr_mvisubscriptionkey");
+                    Entity settings = localContext.RetrieveActiveSettings("ftp_esrenrollmenteligibilitysummaryapiurl", "ftp_veisservicebaseurl", "ftp_mvisubscriptionkey");
 
 
                     try
@@ -36,9 +36,9 @@ namespace MVI.PersonSearch.Plugin
 
                         using (WebClient client = new WebClient())
                         {
-                            string uri = settings["patsr_veisservicebaseurl"].ToString() + settings["patsr_esrenrollmenteligibilitysummaryapiurl"].ToString() + this.Request.Get<string>(context);
+                            string uri = settings["ftp_veisservicebaseurl"].ToString() + settings["ftp_esrenrollmenteligibilitysummaryapiurl"].ToString() + this.Request.Get<string>(context);
                             client.Headers[HttpRequestHeader.ContentType] = "application/json";
-                            string subKeys = settings["patsr_mvisubscriptionkey"].ToString();
+                            string subKeys = settings["ftp_mvisubscriptionkey"].ToString();
                             if (subKeys.Length > 0)
                             {
                                 string[] headers = subKeys.Split('|');

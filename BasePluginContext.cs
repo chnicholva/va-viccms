@@ -129,9 +129,9 @@ namespace PersonSearch.Plugin
             {
                 //change these fields as required for your implementation
                 ColumnSet = new ColumnSet(cols),
-                EntityName = "patsr_setting"
+                EntityName = "mcs_setting"
             };
-            query.AddAttributeValue("patsr_name", "Active Settings");
+            query.AddAttributeValue("mcs_name", "Active Settings");
 
             EntityCollection results = this.OrganizationService.RetrieveMultiple(query);
             if (results.Entities.Count > 0)

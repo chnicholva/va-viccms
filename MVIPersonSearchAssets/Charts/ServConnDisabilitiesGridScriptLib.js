@@ -72,7 +72,7 @@ function scdg_SettingsWebServiceURL_response(scdg_settingData, scdg_lastSkip, sc
             "Request": scdg_xrmdata
             //"Request": '000000' + scdg_xrmdata + '000000'
         }
-        callAction("patsr_EnrollmentEligibilityAction", data, scdg_getEsrEnrollmentJSON_response, function (err) { alert("Service Connected Disabilities Grid Web Resource Function Error(scdg_SettingsWebServiceURL_response): " + err.message); });
+        callAction("ftp_EnrollmentEligibilityAction", data, scdg_getEsrEnrollmentJSON_response, function (err) { alert("Service Connected Disabilities Grid Web Resource Function Error(scdg_SettingsWebServiceURL_response): " + err.message); });
     }
     catch (err) {
         alert("Service Connected Disabilities Grid Web Resource Function Error(scdg_SettingsWebServiceURL_response): " + err.message);
@@ -99,8 +99,8 @@ function scdg_getEsrEnrollmentJSON_response(data) {
 function scdg_FormLoad() {
     try {
         //GET CRM SETTINGS WEB SERVICE URLS
-        var scdg_conditionalFilter = "(patsr_name eq 'Active Settings')";
-        scdg_getMultipleEntityDataAsync('patsr_settingSet', 'patsr_DACURL, patsr_ESREnrollmentEligibilitySummaryAPIURL', scdg_conditionalFilter, 'patsr_name', 'asc', 0, scdg_SettingsWebServiceURL_response, scdg_eesummaryURLbase);
+        var scdg_conditionalFilter = "(mcs_name eq 'Active Settings')";
+        scdg_getMultipleEntityDataAsync('mcs_settingSet', 'ftp_DACURL, ftp_ESREnrollmentEligibilitySummaryAPIURL', scdg_conditionalFilter, 'mcs_name', 'asc', 0, scdg_SettingsWebServiceURL_response, scdg_eesummaryURLbase);
     }
     catch (err) {
         alert("Service Connected Disabilities Grid Web Resource Function Error(scdg_FormLoad): " + err.message);
