@@ -1,53 +1,78 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace PersonSearch.Plugin.Entities.Person
 {
-	internal class MVILog
+    [DataContract]
+	public class MVILog
 	{
+        [DataMember]
 		public string Organization_Name;
 
-		public string First;
+        [DataMember]
+        public string First;
 
-		public string Last;
+        [DataMember]
+        public string Last;
 
-		public string Middle;
+        [DataMember]
+        public string Middle;
 
-		public string DOB;
+        [DataMember]
+        public string DOB;
 
-		public string SSN;
+        [DataMember]
+        public string SSN;
 
-		public string EDIPI;
+        [DataMember]
+        public string EDIPI;
 
-		public string Phone;
+        [DataMember]
+        public string Phone;
 
-		public bool Attended;
+        [DataMember]
+        public bool Attended;
 
-		public string Address;
+        [DataMember]
+        public string Address;
 
-		public string Sex;
+        [DataMember]
+        public string Sex;
 
-		public string MMN;
+        [DataMember]
+        public string MMN;
 
-		public string POBC;
+        [DataMember]
+        public string POBC;
 
-		public string POBS;
+        [DataMember]
+        public string POBS;
 
-		public string RequestType;
+        [DataMember]
+        public string RequestType;
 
-		public string ICN;
+        [DataMember]
+        public string ICN;
 
-		public string Source;
+        [DataMember]
+        public string Source;
 
-		public string ClassCode;
+        [DataMember]
+        public string ClassCode;
 
-		public string Type;
+        [DataMember]
+        public string Type;
 
-		public DateTime CreatedOn;
+        [DataMember]
+        public DateTime CreatedOn;
 
-		public string SessionId;
+        [DataMember]
+        public string SessionId;
 
-		public string UserName;
+        [DataMember]
+        public string UserName;
 
-		public string IDs;
+        [DataMember]
+        public string IDs;
 	}
 }

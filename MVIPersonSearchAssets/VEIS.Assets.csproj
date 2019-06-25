@@ -64,6 +64,9 @@
     <Content Include="Charts\test.html" />
     <Content Include="Charts\test_orig.html" />
     <Content Include="ftp_\MVI\js\MVIPersonSearch.js" />
+    <Content Include="ftp_\VeteranAlerts\VeteranAlerts.css" />
+    <Content Include="ftp_\VeteranAlerts\VeteranAlerts.html" />
+    <Content Include="ftp_\VeteranAlerts\VeteranAlerts.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

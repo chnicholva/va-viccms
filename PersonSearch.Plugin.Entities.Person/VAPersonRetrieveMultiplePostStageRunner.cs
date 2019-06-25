@@ -240,7 +240,7 @@ namespace PersonSearch.Plugin.Entities.Person
                                         selectedPersonRequest.LogTiming = config.LogTimer;
                                         //selectedPersonRequest.noAddPerson = false;
                                         CorrespondingIdsResponse correspondingIdsResponse = WebApiUtility.SendReceiveVeisRequest<CorrespondingIdsResponse>(config, "SelectedPerson", selectedPersonRequest);
-                                        MapCorrespondingIds(correspondingIdsResponse, selectedPersonRequest);
+                                        MapCorrespondingIds(correspondingIdsResponse, selectedPersonRequest, config);
                                     }
                                 }
                                 else
@@ -563,10 +563,9 @@ namespace PersonSearch.Plugin.Entities.Person
 
         private void auditRequest(PersonSearchRequest request)
         {
-            /*
             if (auditUrl == "")
             {
-                auditUrl = getKVPSetting("MVI_Log");
+                auditUrl = PatientPersonExtensions.getKVPSetting("MVI_Log", base.OrganizationService);
             }
             bool isAttended = request.IsAttended;
             MVILog mVILog = new MVILog();
@@ -593,9 +592,8 @@ namespace PersonSearch.Plugin.Entities.Person
             mVILog.Type = "Request";
             mVILog.UserName = ((userName.Length > 30) ? userName.Substring(0, 30) : userName);
             MVILog obj = mVILog;
-            string json = new JavaScriptSerializer().Serialize(obj);
+            string json = JsonHelper.Serialize(obj);
             handleRequest(auditUrl, json, "MVILog");
-            */
         }
 
         public void SetQueryString(SelectedPersonRequest request, QueryExpression qe, VeisConfig config)
@@ -630,10 +628,9 @@ namespace PersonSearch.Plugin.Entities.Person
 
         private void auditRequest(SelectedPersonRequest request)
         {
-            /*
             if (auditUrl == "")
             {
-                auditUrl = getKVPSetting("MVI_Log2");
+                auditUrl = PatientPersonExtensions.getKVPSetting("MVI_Log2", base.OrganizationService);
             }
             MVILog2 mVILog = new MVILog2();
             mVILog.Organization_Name = request.OrganizationName;
@@ -646,9 +643,8 @@ namespace PersonSearch.Plugin.Entities.Person
             //mVILog.SSN = ((request.SocialSecurityNumber != null && request.SocialSecurityNumber.Length > 10) ? request.SocialSecurityNumber.Substring(0, 10) : request.SocialSecurityNumber);
             mVILog.UserName = ((userName.Length > 30) ? userName.Substring(0, 30) : userName);
             MVILog2 obj = mVILog;
-            string json = new JavaScriptSerializer().Serialize(obj);
+            string json = JsonHelper.Serialize(obj);
             handleRequest(auditUrl, json, "MVILog2");
-            */
         }
 
         public void SetQueryString(DeterministicSearchRequest request, QueryExpression qe)
@@ -686,10 +682,9 @@ namespace PersonSearch.Plugin.Entities.Person
 
         private void auditRequest(DeterministicSearchRequest request)
         {
-            /*
             if (auditUrl == "")
             {
-                auditUrl = getKVPSetting("MVI_Log");
+                auditUrl = PatientPersonExtensions.getKVPSetting("MVI_Log", base.OrganizationService);
             }
             MVILog mVILog = new MVILog();
             mVILog.Address = "";
@@ -715,9 +710,8 @@ namespace PersonSearch.Plugin.Entities.Person
             mVILog.Type = "Request";
             mVILog.UserName = userName;
             MVILog obj = mVILog;
-            string json = new JavaScriptSerializer().Serialize(obj);
+            string json = JsonHelper.Serialize(obj);
             handleRequest(auditUrl, json, "MVILog");
-            */
         }
 
         private static string GetStringValueOrDefaultFetch(FilterExpression expression, string fieldName)
@@ -939,7 +933,7 @@ namespace PersonSearch.Plugin.Entities.Person
             return "NO";
         }
 
-        private void MapCorrespondingIds(CorrespondingIdsResponse response, SelectedPersonRequest request)
+        private void MapCorrespondingIds(CorrespondingIdsResponse response, SelectedPersonRequest request, VeisConfig config)
         {
             try
             {
@@ -975,8 +969,12 @@ namespace PersonSearch.Plugin.Entities.Person
                 else
                 {
                     string text = string.Empty;
+                    bool flag = false;
+                    bool flag2 = false;
                     bool flag3 = false;
+                    string b = "";
                     CorrespondingIDs[] correspondingIdList;
+
 
                     string text2 = string.Empty;
                     string empty = string.Empty;
@@ -1022,8 +1020,67 @@ namespace PersonSearch.Plugin.Entities.Person
                         {
                             crme_person3["crme_edipi"] = correspondingIDs.PatientIdentifier;
                         }
+                        if (orgName.Contains("VCL"))
+                        {
+                            int result = 0;
+                            bool flag4 = int.TryParse(correspondingIDs.AssigningFacility, out result);
+                            if (config.GetSensitiveInfo && flag4 && correspondingIDs.AssigningAuthority == "USVHA" && correspondingIDs.AssigningFacility == b && flag)
+                            {
+                                crme_person3["crme_veteransensitivitylevel"] = text;
+                                base.Logger.WriteDebugMessage("DEBUG::Facility match found with ESR/MVI, Sensitivity Level set for " + correspondingIDs.AssigningFacility);
+                            }
+                            else if (config.GetSensitiveInfo && flag4 && correspondingIDs.AssigningAuthority == "USVHA" && !flag && !flag2)
+                            {
+                                string prefFacility = correspondingIDs.AssigningAuthority;
+                                crme_person3["crme_veteransensitivitylevel"] = text;
+                                flag2 = true;
+                                base.Logger.WriteDebugMessage("DEBUG::No facility match found with ESR/MVI, Sensitivity Level set for " + correspondingIDs.AssigningFacility + " != " + prefFacility);
+                            }
+                        }
+                        else
+                        {
+                            crme_person3["crme_veteransensitivitylevel"] = text;
+                        }
+
+                        List<string> strs = new List<string>();
+                        CorrespondingIDs icnId = correspondingIdList.FirstOrDefault((CorrespondingIDs v) => v.AssigningAuthority != null && v.AssigningAuthority.Equals("USVHA", StringComparison.InvariantCultureIgnoreCase) && v.AssigningFacility != null && v.AssigningFacility == "200M" && v.IdentifierType != null && v.IdentifierType.Equals("NI", StringComparison.InvariantCultureIgnoreCase)) ?? correspondingIdList.FirstOrDefault((CorrespondingIDs v) => v.AssigningAuthority != null && v.AssigningAuthority.Equals("USVHA", StringComparison.InvariantCultureIgnoreCase) && v.IdentifierType != null && v.IdentifierType.Equals("PI", StringComparison.InvariantCultureIgnoreCase));
+                        string icn = (icnId != null) ? icnId.PatientIdentifier : string.Empty;
+                        crme_person3["crme_icn"] = icn;
+                        strs.Add(icn);
+                        string url = PatientPersonExtensions.getKVPSetting("sensitive_endpoint", base.OrganizationService);
+                        string keys = config.VeisConfiguration.SvcConfigInfo.ApimSubscriptionKey;
+                        NonVetResponse nvResponse = PatientPersonExtensions.getVHAVeteranEmployeeFlags(String.Format("{0}{1}", config.VeisConfiguration.SvcConfigInfo.SvcBaseUrl, config.EmployeeEndpoint), keys, strs, base.Logger);
+                        List<VeteranEmployeeFlag> vHAVeteranEmployeeFlags = new List<VeteranEmployeeFlag>();
+
+                        foreach (NVDatum datum in nvResponse.Data)
+                        {
+                            if (datum.NationalId == null)
+                            {
+                                vHAVeteranEmployeeFlags.Add(new VeteranEmployeeFlag() { NationalId = "", Value = "NO" });
+                            }
+                            else if (!(datum.Veteran == null || datum.Veteran == "" ? false : !(datum.Veteran.ToUpper() == "YES")))
+                            {
+                                vHAVeteranEmployeeFlags.Add(new VeteranEmployeeFlag() { NationalId = datum.NationalId, Value = "NO" });
+                            }
+                            else if (!(!(datum.Veteran.ToUpper() == "NO") || datum.NewPersonIndicator == null ? true : !(datum.NewPersonIndicator.ToUpper() == "YES")))
+                            {
+                                vHAVeteranEmployeeFlags.Add(new VeteranEmployeeFlag() { NationalId = datum.NationalId, Value = "YES" });
+                            }
+                            else if ((!(datum.Veteran.ToUpper() == "NO") || datum.PrimaryEligibilityCode == null ? false : datum.PrimaryEligibilityCode.ToUpper() == "EMPLOYEE"))
+                            {
+                                vHAVeteranEmployeeFlags.Add(new VeteranEmployeeFlag() { NationalId = datum.NationalId, Value = "YES" });
+                            }
+
+                        }
+
+                        string isEmp = string.Empty;
+                        if (vHAVeteranEmployeeFlags.Count > 0)
+                        {
+                            isEmp = PatientPersonExtensions.isEmployee(crme_person3["crme_icn"].ToString(), vHAVeteranEmployeeFlags);
+                        }
 
                         crme_person3["crme_ssn"] = response.SocialSecurityNumber;
+                        crme_person3["crme_veteransensitivitylevel"] = PatientPersonExtensions.getSensitivityLevelVHA(config, crme_person3, isEmp);
                         ((EntityCollection)base.PluginExecutionContext.OutputParameters["BusinessEntityCollection"]).Entities.Add(crme_person3);
                     }
                     if (flag3)
@@ -1226,6 +1283,7 @@ namespace PersonSearch.Plugin.Entities.Person
 
         private void handleRequest(string url, string json, string logTable)
         {
+            /*
             HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
@@ -1249,6 +1307,7 @@ namespace PersonSearch.Plugin.Entities.Person
             {
                 base.Logger.WriteDebugMessage("ERROR::Error creating " + logTable + " response record: " + ex.Message);
             }
+            */
         }
 
         private void HandleMVIErrorInUI()

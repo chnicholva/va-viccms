@@ -1,0 +1,135 @@
+﻿<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Veteran Alerts</title>
+    <script type="text/javascript" src="../../ClientGlobalContext.js.aspx"></script>
+    <script type="text/javascript" src="../JScript/SDK.REST.js"></script>
+    <script type="text/javascript" src="../JScript/json2.js"></script>
+    <script type="text/javascript" src="..\JScript\jquery.1.11.min.js"></script>
+    <script type="text/javascript" src="..\JScript\VCCM.USDHelper.js"></script>
+    <script type="text/javascript" src="..\JScript\VCCM.MHVHelper.js"></script>
+    <script type="text/javascript" src="..\VeteranAlerts\JScript\VeteranAlerts.js"></script>
+    <script type="text/javascript" src="..\WebServiceSecurityLib\js\WebServiceSecurityLibrary.js"></script>
+    <link href="css/VeteranAlerts.css" rel="stylesheet">
+</head>
+<body onload="" onfocusout="parent.setEmailRange();" style="overflow-wrap: break-word;">
+    <div id="loadingGifDiv" align="middle" role="alert">
+        <table height="100%" width="100%">
+            <tbody>
+                <tr>
+                    <td align="middle">
+                        <img id="progressImg" alt="Loading, please wait" title="Loading, please wait" src="/_imgs/advfind/progress.gif">
+                        <div>
+                            <p id="progressText"></p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="ms-crm-RefreshDialog-Main-Container" id="deceasedVetContainer" role="alert">
+        <div class="ms-crm-RefreshDialog-Header" id="deceasedVet_tdDialogHeader">
+            <div title="" class="ms-crm-RefreshDialog-Header-Title ms-crm-TextAutoEllipsis" id="deceasedVetHeader" style="width: 75%;">Deceased Veteran Warning</div>
+            <div title="" class="ms-crm-RefreshDialog-Header-Desc" id="deceasedVetDescription">
+            </div>
+            <div title="" class="ms-crm-RefreshDialog-Footer" id="deceasedVetButtonContainer">
+                <label>Do you wish to continue processing this patient record?</label>
+                <button tabindex="1" class="ms-crm-RefreshDialog-Button" id="btn_deceasedVetYes" style="margin-left: 8px;" onclick="btn_deceasedVetYes_click()" type="button">Yes</button>
+                <button tabindex="1" class="ms-crm-RefreshDialog-Button" id="btn_deceasedVetNo" style="margin-left: 8px;" onclick="btn_deceasedVetNo_click()" type="button">No</button>
+            </div>
+            <div class="ms-crm-RefreshDialog-Main"></div>
+        </div>
+    </div>
+
+    <div class="ms-crm-RefreshDialog-Main-Container" id="sensitiveVetContainer" role="alert">
+        <div class="ms-crm-RefreshDialog-Header" id="sensitiveVet_tdDialogHeader">
+            <div title="" class="ms-crm-RefreshDialog-Header-Title ms-crm-TextAutoEllipsis" id="sensitiveVetHeader" style="width: 75%;">Sensitive Veteran Warning</div>
+            <div title="" class="ms-crm-RefreshDialog-Header-Desc" id="sensitiveVetDescription">
+                This record is protected by the Privacy Act of 1974 and the
+                Health Insurance Portability and Accountability Act of 1996.
+                If you elect to proceed, you will be required to prove you
+                have a need to know.  Accessing this patient is tracked, and
+                your station Security Officer will contact you for your
+                justification.
+            </div>
+            <div title="" class="ms-crm-RefreshDialog-Footer" id="sensitiveVetButtonContainer">
+                <label>Do you want to continue processing this patient record?</label>
+                <button tabindex="1" class="ms-crm-RefreshDialog-Button" id="btn_sensitiveVetYes" style="margin-left: 8px;" onclick="btn_sensitiveVetYes_click()" type="button">Yes</button>
+                <button tabindex="2" class="ms-crm-RefreshDialog-Button" id="btn_sensitiveVetNo" style="margin-right: 30px; margin-left: 8px;" onclick="btn_sensitiveVetNo_click()" type="button">No</button>
+            </div>
+            <div class="ms-crm-RefreshDialog-Main"></div>
+        </div>
+    </div>
+
+    <div class="ms-crm-RefreshDialog-Main-Container" id="insufficientRightsContainer">
+        <div class="ms-crm-RefreshDialog-Header" id="insufficientRights_tdDialogHeader">
+            <div title="" class="ms-crm-RefreshDialog-Header-Title ms-crm-TextAutoEllipsis" id="insufficientRightsHeader" style="width: 75%;">Insufficient Permission</div>
+            <div title="" class="ms-crm-RefreshDialog-Header-Desc" id="insufficientRightsDescription">Insufficient Permission</div>
+            <div title="" class="ms-crm-RefreshDialog-Footer" id="insufficientRightsButtonContainer">
+                <label>Click OK to end this session</label>
+                <button tabindex="1" class="ms-crm-RefreshDialog-Button" id="btn_insufficentRightsEndSession" style="margin-left: 8px;" onclick="btn_insufficentRightsEndSession_click(this)" type="button">OK</button>
+                <button tabindex="2" class="ms-crm-RefreshDialog-Button" id="btn_insufficentRightsEscalate" style="margin-left: 8px;" onclick="btn_insufficentRightsEscalate_click()" type="button" title="Escalation not implemented">Escalate</button>
+            </div>
+            <div class="ms-crm-RefreshDialog-Main"></div>
+        </div>
+    </div>
+
+    <div class="ms-crm-RefreshDialog-Main-Container" id="errorContainer" role="alert">
+        <div class="ms-crm-RefreshDialog-Header" id="error_tdDialogHeader">
+            <div class="ms-crm-RefreshDialog-Header-Title ms-crm-TextAutoEllipsis" id="errorHeaderTitle" style="width: 75%;">Error querying ESR for veteran data</div>
+            <div class="ms-crm-RefreshDialog-Header-Desc" id="errorHeaderDescription"></div>
+            <div class="ms-crm-RefreshDialog-Footer" id="errorButtonContainer">
+                <br>
+                <label>Click OK to end this session</label>
+                <button tabindex="1" class="ms-crm-RefreshDialog-Button" id="btn_errorOK" style="margin-left: 8px;" onclick="btn_errorOK_click()" type="button">OK</button>
+                <button tabindex="1" class="ms-crm-RefreshDialog-Button" id="btn_errorTryAgain" style="margin-left: 8px;" onclick="btn_errorTryAgain_click()" type="button">Start Over</button>
+            </div>
+            <div class="ms-crm-RefreshDialog-Main"></div>
+        </div>
+    </div>
+
+    <div class="ms-crm-RefreshDialog-Main-Container" id="vistaUserImpersonationContainer">
+        <div class="ms-crm-RefreshDialog-Header" id="vistaUserImpersonation_tdDialogHeader">
+            <div title="" class="ms-crm-RefreshDialog-Header-Title ms-crm-TextAutoEllipsis" id="vistaUserImpersonationHeader" style="width: 75%;">Non-Prod VistA User Impersonation</div>
+            <div title="" class="ms-crm-RefreshDialog-Header-Desc" id="vistaUserImpersonationDescription">
+                **THIS IS A NON-PROD ENVIRONMENT** You may proceed with Sensitive Veteran Access auditing impersonating Lori Nicholls (613) or as yourself.
+            </div>
+            <div title="" class="ms-crm-RefreshDialog-Footer" id="vistaUserImpersonationFormContainer">
+                <br>
+                <label></label>
+                <button tabindex="1" class="ms-crm-RefreshDialog-Button" id="btn_impersonate" style="margin-left: 8px; width: auto;" onclick="setupVistaIENSearch(true,true)" type="button">Impersonate Lori Nicholls</button>
+                <button tabindex="1" class="ms-crm-RefreshDialog-Button" id="btn_self" style="margin-left: 8px; width: auto;" onclick="setupVistaIENSearch(true,false)" type="button">Search VistA for myself</button>
+            </div>
+            <div class="ms-crm-RefreshDialog-Main"></div>
+        </div>
+    </div>
+
+    <div class="ms-crm-RefreshDialog-Main-Container" id="vistaUsersListContainer">
+        <div class="ms-crm-RefreshDialog-Header" id="vistaUsersList_tdDialogHeader">
+            <div title="" class="ms-crm-RefreshDialog-Header-Title ms-crm-TextAutoEllipsis" id="vistaUsersListHeader" style="width: 75%;">Logging Sensitive Veteran Access</div>
+            <div title="" class="ms-crm-RefreshDialog-Header-Desc" id="vistaUsersListDescription"></div>
+            <div title="" class="ms-crm-RefreshDialog-Footer" id="vistaUsersListFormContainer">
+                <br>
+                <p>VistA returned multiple users; select the correct one that represents YOU.</p>
+            </div>
+            <div class="ms-crm-RefreshDialog-Main"></div>
+        </div>
+    </div>
+
+    <div class="ms-crm-RefreshDialog-Main-Container" id="patientFlagsContainer" role="alert">
+        <div class="ms-crm-RefreshDialog-Header" id="patientFlags_tdDialogHeader">
+            <div title="" class="ms-crm-RefreshDialog-Header-Title ms-crm-TextAutoEllipsis" id="patientFlagsHeader" style="width: 75%;">Patient Flags</div>
+            <div title="" class="ms-crm-RefreshDialog-Header-Desc" id="patientFlagsDescription"></div>
+            <div title="" class="ms-crm-RefreshDialog-Footer" id="patientFlagsFormContainer"></div>
+            <!-- <div class="acknowledge">
+                <button class="ms-crm-RefreshDialog-Button" id="abtn" onclick="btn_flagsYes_click()">Acknowledge</button>
+            </div> -->
+            <div class="ms-crm-RefreshDialog-Main"></div>
+        </div>
+    </div>
+    <!--<div id="developerBypassContainer">
+        <input id="btnDeveloperBypass" type="button" onclick="developerBypass()" title="Click to bypass Veteran Alerts"></input>
+    </div>-->
+
+</body>
+</html>

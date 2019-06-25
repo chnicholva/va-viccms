@@ -58,7 +58,6 @@ namespace PersonSearch.Plugin.Helpers
             ent.Attributes.Add("crme_veteransensitivitylevel", patient.VeteranSensitivityLevel);
             ent.Attributes.Add("crme_edipi", patient.EdiPi);
 
-            List<KeyValuePair<string, string>> list = null;
             string empty = string.Empty;
             if (config.GetSensitiveInfo)
             {
@@ -103,7 +102,7 @@ namespace PersonSearch.Plugin.Helpers
             return ent;
         }
 
-        private static NonVetResponse getVHAVeteranEmployeeFlags(string url, string subKeys, List<string> list, Logger logger)
+        public static NonVetResponse getVHAVeteranEmployeeFlags(string url, string subKeys, List<string> list, Logger logger)
         {
             NonVetRequest request = new NonVetRequest()
             {
@@ -171,7 +170,7 @@ namespace PersonSearch.Plugin.Helpers
         }
 
 
-        private static string isEmployee(string ICN, List<VeteranEmployeeFlag> empList)
+        public static string isEmployee(string ICN, List<VeteranEmployeeFlag> empList)
         {
             string value;
             int num = 0;
@@ -206,7 +205,7 @@ namespace PersonSearch.Plugin.Helpers
             return value;
         }
 
-        private static void HandleSensitivityMasking(VeisConfig config, PatientPerson person, Entity newPerson, string employee)
+        public static void HandleSensitivityMasking(VeisConfig config, PatientPerson person, Entity newPerson, string employee)
         {
             if (config.GetSensitiveInfo && newPerson.Contains("crme_icn") && newPerson["crme_icn"].ToString() != "" && !config.OrgName.ToUpper().Contains("VRE"))
             {
@@ -246,7 +245,7 @@ namespace PersonSearch.Plugin.Helpers
             }
         }
 
-        private static string getSensitivityLevelVHA(VeisConfig config, Entity person, string employee)
+        public static string getSensitivityLevelVHA(VeisConfig config, Entity person, string employee)
         {
             string url = String.Format("{0}{1}{2}", config.VeisConfiguration.SvcConfigInfo.SvcBaseUrl, config.SensitiveEndpoint, person["crme_icn"].ToString());
             //return url;
@@ -339,7 +338,7 @@ namespace PersonSearch.Plugin.Helpers
         }
 
 
-        private static string TryGetICN(PatientPerson person, Logger Logger)
+        public static string TryGetICN(PatientPerson person, Logger Logger)
         {
             try
             {
