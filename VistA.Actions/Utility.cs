@@ -1,17 +1,20 @@
-﻿using Microsoft.Xrm.Sdk;
-using PersonSearch.Plugin.Helpers;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Security;
+using System.Runtime.Serialization.Json;
+using System.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Threading.Tasks;
-using VEIS.Plugins.Messages;
-using VEIS.Plugins.Models;
-using PersonSearch.Plugin;
+using System.Text.RegularExpressions;
+using System.Threading;
+using Microsoft.Xrm.Sdk;
+using VCCM.VistA.Actions.Messages;
+using VCCM.VistA.Actions.Models;
+using static VCCM.VistA.Actions.BaseAction;
 
-namespace VEIS.Plugin.Helpers
+namespace VCCM.VistA.Actions
 {
 
     /// <summary>
@@ -33,14 +36,6 @@ namespace VEIS.Plugin.Helpers
 
         public const string CreateCRMLogEntryRequest = "CRMe#CreateCRMLogEntryRequest";
 
-        const string _urlRestPath = "/api/vimt/{0}";
-        const string _urlParams = "?messageId={0}&messageType=text%2Fjson&isQueued=false";
-
-        const string SEND = "Send";
-        const string SEND_RECEIVE = "SendReceive";
-
-        const string _vimtExceptionMessage = "The Query of the Legacy system timed out, click on refresh to try again";
-        const int DEFAULT_TIMEOUT = 20;
         public static string BuildExceptionMessage(Exception ex)
         {
             StringBuilder sb = new StringBuilder();
@@ -58,9 +53,9 @@ namespace VEIS.Plugin.Helpers
             return sb.ToString();
         }
 
-        public static T SendReceiveVeisRequest<T>(IPluginExecutionContext localContext, VeisConfig config, string messageId, VeisRequest request)
+        public static T SendReceiveVeisRequest<T>(ActionContext localContext, VeisConfig config, string messageId, VeisRequest request)
         {
-            //localContext.TracingService.Trace("Sending Request");
+            localContext.TracingService.Trace("Sending Request");
             return SendReceiveVeisRequest<T>(config, messageId, request);
         }
 
@@ -76,6 +71,7 @@ namespace VEIS.Plugin.Helpers
 
                 using (WebClient client = new WebClient())
                 {
+                    
                     string uri;
                     if (config.VeisConfiguration.SvcConfigInfo.SvcLOBServiceUrl.EndsWith("/"))
                     {
@@ -97,7 +93,7 @@ namespace VEIS.Plugin.Helpers
                             client.Headers.Add(headers[i], headers[i + 1]);
                         }
                     }
-                    string response = client.UploadString(uri, reqBody);
+                    string response = client.UploadString(uri, reqBody.ToString());
                     if (typeof(T) == typeof(string))
                     {
                         return (T)(object)response;
@@ -108,6 +104,7 @@ namespace VEIS.Plugin.Helpers
                     }
                 }
             }
+
             catch (WebException exception)
             {
                 string callResponse = string.Empty;
@@ -124,10 +121,6 @@ namespace VEIS.Plugin.Helpers
                     throw new Exception("The timeout elapsed while attempting to issue the request.", exception);
                 }
                 throw new Exception($"A Web exception occurred while attempting to issue the request. {exception.Message}: {callResponse} Request: {reqBody}", exception);
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidPluginExecutionException(ex.ToString());
             }
         }
 
@@ -148,7 +141,7 @@ namespace VEIS.Plugin.Helpers
 
                 using (WebClient client = new WebClient())
                 {
-                    string uri = string.Empty;
+                    string uri=string.Empty;
                     if ((config.VeisConfiguration.SvcConfigInfo.SvcLOBServiceUrl.EndsWith("/") && (!messageId.StartsWith("/"))) || ((!config.VeisConfiguration.SvcConfigInfo.SvcLOBServiceUrl.EndsWith("/")) && (messageId.StartsWith("/"))))
                     {
                         uri = config.VeisConfiguration.SvcConfigInfo.SvcLOBServiceUrl + messageId;
@@ -221,7 +214,7 @@ namespace VEIS.Plugin.Helpers
                     {
                         uri = config.SvcConfigInfo.SvcLOBServiceUrl + "/" + messageId;
                     }
-
+                    
                     client.AddAuthHeader(config.CRMAuthInfo);
                     Console.WriteLine("Auth Header: " + client.Headers[HttpRequestHeader.Authorization]);
                     client.Headers[HttpRequestHeader.ContentType] = "application/json";
@@ -270,9 +263,14 @@ namespace VEIS.Plugin.Helpers
         /// <param name="callingMethod">Parent Calling Method</param>
         public static void LogError(Uri baseUri, string org, string configFieldName, Guid userId, string method, string message, string callingMethod = null)
         {
+            string patsr_method;
             if (!string.IsNullOrEmpty(callingMethod))
             {
-                method = callingMethod + ": " + method;
+                patsr_method = callingMethod + ": " + method;
+            }
+            else
+            {
+                patsr_method = method;
             }
 
             try
@@ -282,14 +280,14 @@ namespace VEIS.Plugin.Helpers
                     MessageId = Guid.NewGuid().ToString(),
                     OrganizationName = org,
                     UserId = userId,
-                    crme_Name = string.Format("Exception: {0}:{1}", "Error in ", method),
-                    crme_ErrorMessage = message,
-                    crme_Debug = false,
-                    crme_GranularTiming = false,
-                    crme_TransactionTiming = false,
-                    crme_Method = method,
-                    crme_LogLevel = (int)LogLevel.Error,
-                    crme_Sequence = 1,
+                    patsr_Name = string.Format("Exception: {0}:{1}", "Error in ", method),
+                    mcs_errormessage = message,
+                    patsr_Debug = false,
+                    patsr_GranularTiming = false,
+                    patsr_TransactionTiming = false,
+                    patsr_Method = patsr_method,
+                    patsr_LogLevel = (int)LogLevel.Error,
+                    patsr_Sequence = 1,
                     NameofDebugSettingsField = configFieldName
                 };
 
@@ -348,6 +346,54 @@ namespace VEIS.Plugin.Helpers
 
     #region Log Messages
 
+    public class CreateCRMLogEntryRequest
+    {
+        public string MessageId { get; set; }
+
+        public string OrganizationName { get; set; }
+
+        public Guid UserId { get; set; }
+
+        public int patsr_Sequence { get; set; }
+
+        public string patsr_Name { get; set; }
+
+        public string NameofDebugSettingsField { get; set; }
+
+        public string mcs_errormessage { get; set; }
+
+        public string patsr_Method { get; set; }
+
+        public bool patsr_GranularTiming { get; set; }
+
+        public bool patsr_TransactionTiming { get; set; }
+
+        public bool patsr_Debug { get; set; }
+
+        public int patsr_LogLevel { get; set; }
+
+        public Guid patsr_RelatedParentId { get; set; }
+
+        public string patsr_RelatedParentEntityName { get; set; }
+
+        public string patsr_RelatedParentFieldName { get; set; }
+
+        public string patsr_RelatedWebMethodName { get; set; }
+
+        public string patsr_TimeStart { get; set; }
+
+        public string patsr_TimeEnd { get; set; }
+
+        public Decimal patsr_Duration { get; set; }
+    }
+
+    public class CreateCRMLogEntryResponse
+    {
+        public string MessageId { get; set; }
+        public Guid patsr_loggingId { get; set; }
+    }
+
+
 
     #endregion
 
@@ -381,4 +427,6 @@ namespace VEIS.Plugin.Helpers
         public string Message { get; set; }
     }
 
+
 }
+

@@ -46,17 +46,17 @@ namespace VEIS.Plugins.Models
         public string VisnID { get; set; }
         static VEISVASTRefreshSubFacility()
         {
-            VEISVASTRefreshSubFacility.CrmEntityName = "patsr_subfacility";
-            VEISVASTRefreshSubFacility.PrimaryIdentiferFieldName = "patsr_subfacilityid";
-            VEISVASTRefreshSubFacility.CrmPrimaryAttributeName = "patsr_name";
-            VEISVASTRefreshSubFacility.FullStationNameFieldName = "patsr_name";
-            VEISVASTRefreshSubFacility.CommonStationNameFieldName = "patsr_commonstationname";
-            VEISVASTRefreshSubFacility.StationNumberFieldName = "patsr_facilitycode";
-            VEISVASTRefreshSubFacility.ParentFacilityLookupFieldName = "patsr_facility";
-            VEISVASTRefreshSubFacility.DefaultFacilityFlagFieldName = "patsr_facilitydefaultflag";
-            VEISVASTRefreshSubFacility.CoCClasificationFieldName = "patsr_cocclassisfication";
-            VEISVASTRefreshSubFacility.StationIDFieldName = "patsr_vaststationid";
-            VEISVASTRefreshSubFacility.LastUpdatedFieldName = "patsr_lastupdatedfromvaston";
+            VEISVASTRefreshSubFacility.CrmEntityName = "ftp_subfacility";
+            VEISVASTRefreshSubFacility.PrimaryIdentiferFieldName = "ftp_subfacilityid";
+            VEISVASTRefreshSubFacility.CrmPrimaryAttributeName = "ftp_name";
+            VEISVASTRefreshSubFacility.FullStationNameFieldName = "ftp_name";
+            VEISVASTRefreshSubFacility.CommonStationNameFieldName = "ftp_commonstationname";
+            VEISVASTRefreshSubFacility.StationNumberFieldName = "ftp_facilitycode_text";
+            VEISVASTRefreshSubFacility.ParentFacilityLookupFieldName = "ftp_facilityid";
+            VEISVASTRefreshSubFacility.DefaultFacilityFlagFieldName = "ftp_facilitydefaultflag_bool";
+            VEISVASTRefreshSubFacility.CoCClasificationFieldName = "ftp_cocclassification_text";
+            VEISVASTRefreshSubFacility.StationIDFieldName = "ftp_vaststationid_text";
+            VEISVASTRefreshSubFacility.LastUpdatedFieldName = "ftp_lastupdatedfromvaston";
             string[] crmPrimaryAttributeName = new string[] { VEISVASTRefreshSubFacility.CrmPrimaryAttributeName, VEISVASTRefreshSubFacility.FullStationNameFieldName, VEISVASTRefreshSubFacility.CommonStationNameFieldName, VEISVASTRefreshSubFacility.StationNumberFieldName, VEISVASTRefreshSubFacility.ParentFacilityLookupFieldName, VEISVASTRefreshSubFacility.DefaultFacilityFlagFieldName, VEISVASTRefreshSubFacility.CoCClasificationFieldName, VEISVASTRefreshSubFacility.StationIDFieldName };
             VEISVASTRefreshSubFacility.CrmColumns = new ColumnSet(crmPrimaryAttributeName);
         }
@@ -77,7 +77,7 @@ namespace VEIS.Plugins.Models
 
         public Entity MapToCRMRecord(Guid recordId, Dictionary<VASTStation, Entity> parentFacilityDictionary)
         {
-            Entity entity = new Entity("patsr_subfacility");
+            Entity entity = new Entity("ftp_subfacility");
             entity.Id = recordId;
             entity[VEISVASTRefreshSubFacility.StationIDFieldName] = this.StationID;
             entity[VEISVASTRefreshSubFacility.StationNumberFieldName] = this.StationNumber;
@@ -98,7 +98,7 @@ namespace VEIS.Plugins.Models
         {
             EntityReference item;
             bool flag = (!record.Contains(VEISVASTRefreshSubFacility.StationIDFieldName) ? false : (string)record[VEISVASTRefreshSubFacility.StationIDFieldName] == this.StationID);
-            bool flag1 = (!record.Contains(VEISVASTRefreshSubFacility.StationNumberFieldName) ? false : (string)record[VEISVASTRefreshSubFacility.StationNumberFieldName] == this.StationNumber);
+            bool flag1 = (!record.Contains(VEISVASTRefreshSubFacility.StationNumberFieldName) ? false : record[VEISVASTRefreshSubFacility.StationNumberFieldName].ToString() == this.StationNumber);
             bool flag2 = (!record.Contains(VEISVASTRefreshSubFacility.CommonStationNameFieldName) ? false : (string)record[VEISVASTRefreshSubFacility.CommonStationNameFieldName] == this.CommonStationName);
             bool flag3 = (!record.Contains(VEISVASTRefreshSubFacility.CrmPrimaryAttributeName) ? false : (string)record[VEISVASTRefreshSubFacility.CrmPrimaryAttributeName] == this.CRMDisplayname);
             bool flag4 = (!record.Contains(VEISVASTRefreshSubFacility.FullStationNameFieldName) ? false : (string)record[VEISVASTRefreshSubFacility.FullStationNameFieldName] == this.StationName);

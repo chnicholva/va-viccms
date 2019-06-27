@@ -40,16 +40,16 @@ namespace VEIS.Plugins.Models
         public string VisnID { get; set; }
         static VEISVASTRefreshFacility()
         {
-            VEISVASTRefreshFacility.CrmEntityName = "patsr_facility";
-            VEISVASTRefreshFacility.CrmPrimaryIdentiferFieldName = "patsr_facilityid";
-            VEISVASTRefreshFacility.CrmPrimaryAttributeName = "patsr_name";
-            VEISVASTRefreshFacility.FullStationNameFieldName = "patsr_name";
-            VEISVASTRefreshFacility.CommonStationNameFieldName = "patsr_commonstationname";
-            VEISVASTRefreshFacility.StationNumberFieldName = "patsr_facilitycode";
-            VEISVASTRefreshFacility.VISNLookupFieldName = "patsr_visn";
-            VEISVASTRefreshFacility.CoCClasificationFieldName = "patsr_cocclassification";
-            VEISVASTRefreshFacility.StationIDFieldName = "patsr_vaststationid";
-            VEISVASTRefreshFacility.LastUpdatedFieldName = "patsr_lastupdatedfromvaston";
+            VEISVASTRefreshFacility.CrmEntityName = "ftp_facility";
+            VEISVASTRefreshFacility.CrmPrimaryIdentiferFieldName = "ftp_facilityid";
+            VEISVASTRefreshFacility.CrmPrimaryAttributeName = "ftp_name";
+            VEISVASTRefreshFacility.FullStationNameFieldName = "ftp_name";
+            VEISVASTRefreshFacility.CommonStationNameFieldName = "ftp_commonstationname";
+            VEISVASTRefreshFacility.StationNumberFieldName = "ftp_facilitycode";
+            VEISVASTRefreshFacility.VISNLookupFieldName = "ftp_visnid";
+            VEISVASTRefreshFacility.CoCClasificationFieldName = "ftp_cocclassification_text";
+            VEISVASTRefreshFacility.StationIDFieldName = "ftp_vaststationid_text";
+            VEISVASTRefreshFacility.LastUpdatedFieldName = "ftp_lastupdatedfromvaston";
             string[] crmPrimaryAttributeName = new string[] { VEISVASTRefreshFacility.CrmPrimaryAttributeName, VEISVASTRefreshFacility.FullStationNameFieldName, VEISVASTRefreshFacility.CommonStationNameFieldName, VEISVASTRefreshFacility.StationNumberFieldName, VEISVASTRefreshFacility.VISNLookupFieldName, VEISVASTRefreshFacility.CoCClasificationFieldName, VEISVASTRefreshFacility.StationIDFieldName };
             VEISVASTRefreshFacility.CrmColumns = new ColumnSet(crmPrimaryAttributeName);
         }
@@ -67,11 +67,15 @@ namespace VEIS.Plugins.Models
 
         public Entity MapToCRMRecord(Guid recordId, Dictionary<string, Entity> visnDictionary)
         {
-            Entity entity = new Entity("patsr_facility");
+            Entity entity = new Entity("ftp_facility");
             entity.Id = recordId;
             entity[VEISVASTRefreshFacility.CrmPrimaryAttributeName] = this.CRMDisplayname;
             entity[VEISVASTRefreshFacility.StationIDFieldName] = this.StationID;
-            entity[VEISVASTRefreshFacility.StationNumberFieldName] = this.StationNumber;
+            int stationNumber;
+            if (Int32.TryParse(this.StationNumber, out stationNumber))
+            {
+                entity[VEISVASTRefreshFacility.StationNumberFieldName] = stationNumber;
+            }
             entity[VEISVASTRefreshFacility.CommonStationNameFieldName] = this.CommonStationName;
             entity[VEISVASTRefreshFacility.FullStationNameFieldName] = this.StationName;
             entity[VEISVASTRefreshFacility.CoCClasificationFieldName] = this.CoCClassification;
@@ -88,9 +92,9 @@ namespace VEIS.Plugins.Models
         public bool MatchesCRMRecord(Entity record)
         {
             return (!record.Contains(VEISVASTRefreshFacility.StationIDFieldName) ||
-                !((string)record[VEISVASTRefreshFacility.StationIDFieldName] == this.StationID) ||
+                !(record[VEISVASTRefreshFacility.StationIDFieldName].ToString() == this.StationID) ||
                 !record.Contains(VEISVASTRefreshFacility.StationNumberFieldName) ||
-                !((string)record[VEISVASTRefreshFacility.StationNumberFieldName] == this.StationNumber) ||
+                !(record[VEISVASTRefreshFacility.StationNumberFieldName].ToString() == this.StationNumber) ||
                 !record.Contains(VEISVASTRefreshFacility.CommonStationNameFieldName) ||
                 !((string)record[VEISVASTRefreshFacility.CommonStationNameFieldName] == this.CommonStationName) ||
                 !record.Contains(VEISVASTRefreshFacility.CrmPrimaryAttributeName) ||

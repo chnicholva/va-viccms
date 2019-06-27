@@ -140,18 +140,6 @@ namespace PersonSearch.Plugin.Entities.Person
                     }
                 }
 
-                //if (settings.Contains("patsr_vastlistrefreshapiurl") && settings.Contains(servicePathField))
-                //{
-                //    if (settings["patsr_vastlistrefreshapiurl"].ToString().EndsWith("/"))
-                //    {
-                //        config.VeisConfiguration.VASTRefreshFacilityAPI = settings[servicePathField].ToString() + settings["patsr_vastlistrefreshapiurl"].ToString();
-                //    }
-                //    else
-                //    {
-                //        config.VeisConfiguration.VASTRefreshFacilityAPI = settings[servicePathField].ToString() + "/" + settings["patsr_vastlistrefreshapiurl"].ToString();
-                //    }
-                //}
-
                 return config;
             }
             return null;

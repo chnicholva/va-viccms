@@ -102,6 +102,7 @@
     <Compile Include="MVI.PersonSearch.Plugin.Helpers\Runner.cs" />
     <Compile Include="MVI.PersonSearch.Plugin\EnrollmentEligibilityAction.cs" />
     <Compile Include="MVI.PersonSearch.Plugin\Plugin.cs" />
+    <Compile Include="MVI.PersonSearch.Plugin\RefreshFacilitiesAction.cs" />
     <Compile Include="PersonSearch.Plugin.Entities.Person\Data.cs" />
     <Compile Include="PersonSearch.Plugin.Entities.Person\Datum.cs" />
     <Compile Include="PersonSearch.Plugin.Entities.Person\Demographics.cs" />
@@ -186,10 +187,8 @@
     <Compile Include="VEIS.Plugins.Models\GISStationAttributes.cs" />
     <Compile Include="VEIS.Plugins.Models\ParentFacilityMappingMethod.cs" />
     <Compile Include="VEIS.Plugins.Models\Person.cs" />
-    <Compile Include="VEIS.Plugins.Models\SubFacility.cs" />
     <Compile Include="VEIS.Plugins.Models\VASTStation.cs" />
     <Compile Include="VEIS.Plugins.Models\VeisConfiguration.cs" />
-    <Compile Include="VEIS.Plugins.Models\VEISFacility.cs" />
     <Compile Include="VEIS.Plugins.Models\VEISSvcLOBConfiguration.cs" />
     <Compile Include="VEIS.Plugins.Models\VEISVASTRefreshFacility.cs" />
     <Compile Include="VEIS.Plugins.Models\VEISVASTRefreshSubFacility.cs" />

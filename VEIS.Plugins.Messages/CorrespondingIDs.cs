@@ -50,7 +50,7 @@ namespace VEIS.Plugins.Messages
         public string RawValueFromMvi { get; set; }
 
         /// <summary>
-        /// Value of the patsr_facility from CRM after mapping
+        /// Value of the ftp_facility from CRM after mapping
         /// </summary>
         [DataMember(EmitDefaultValue = false)]
         public Guid FacilityId { get; set; }

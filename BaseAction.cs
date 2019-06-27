@@ -12,6 +12,7 @@ using System.Activities;
 using VEIS.Plugins.Models;
 using Microsoft.Xrm.Sdk.Workflow;
 using VEIS.Plugins.Messages;
+using PersonSearch.Plugin.Helpers;
 
 namespace PersonSearch.Plugin
 {
@@ -52,6 +53,78 @@ namespace PersonSearch.Plugin
                 // Obtain the execution context service from the service provider.
                 this.WorkflowExecutionContext = context.GetExtension<IWorkflowContext>();
                 this.OrganizationName = this.WorkflowExecutionContext.OrganizationName;
+            }
+
+            public VeisConfig RetrieveVeisConfig(string servicePathField, string subscriptionKeyField)
+            {
+                Entity settings = RetrieveActiveSettings(
+                                                            "mcs_transactiontiming",
+                                                            "ftp_veisservicebaseurl",
+                                                            "ftp_vastlistrefreshapiurl",
+                                                            "ftp_veisorganizationname",
+                                                            "ftp_veisclientsecret",
+                                                            "ftp_veistenantid",
+                                                            "ftp_veisclientapplicationid",
+                                                            "ftp_veisresourceid",
+                                                            servicePathField,
+                                                            subscriptionKeyField,
+                                                            "mcs_granulartimings",
+                                                            "vre_searchlogtiming",
+                                                            "vre_searchlogsoap",
+                                                            "mcs_unexpectedmessage",
+                                                            "bah_masksensitiveinfo",
+                                                            "bah_retrievesensitivitylevel",
+                                                            "bah_enableauditing",
+                                                            "ftp_employeeendpoint",
+                                                            "ftp_sensitiveendpoint"
+                                                            );
+                if (settings != null)
+                {
+                    VeisConfig config = new VeisConfig()
+                    {
+                        OrgOverride = (settings.Contains("ftp_veisorganizationname")) ? settings["ftp_veisorganizationname"].ToString() : string.Empty,
+                        GetSensitiveInfo = (settings.Contains("bah_retrievesensitivitylevel")) ? (Boolean)settings["bah_retrievesensitivitylevel"] : false,
+                        EnableAuditing = (settings.Contains("bah_enableauditing")) ? (Boolean)settings["bah_enableauditing"] : false,
+                        LogTimer = (settings.Contains("vre_searchlogtiming")) ? (Boolean)settings["vre_searchlogtiming"] : false,
+                        LogSoap = (settings.Contains("vre_searchlogsoap")) ? (Boolean)settings["vre_searchlogsoap"] : false,
+                        EmployeeEndpoint = (settings.Contains("ftp_employeeendpoint")) ? settings.GetAttributeValue<string>("ftp_employeeendpoint") : string.Empty,
+                        SensitiveEndpoint = (settings.Contains("ftp_sensitiveendpoint")) ? settings.GetAttributeValue<string>("ftp_sensitiveendpoint") : string.Empty
+                    };
+                    config.UserId = this.WorkflowExecutionContext.UserId;
+                    config.OrgName = (config.OrgOverride != "" && config.OrgOverride != string.Empty) ? config.OrgOverride : "FTP";
+
+                    config.VeisConfiguration = new VeisConfiguration()
+                    {
+                        CRMAuthInfo = new CRMAuthTokenConfiguration()
+                        {
+                            ClientApplicationId = (settings.Contains("ftp_veisclientapplicationid")) ? settings["ftp_veisclientapplicationid"].ToString() : string.Empty,
+                            ClientSecret = (settings.Contains("ftp_veisclientsecret")) ? settings["ftp_veisclientsecret"].ToString() : string.Empty,
+                            TenantId = (settings.Contains("ftp_veistenantid")) ? settings["ftp_veistenantid"].ToString() : string.Empty,
+                            ResourceId = (settings.Contains("ftp_veisresourceid")) ? settings["ftp_veisresourceid"].ToString() : string.Empty,
+
+                        },
+                        SvcConfigInfo = new VEISSvcLOBConfiguration()
+                        {
+                            ApimSubscriptionKey = (settings.Contains(subscriptionKeyField)) ? settings[subscriptionKeyField].ToString() : string.Empty,
+                        }
+                    };
+
+                    if (settings.Contains("ftp_veisservicebaseurl") && settings.Contains(servicePathField))
+                    {
+                        config.VeisConfiguration.SvcConfigInfo.SvcBaseUrl = settings["ftp_veisservicebaseurl"].ToString();
+                        if (settings["ftp_veisservicebaseurl"].ToString().EndsWith("/"))
+                        {
+                            config.VeisConfiguration.SvcConfigInfo.SvcLOBServiceUrl = settings["ftp_veisservicebaseurl"].ToString() + settings[servicePathField].ToString();
+                        }
+                        else
+                        {
+                            config.VeisConfiguration.SvcConfigInfo.SvcLOBServiceUrl = settings["ftp_veisservicebaseurl"].ToString() + "/" + settings[servicePathField].ToString();
+                        }
+                    }
+
+                    return config;
+                }
+                return null;
             }
 
 
