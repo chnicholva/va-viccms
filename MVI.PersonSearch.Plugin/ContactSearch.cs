@@ -242,7 +242,8 @@ namespace MVI.PersonSearch.Plugin
 						EntityCollection contactCollection = new EntityCollection();
 						foreach (XmlNode childNode in searchNodes[0].ChildNodes)
 						{
-							string text3 = generateSearchFetch(childNode, hshEntityAttribs);
+							string text3 = generateSearchFetch(childNode, hshEntityAttribs, tracingService);
+                            tracingService.Trace("Fetch: " + text3);
 							if (text3 != "SEARCHFIELDNOTINQUERY")
 							{
 								tracingService.Trace(string.Format("Search: {0}, FetchXML: {1}", childNode.Attributes["name"].Value, text3), new object[0]);
@@ -390,47 +391,49 @@ namespace MVI.PersonSearch.Plugin
 			}
 		}
 
-		private string generateSearchFetch(XmlNode searchnode, Hashtable queryfields)
+		private string generateSearchFetch(XmlNode searchnode, Hashtable queryfields, ITracingService tracingService)
 		{
 			StringBuilder stringBuilder = new StringBuilder();
 			StringBuilder stringBuilder2 = new StringBuilder();
+            
 			foreach (XmlNode childNode in searchnode.ChildNodes)
 			{
 				bool flag = false;
 				bool flag2 = false;
 				int result = 0;
-				string value = childNode.Attributes["name"].Value;
-				string value2 = childNode.Attributes["type"].Value;
-				if (value2.ToUpper().StartsWith("STRINGLAST"))
+				string name = childNode.Attributes["name"].Value;
+				string type = childNode.Attributes["type"].Value;
+                tracingService.Trace("Name: " + name + " Type: " + type);
+				if (type.ToUpper().StartsWith("STRINGLAST"))
 				{
-					flag = int.TryParse(value2.ToUpper().Replace("STRINGLAST", ""), out result);
+					flag = int.TryParse(type.ToUpper().Replace("STRINGLAST", ""), out result);
 				}
-				if (value2.ToUpper() == "STARTSWITH")
+				if (type.ToUpper() == "STARTSWITH")
 				{
 					flag2 = true;
 				}
-				if (!queryfields.ContainsKey(value))
+				if (!queryfields.ContainsKey(name))
 				{
 					return "SEARCHFIELDNOTINQUERY";
 				}
-				if (string.IsNullOrWhiteSpace(((QueryFields)queryfields[value]).Value))
+				if (string.IsNullOrWhiteSpace(((QueryFields)queryfields[name]).Value))
 				{
 					return "SEARCHFIELDNOTINQUERY";
 				}
-				stringBuilder.AppendLine($"<attribute name='{value}'/>");
-				if (flag && ((QueryFields)queryfields[value]).Value.Length >= result)
+				stringBuilder.AppendLine($"<attribute name='{name}'/>");
+				if (flag && ((QueryFields)queryfields[name]).Value.Length >= result)
 				{
-					int length = ((QueryFields)queryfields[value]).Value.Length;
-					string arg = ((QueryFields)queryfields[value]).Value.Substring(length - result, result);
-					stringBuilder2.AppendLine($"<condition attribute='{value}' value='{arg}' operator='eq'/>");
+					int length = ((QueryFields)queryfields[name]).Value.Length;
+					string arg = ((QueryFields)queryfields[name]).Value.Substring(length - result, result);
+					stringBuilder2.AppendLine($"<condition attribute='{name}' value='{arg}' operator='eq'/>");
 				}
 				else if (flag2)
 				{
-					stringBuilder2.AppendLine($"<condition attribute='{value}' value='{((QueryFields)queryfields[value]).Value}' operator='begins-with'/>");
+					stringBuilder2.AppendLine($"<condition attribute='{name}' value='{((QueryFields)queryfields[name]).Value}' operator='begins-with'/>");
 				}
 				else
 				{
-					stringBuilder2.AppendLine($"<condition attribute='{value}' value='{((QueryFields)queryfields[value]).Value}' operator='eq'/>");
+					stringBuilder2.AppendLine($"<condition attribute='{name}' value='{((QueryFields)queryfields[name]).Value}' operator='eq'/>");
 				}
 			}
 			string format = "<fetch distinct='false' mapping='logical' output-format='xml-platform' version='1.0' no-lock='true'>\r\n                            <entity name='contact'>\r\n                            {0}\r\n                            <attribute name='contactid'/>\r\n                            <filter type='and'>\r\n                            {1}\r\n                            </filter>\r\n                            </entity>\r\n                            </fetch>";
