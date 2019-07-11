@@ -105,8 +105,10 @@
     <Compile Include="MVI.PersonSearch.Plugin.Helpers\ILogger.cs" />
     <Compile Include="MVI.PersonSearch.Plugin.Helpers\Logger.cs" />
     <Compile Include="MVI.PersonSearch.Plugin.Helpers\Runner.cs" />
+    <Compile Include="MVI.PersonSearch.Plugin\ContactSearch.cs" />
     <Compile Include="MVI.PersonSearch.Plugin\EnrollmentEligibilityAction.cs" />
     <Compile Include="MVI.PersonSearch.Plugin\Plugin.cs" />
+    <Compile Include="MVI.PersonSearch.Plugin\QueryFields.cs" />
     <Compile Include="MVI.PersonSearch.Plugin\RefreshFacilitiesAction.cs" />
     <Compile Include="PersonSearch.Plugin.Entities.Person\Data.cs" />
     <Compile Include="PersonSearch.Plugin.Entities.Person\Datum.cs" />
