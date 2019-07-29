@@ -931,7 +931,7 @@ namespace PersonSearch.Plugin.Entities.Person
                 if (response.ExceptionOccured)
                 {
                     crme_person["crme_exceptionoccured"] = true;
-                    crme_person["crme_exceptionbessage"] = "An unexpected error occured during the MVI search. Please try again or contact your system administrator if the problem persists.";
+                    crme_person["crme_exceptionmessage"] = "An unexpected error occured during the MVI search. Please try again or contact your system administrator if the problem persists.";
                 }
                 if (response.CorrespondingIdList == null || !response.CorrespondingIdList.Any())
                 {

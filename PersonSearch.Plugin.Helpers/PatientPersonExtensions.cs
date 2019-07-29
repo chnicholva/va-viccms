@@ -247,56 +247,70 @@ namespace PersonSearch.Plugin.Helpers
 
         public static string getSensitivityLevelVHA(VeisConfig config, Entity person, string employee)
         {
-            string url = String.Format("{0}{1}{2}", config.VeisConfiguration.SvcConfigInfo.SvcBaseUrl, config.SensitiveEndpoint, person["crme_icn"].ToString());
-            //return url;
-            string str;
-            bool flag;
-
-            HttpWebRequest apiRequest = (HttpWebRequest)WebRequest.Create(url);
-            string subKeys = config.VeisConfiguration.SvcConfigInfo.ApimSubscriptionKey;
-            if (subKeys.Length > 0)
+            string str = string.Empty;
+            if (person != null && person.Contains("crme_icn"))
             {
-                string[] headers = subKeys.Split('|');
-                for (int i = 0; i < headers.Length; i = i + 2)
+                string url = String.Format("{0}{1}{2}", config.VeisConfiguration.SvcConfigInfo.SvcBaseUrl, config.SensitiveEndpoint, person["crme_icn"].ToString());
+                //return url;
+                bool flag = false;
+
+                HttpWebRequest apiRequest = (HttpWebRequest)WebRequest.Create(url);
+                string subKeys = config.VeisConfiguration.SvcConfigInfo.ApimSubscriptionKey;
+                if (subKeys.Length > 0)
                 {
-                    apiRequest.Headers.Add(headers[i], headers[i + 1]);
+                    string[] headers = subKeys.Split('|');
+                    for (int i = 0; i < headers.Length; i = i + 2)
+                    {
+                        apiRequest.Headers.Add(headers[i], headers[i + 1]);
+                    }
                 }
-            }
-            apiRequest.Method = "GET";
+                apiRequest.Method = "GET";
 
-            WebResponse webResponse = apiRequest.GetResponse();
-            Stream webStream = webResponse.GetResponseStream();
-            StreamReader responseReader = new StreamReader(webStream);
-            string str1 = responseReader.ReadToEnd();
-            responseReader.Close();
-            //return str1;
-            person["crme_veteransensitivitylevel"] = str1;
-            ESRSensitiveObject eSRSensitiveObject = JsonHelper.Deserialize<ESRSensitiveObject>(str1);
-            //TODO Create contact person.PreferredFacility = (eSRSensitiveObject.Data.Demographics != null ? eSRSensitiveObject.Data.Demographics.PreferredFacility : "");
-            if (!(employee == string.Empty))
-            {
-                str = (!(employee == "YES") ? string.Concat(eSRSensitiveObject.Data.SensitivityInfo.SensityFlag.ToLower(), ":false") : "true:true");
-            }
-            else if (!config.OrgName.Contains("VCL"))
-            {
-                str = ((eSRSensitiveObject.Data.EnrollmentDeterminationInfo == null || eSRSensitiveObject.Data.EnrollmentDeterminationInfo.PrimaryEligibility == null || eSRSensitiveObject.Data.EnrollmentDeterminationInfo.PrimaryEligibility.Type == null ? true : !(eSRSensitiveObject.Data.EnrollmentDeterminationInfo.PrimaryEligibility.Type.ToUpper() == "EMPLOYEE")) ? string.Concat(eSRSensitiveObject.Data.SensitivityInfo.SensityFlag.ToLower(), ":false") : string.Concat(eSRSensitiveObject.Data.SensitivityInfo.SensityFlag.ToLower(), ":true"));
-            }
-            else
-            {
-                if (eSRSensitiveObject.Data.EnrollmentDeterminationInfo == null || eSRSensitiveObject.Data.EnrollmentDeterminationInfo.PrimaryEligibility == null || eSRSensitiveObject.Data.EnrollmentDeterminationInfo.PrimaryEligibility.Type == null)
+                WebResponse webResponse = apiRequest.GetResponse();
+                Stream webStream = webResponse.GetResponseStream();
+                StreamReader responseReader = new StreamReader(webStream);
+                string str1 = responseReader.ReadToEnd();
+                responseReader.Close();
+                //return str1;
+                person["crme_veteransensitivitylevel"] = str1;
+
+                ESRSensitiveObject eSRSensitiveObject = JsonHelper.Deserialize<ESRSensitiveObject>(str1);
+                if (eSRSensitiveObject.ErrorOccurred)
                 {
-                    flag = true;
+                    person["crme_exceptionoccured"] = true;
+                    person["crme_exceptionmessage"] = eSRSensitiveObject.ErrorMessage;
+                    return str;
                 }
                 else
                 {
-                    flag = (eSRSensitiveObject.Data.EnrollmentDeterminationInfo.PrimaryEligibility.Type.ToUpper() == "EMPLOYEE" ? false : !(eSRSensitiveObject.Data.EnrollmentDeterminationInfo.Veteran.ToUpper() == "FALSE"));
+                    //TODO Create contact person.PreferredFacility = (eSRSensitiveObject.Data.Demographics != null ? eSRSensitiveObject.Data.Demographics.PreferredFacility : "");
+                    if (!(employee == string.Empty))
+                    {
+                        str = (!(employee == "YES" && eSRSensitiveObject.Data != null && eSRSensitiveObject.Data.SensitivityInfo != null && eSRSensitiveObject.Data.SensitivityInfo.SensityFlag != null) ? string.Concat(eSRSensitiveObject.Data.SensitivityInfo.SensityFlag.ToLower(), ":false") : "true:true");
+                    }
+                    else if (!config.OrgName.Contains("VCL"))
+                    {
+                        str = ((eSRSensitiveObject.Data == null || eSRSensitiveObject.Data.EnrollmentDeterminationInfo == null || eSRSensitiveObject.Data.EnrollmentDeterminationInfo.PrimaryEligibility == null || eSRSensitiveObject.Data.EnrollmentDeterminationInfo.PrimaryEligibility.Type == null ? true : !(eSRSensitiveObject.Data.EnrollmentDeterminationInfo.PrimaryEligibility.Type.ToUpper() == "EMPLOYEE")) ? string.Concat(eSRSensitiveObject.Data.SensitivityInfo.SensityFlag.ToLower(), ":false") : string.Concat(eSRSensitiveObject.Data.SensitivityInfo.SensityFlag.ToLower(), ":true"));
+                    }
+                    else
+                    {
+                        if (eSRSensitiveObject.Data == null || eSRSensitiveObject.Data.EnrollmentDeterminationInfo == null || eSRSensitiveObject.Data.EnrollmentDeterminationInfo.PrimaryEligibility == null || eSRSensitiveObject.Data.EnrollmentDeterminationInfo.PrimaryEligibility.Type == null)
+                        {
+                            flag = true;
+                        }
+                        else if (eSRSensitiveObject.Data != null && eSRSensitiveObject.Data.EnrollmentDeterminationInfo != null && eSRSensitiveObject.Data.EnrollmentDeterminationInfo.PrimaryEligibility != null)
+                        {
+                            flag = (eSRSensitiveObject.Data.EnrollmentDeterminationInfo.PrimaryEligibility.Type.ToUpper() == "EMPLOYEE" ? false : !(eSRSensitiveObject.Data.EnrollmentDeterminationInfo.Veteran.ToUpper() == "FALSE"));
+                        }
+                        if (eSRSensitiveObject.Data != null && eSRSensitiveObject.Data.SensitivityInfo != null && eSRSensitiveObject.Data.SensitivityInfo.SensityFlag != null)
+                        {
+                            str = (flag ? string.Concat(eSRSensitiveObject.Data.SensitivityInfo.SensityFlag.ToLower(), ":false") : string.Concat(eSRSensitiveObject.Data.SensitivityInfo.SensityFlag.ToLower(), ":true"));
+                        }
+                    }
                 }
-                str = (flag ? string.Concat(eSRSensitiveObject.Data.SensitivityInfo.SensityFlag.ToLower(), ":false") : string.Concat(eSRSensitiveObject.Data.SensitivityInfo.SensityFlag.ToLower(), ":true"));
             }
 
             return str;
-
-
         }
 
         private static void TryGetMviQueryParams(PatientPerson person, Entity newPerson, Logger Logger)

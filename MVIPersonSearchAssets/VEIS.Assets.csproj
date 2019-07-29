@@ -64,9 +64,17 @@
     <Content Include="Charts\test.html" />
     <Content Include="Charts\test_orig.html" />
     <Content Include="ftp_\MVI\js\MVIPersonSearch.js" />
+    <Content Include="ftp_\PCMMPlaceHolder.html" />
+    <Content Include="ftp_\PCMMTeamDisplay.html" />
+    <Content Include="ftp_\Request\JScript\main.js" />
     <Content Include="ftp_\VeteranAlerts\VeteranAlerts.css" />
     <Content Include="ftp_\VeteranAlerts\VeteranAlerts.html" />
     <Content Include="ftp_\VeteranAlerts\VeteranAlerts.js" />
+    <Content Include="ftp_\Veteran\JScript\main.js" />
+    <Content Include="ftp_\Veteran\JScript\pcmm.js" />
+    <Content Include="ftp_\Veteran\JScript\pcmmteamdisplay.js" />
+    <Content Include="ftp_\Veteran\PCMMTeamDisplay.html" />
+    <Content Include="ftp_\VistaMultiNote\FrequentlyUsedControls\js\FrequentlyUsedControlScriptLib.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
