@@ -55,8 +55,10 @@ function recurseChildWindows(w) {
 }
 function form_onLoad() {
     debugger;
+    /*
     window.top.onerror = error_handler;
     recurseChildWindows(window.top);
+    */
     var formType = Xrm.Page.ui.getFormType();
     var reasonData = getCurrentReasonForRequest();
     if (reasonData != null) {
