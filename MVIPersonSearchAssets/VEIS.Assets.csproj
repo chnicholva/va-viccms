@@ -63,6 +63,7 @@
     <Content Include="Charts\ServConnDisabilitiesGridStyle.css" />
     <Content Include="Charts\test.html" />
     <Content Include="Charts\test_orig.html" />
+    <Content Include="ftp_\JScript\DialogOverrides.js" />
     <Content Include="ftp_\MVI\js\MVIPersonSearch.js" />
     <Content Include="ftp_\PCMMPlaceHolder.html" />
     <Content Include="ftp_\PCMMTeamDisplay.html" />

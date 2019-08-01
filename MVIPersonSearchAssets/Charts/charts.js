@@ -250,6 +250,8 @@ function setChartSourceFromButtonConfig(thisButtonConfig, additionalParams) {
                         data = data.replace("\"btnCreateAddend\"", "\"btnCreateAddend\" style=\"display:none\"");
                         data = data.replace("\"btnNotesSigner\"", "\"btnNotesSigner\" style=\"display:none\"");
                         data = data.replace("\"btnAddSigner\"", "\"btnAddSigner\" style=\"display:none\"");
+                        data = data.replace(new RegExp('glyphicon glyphicon-info-sign', 'g'), "fa fa-info-circle");
+
                         //inject our js into this doc
                         data = data.replace(retrievedSettings.ftp_VEISContentSiteURL + "Scripts/Views/WidgetDateFilter.js", context.getClientUrl() + "/WebResources/ftp_/Veteran/JScript/datefilter.js");
                         var iFrame = $('#thechart');

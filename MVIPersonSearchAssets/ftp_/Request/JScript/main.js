@@ -36,29 +36,14 @@ var _retrievedSettings = null,
     _loadedOn = new Date(),
     _labsUseSecureAPI = true;
 
+
 function formResolved() {
     debugger;
     Xrm.Page.data.refresh(save);
 }
 
-function error_handler(message, source, lineno, colno, error) {
-    this.console.log('Error caught: ' + message + ' ' + error + ' ' + source);
-    return false;
-}
-function recurseChildWindows(w) {
-    if (w !== undefined && w != null && w.frames != null) {
-        for (var i = 0; i < w.frames.length; i++) {
-            w.onerror = error_handler;
-            recurseChildWindows(w.frames[i]);
-        }
-    }
-}
 function form_onLoad() {
-    debugger;
-    /*
-    window.top.onerror = error_handler;
-    recurseChildWindows(window.top);
-    */
+
     var formType = Xrm.Page.ui.getFormType();
     var reasonData = getCurrentReasonForRequest();
     if (reasonData != null) {
@@ -230,7 +215,10 @@ function ShowHideTabByUserRoleName() {
     writeToConsole("Pharmacy Validation Tab visible? " + Xrm.Page.ui.tabs.get("Tab_PharmacyValidation").getVisible());
 
     //Refresh Tabbed Control
-    Xrm.Page.getControl('WebResource_HorizontalTabs').setSrc(Xrm.Page.getControl('WebResource_HorizontalTabs').getSrc());
+    //Xrm.Page.getControl('WebResource_HorizontalTabs').setSrc(Xrm.Page.getControl('WebResource_HorizontalTabs').getSrc());
+    var tabs = parent.document.getElementById("WebResource_HorizontalTabs") ? parent.document.getElementById("WebResource_HorizontalTabs") : parent.document.getElementById("header_WebResource_HorizontalTabs");
+    if (tabs != null)
+        tabs.src = tabs.src;
 
     //Xrm.Page.ui.tabs.get("Tab_ActionTaken").setVisible(showPharmacyValidationAndActionTakenTabs);
 
@@ -488,7 +476,7 @@ function ftp_reasonforrequest_onChange(pPharmacyBoolean, pPactBoolean, pFiredOnL
 
     //Refresh Tabbed Control	
     //Xrm.Page.getControl('WebResource_HorizontalTabs').setSrc(Xrm.Page.getControl('WebResource_HorizontalTabs').getSrc());
-    var tabs = document.getElementById("header_WebResource_HorizontalTabs");
+    var tabs = parent.document.getElementById("WebResource_HorizontalTabs") ? parent.document.getElementById("WebResource_HorizontalTabs") : parent.document.getElementById("header_WebResource_HorizontalTabs");
     if (tabs != null)
         tabs.src = tabs.src;
 
@@ -574,7 +562,7 @@ function ftp_reasonforrequest_onChange(pPharmacyBoolean, pPactBoolean, pFiredOnL
 
     //Refresh Tabbed Control	
     //Xrm.Page.getControl('WebResource_HorizontalTabs').setSrc(Xrm.Page.getControl('WebResource_HorizontalTabs').getSrc());
-    var tabs = document.getElementById("header_WebResource_HorizontalTabs");
+    var tabs = parent.document.getElementById("WebResource_HorizontalTabs") ? parent.document.getElementById("WebResource_HorizontalTabs") : parent.document.getElementById("header_WebResource_HorizontalTabs");
     if (tabs != null)
         tabs.src = tabs.src;
 
@@ -656,7 +644,7 @@ function ftp_reasonforrequest_onChange(pPharmacyBoolean, pPactBoolean, pFiredOnL
     }
     //Refresh Tabbed Control	
     //Xrm.Page.getControl('WebResource_HorizontalTabs').setSrc(Xrm.Page.getControl('WebResource_HorizontalTabs').getSrc());
-    var tabs = document.getElementById("header_WebResource_HorizontalTabs");
+    var tabs = parent.document.getElementById("WebResource_HorizontalTabs") ? parent.document.getElementById("WebResource_HorizontalTabs") : parent.document.getElementById("header_WebResource_HorizontalTabs");
     if (tabs != null)
         tabs.src = tabs.src;
 }
@@ -1473,13 +1461,6 @@ function ftp_assigneetype_onChange() {
             }
 
             if (formType == 2) {
-
-
-
-
-
-
-
                 var vetId = Xrm.Page.getAttribute("customerid").getValue()[0].id;
                 var veteran = retrieveSingleVeteran(vetId);
                 var vetFacility = veteran.d.ftp_FacilityId;
