@@ -240,7 +240,6 @@ namespace PersonSearch.Plugin.Entities.Person
                                     personSearchRequest.Debug = false;
                                     personSearchRequest.LogSoap = config.LogSoap;
                                     personSearchRequest.LogTiming = config.LogTimer;
-                                    
                                     string message = searchType == "SearchByIdentifier" ? "SearchMessage" : "SearchPerson";
 
                                     PersonSearchResponse personSearchResponse2 = WebApiUtility.SendReceiveVeisRequest<PersonSearchResponse>(config, message, personSearchRequest);

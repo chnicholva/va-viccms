@@ -26,22 +26,22 @@ namespace VCCM.VistA.Actions
                 {
                     string stringRequest = this.Request.Get<string>(context);
 
-                    Entity settings = localContext.RetrieveActiveSettings("ftp_viaservicebaseurl", "ftp_mvisubscriptionkey");
+                    Entity settings = localContext.RetrieveActiveSettings("ftp_veisservicebaseurl", "ftp_emrserviceurl", "ftp_mvisubscriptionkey");
                     localContext.Trace("Settings retrieved.");
-                    string apiUrl = settings.GetAttributeValue<string>("ftp_viaservicebaseurl") + "/EmrService";
+                    string apiUrl = settings.GetAttributeValue<string>("ftp_viaservicebaseurl") + settings.GetAttributeValue<string>("ftp_emrserviceurl");
                     //string apiUrl = "https://vaww.viapreprod.va.gov/via-webservices/services/EmrService";
 
                     HttpWebRequest apiRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
                     //  implement subscription key
-                    //string subKeys = settings.GetAttributeValue<string>("ftp_mvisubscriptionkey");
-                    //if (subKeys.Length > 0)
-                    //{
-                    //    string[] headers = subKeys.Split('|');
-                    //    for (int i = 0; i < headers.Length; i = i + 2)
-                    //    {
-                    //        apiRequest.Headers.Add(headers[i], headers[i + 1]);
-                    //    }
-                    //}
+                    string subKeys = settings.GetAttributeValue<string>("ftp_mvisubscriptionkey");
+                    if (subKeys.Length > 0)
+                    {
+                        string[] headers = subKeys.Split('|');
+                        for (int i = 0; i < headers.Length; i = i + 2)
+                        {
+                            apiRequest.Headers.Add(headers[i], headers[i + 1]);
+                        }
+                    }
                     apiRequest.Method = "POST";
                     apiRequest.ContentType = "application/xml";
                     string postData = stringRequest;
@@ -61,8 +61,6 @@ namespace VCCM.VistA.Actions
 
                     //this.VeisRawResponse.Set(localContext.ActivityContext, apiStringResponse);
                     this.Response.Set(localContext.ActivityContext, apiStringResponse);
-                    
-                    //this.Response.Set(localContext.ActivityContext, stringRequest);
                 }
             }
             catch (Exception ex)
