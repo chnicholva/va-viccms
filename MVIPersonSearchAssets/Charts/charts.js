@@ -26,6 +26,7 @@ $(document).ready(function () {
     context = getContext();
     configData = null;
     parseDataParametersFromUrl(location.search);
+    addButtonHandlers();
 
 });
 
@@ -247,7 +248,7 @@ function setChartSourceFromButtonConfig(thisButtonConfig, additionalParams) {
                             "for(var i =0; i<keys.length;i = i+2) { xhr.setRequestHeader(keys[i], keys[i+1]); }" +
                             "},"
                         );
-                        data = data.replace("\"btnCreateAddend\"", "\"btnCreateAddend\" style=\"display:none\"");
+                        //data = data.replace("\"btnCreateAddend\"", "\"btnCreateAddend\" style=\"display:none\"");
                         data = data.replace("\"btnNotesSigner\"", "\"btnNotesSigner\" style=\"display:none\"");
                         data = data.replace("\"btnAddSigner\"", "\"btnAddSigner\" style=\"display:none\"");
                         data = data.replace(new RegExp('glyphicon glyphicon-info-sign', 'g'), "fa fa-info-circle");
@@ -282,6 +283,45 @@ function setChartSourceFromButtonConfig(thisButtonConfig, additionalParams) {
         }
     }
 
+}
+function addButtonHandlers() {
+    //add some event handlers...
+    window.addEventListener(
+        "message",
+        function (pMessageContent) {
+            if (!!pMessageContent && !!pMessageContent.data && (typeof pMessageContent.data == "object") && !!pMessageContent.data.buttonClicked && !!pMessageContent.data.data) {
+                if (!!retrievedSettings && !!context && !!configData) {
+                    if (!!pMessageContent.data.data.noteUId) {
+                        switch (pMessageContent.data.buttonClicked) {
+                            case "btnCreateAddend":
+                                openNewAddendumForm(pMessageContent.data.data.noteUId);
+                                break;
+                            case "btnNotesSigner":
+                                //openCRMRecordForAdditionalSigners(pMessageContent.data.data.noteUId, "ftp_progressnote", "ftp_integrationnoteid", "ftp_patient");
+                                openNewAdditionalSignerForm(pMessageContent.data.data.noteUId, "note");
+                                break;
+                            case "btnAddSigner":
+                                //openCRMRecordForAdditionalSigners(pMessageContent.data.data.noteUId, "ftp_addendum", "ftp_AddendumNoteID", "ftp_Veteran");
+                                openNewAdditionalSignerForm(pMessageContent.data.data.noteUId, "addendum");
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    else {
+                        alert("Cannot " + (pMessageContent.data.buttonClicked == "btnCreateAddend" ? " add addendum" : " add signers") + ". VistA note ID not provided.");
+                    }
+                }
+                else {
+                    //missing config information on page
+                }
+            }
+            else {
+                alert("Message from iFrame is missing required information.");
+            }
+        }
+
+    );
 }
 function openNewAddendumForm(pNoteVistAId) {
     //open ftp_addendum form to create new addendum attached to note in VistA

@@ -26,7 +26,7 @@ namespace PersonSearch.Plugin
             return webClient;
         }
 
-        private static AzureAccessToken GetAccessToken(CRMAuthTokenConfiguration crmAuthInfo)
+        public static AzureAccessToken GetAccessToken(CRMAuthTokenConfiguration crmAuthInfo)
         {
             AzureAccessToken token = null;
             using (WebClient client = new WebClient())

@@ -21,20 +21,13 @@ namespace PersonSearch.Plugin
     {
         protected override void Execute(CodeActivityContext context)
         {
-            try
+            using (var localContext = new ActionContext(context))
             {
-                using (var localContext = new ActionContext(context))
-                {
-                    //  retriev veis config
-                    VeisConfig config = localContext.RetrieveVeisConfig("ftp_mviserviceurl", "ftp_mvisubscriptionkey");
-                    //  get token
-                    WebApiUtility.
-                    //this.Response = 
-                }
-            }
-            catch(Exception ex)
-            {
-
+                //  retriev veis config
+                VeisConfig config = localContext.RetrieveVeisConfig("ftp_mviserviceurl", "ftp_mvisubscriptionkey");
+                var token = AuthExtensions.GetAccessToken(config.VeisConfiguration.CRMAuthInfo);
+                //  get token
+                this.Response.Set(context, $"{token.token_type} {token.access_token}");
             }
         }
 
