@@ -8,7 +8,7 @@
     <LangVersion>7</LangVersion>
     <AssemblyName>VCCM.VEIS.MVI.PersonSearch.Plugin</AssemblyName>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <TargetFrameworkProfile />
