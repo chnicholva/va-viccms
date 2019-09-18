@@ -1,0 +1,13 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">Copies or appends the article URL to the Clipboard.</SPAN><o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>data</STRONG></TD>
+<TD>Data that you want to be copied. You can also use replacement parameters. For example: data=[[$context.title]]</TD></TR>
+<TR>
+<TD><STRONG>append</STRONG></TD>
+<TD>Indicates whether or not to append the data to the Clipboard. Set true to append; otherwise set false. For example: append=false.
+</TD></TR></TBODY></TABLE></BODY></HTML>

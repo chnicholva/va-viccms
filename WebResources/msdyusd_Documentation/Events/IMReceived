@@ -1,0 +1,12 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>This event is fired when an agent receives an IM.&nbsp; Typically this would be used to update the display to provide feedback to the user that they have received an IM and needs attention.<o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>SessionId</STRONG></TD>
+<TD>The SessionId of the session on which the chat recieved an IM update.</TD></TR>
+<TR>
+<TD><STRONG>Text</STRONG></TD>
+<TD>Optionally includes the text that was received.</TD></TR></TBODY></TABLE></BODY></HTML>

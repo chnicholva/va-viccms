@@ -1,0 +1,3 @@
+<HTML><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY><FONT size=2 face="Tahoma, Verdana, Arial">Invoked after all the initialization is complete during the agent desktop startup. This event is invoked only once at the agent desktop startup, and you could use this event to set themes and do other startup actions.</FONT></BODY></HTML>

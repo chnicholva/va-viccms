@@ -1,0 +1,9 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Invoked when the page has finished loading.<o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>url</STRONG></TD>
+<TD>The URL of the page that has finished loading.</TD></TR></TBODY></TABLE><BR>On a Microsoft Dynamics CRM page type of hosted control, this event is invoked after the data has been saved to the replacement parameter. This event is invoked only once irrespective of the multiple BrowserDocumentComplete events invoked by the individual frames within the page.</BODY></HTML>

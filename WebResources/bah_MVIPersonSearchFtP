@@ -1,0 +1,574 @@
+<html><head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" charset="utf-8">
+    <title>Person Search</title>
+
+    <style>
+        fieldset {
+            color: rgb(0,0,0);
+            direction: ltr;
+            font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlphaSans","S60 Sans",Arial,sans-serif;
+            font-size: 16px;
+            line-height: 20px;
+            font-weight: 100;
+            margin-bottom: 14px;
+            margin-left: 0;
+            margin-right: 0;
+            margin-top: 0;
+            background-color: rgb(255,255,255);
+            padding: 2px;
+            border: solid 0 #ffffff;
+            width: 100%;
+        }
+
+        .showHide {
+            cursor: pointer;
+        }
+
+        .noBorder {
+            border: none;
+        }
+
+        table {
+            border-collapse: collapse;
+            font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlphaSans","S60 Sans",Arial,sans-serif;
+            width: 705px;
+        }
+
+        .StationTable {
+            border-collapse: collapse;
+            font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlphaSans","S60 Sans",Arial,sans-serif;
+            width: 200px;
+        }
+
+        th {
+            background-color: #ffffff;
+            color: black;
+            font-family: "Segoe UI Light","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlphaSans","S60 Sans",Arial,sans-serif;
+            font-size: 16px;
+            line-height: 20px;
+            font-weight: 600;
+            white-space: nowrap;
+            text-align: left;
+        }
+
+        td {
+            padding: 5px;
+            white-space: nowrap;
+        }
+
+        .odd {
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .even {
+            background-color: whitesmoke;
+            cursor: pointer;
+        }
+
+        .odd:hover {
+            background-color: #99ccff;
+            color: #800000;
+        }
+
+        .even:hover {
+            background-color: #99ccff;
+            color: #800000;
+        }
+
+        .waitDialog {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 250px;
+            height: 50px;
+            margin: -101px 0 0 -251px;
+            background: rgb(255, 255, 255);
+            border: 1px solid black;
+        }
+
+            .waitDialog p {
+                padding: 5px;
+                margin: 5px;
+                text-align: center;
+            }
+
+        #stationTmpDialog {
+            width: 275px;
+        }
+
+        #deathAndSensitivityTmpDialog {
+            width: 280px;
+        }
+
+        .deceasedDateText {
+            color: red;
+            font-size: 16px;
+        }
+
+        #creatingVeteranTmpDialog {
+            width: 500px;
+        }
+
+        div#tmpDialog {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 250px;
+            height: 50px;
+            margin: -101px 0 0 -251px;
+            background: rgb(255, 255, 255);
+            border: 1px solid black;
+        }
+
+            div#tmpDialog p {
+                padding: 5px;
+                margin: 5px;
+                text-align: center;
+            }
+
+        input {
+            background-color: rgba(255,255,255,0);
+            border-color: rgb(186,186,186);
+            border-width: 1px;
+            border-style: solid;
+            color: rgb(0,0,0);
+            font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlphaSans","S60 Sans",Arial,sans-serif;
+            font-size: 14.06px;
+            height: 30px;
+            line-height: normal;
+        }
+
+        div {
+            color: rgb(0,0,0);
+            direction: ltr;
+            float: left;
+            font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlphaSans","S60 Sans",Arial,sans-serif;
+            font-size: 12.06px;
+            line-height: 17px;
+            padding-bottom: 4px;
+            padding-top: 0;
+            text-align: left;
+        }
+
+        button {
+            background-color: rgb(0,32,80);
+            border-color: rgb(255,255,255);
+            border-style: none;
+            border-width: 0px;
+            color: rgb(255,255,255);
+            direction: ltr;
+            font-family: "Segoe UI Semibold","Segoe UI Web Semibold","Segoe UI Web Regular","Segoe UI","SegoeUI Symbol","HelveticaNeue-Medium","Helvetica Neue",Arial,sans-serif;
+            font-size: 14.06px;
+            height: 30px;
+            line-height: 20px;
+            min-width: 84.4px;
+            padding-bottom: 10px;
+            padding-left: 12px;
+            padding-right: 12px;
+            padding-top: 5px;
+            margin-right: 6px;
+        }
+
+        h1 {
+            font-family: 'Segoe UI',Tahoma,Arial;
+            font-weight: 100;
+            color: #262626;
+            font-size: 36px;
+            line-height: 20px;
+            margin-bottom: 12px;
+        }
+
+        h2 {
+            color: rgb(0,0,0);
+            direction: ltr;
+            font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlphaSans","S60 Sans",Arial,sans-serif;
+            font-size: 14.06px;
+            line-height: 20px;
+            font-weight: 100;
+            margin-bottom: 14px;
+            margin-left: 0px;
+            margin-right: 0px;
+            margin-top: 0px;
+        }
+
+        h3 {
+            font-family: 'Segoe UI',Tahoma,Arial;
+            font-weight: 100;
+            color: #262626;
+            font-size: 22px;
+            line-height: 10px;
+            margin-bottom: 12px;
+            margin-top: 8px;
+        }
+
+        fieldset {
+            border: 0;
+        }
+
+        span {
+            color: red;
+            font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlphaSans","S60 Sans",Arial,sans-serif;
+            font-size: 14.06px;
+            font-weight: 100;
+            display: none;
+        }
+
+        #showHideText {
+            font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
+            font-size: 16px;
+            color: #000;
+            display: inline-block;
+        }
+        .auto-style1 {
+            width: 142px;
+        }
+    </style>
+    <script src="ClientGlobalContext.js.aspx" type="text/javascript"></script>
+    <script src="bah_jquery1.4.1.min.js" type="text/javascript"></script>
+    <script src="bah_SDK.REST.js" type="text/javascript"></script>
+    <script src="bah_json2.js" type="text/javascript"></script>
+    <script src="ftp_\JScript\VCCM.USDHelper.js" type="text/javascript"></script>
+    <script src="ftp_\MVI\js\MVIPersonSearch.js" type="text/javascript"></script>
+    <script src="ftp_\WebServiceSecurityLib\js\WebServiceSecurityLibrary.js" type="text/javascript"></script>
+</head>
+<body style="-ms-word-wrap: break-word;">
+    <h1 style="padding-top: 12px;">Veteran Search</h1>
+<div id="mviSearch" style="font-family: undefined;">
+        <table>
+            <tbody>
+                <tr>
+                    <td class="auto-style1">
+                        <h3>Section 1 - Search By Traits</h3>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <fieldset>
+            <legend>The criteria for a search by traits includes: First and Last Name, Social Security Number, and Date of Birth. At least 3 fields are required.</legend>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class="auto-style1">
+                            <label for="SocialSecurityTextBox">SSN</label>
+                        </td>
+                        <td>
+                            <label for="FirstNameTextBox">First</label>
+                        </td>
+                        <td>
+                            <label for="LastNameTextBox">*Last</label>
+                        </td>
+                        <td>
+                            <label for="BirthMonthTextBox">Month</label>
+                        </td>
+                        <td>
+                            <label for="BirthDayTextBox">Day</label>
+                        </td>
+                        <td>
+                            <label for="BirthYearTextBox">Year</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input name="ssn" tabindex="1" class="formInputText" id="SocialSecurityTextBox" size="16" maxlength="11">
+                        </td>
+                        <td>
+                            <input name="firstName" tabindex="2" class="formInputText" id="FirstNameTextBox" size="16" maxlength="30">
+                        </td>
+                        <td>
+                            <input name="lastName" tabindex="3" class="formInputText" id="LastNameTextBox" required="required" size="16" maxlength="30">
+                        </td>
+                        <td>
+                            <input name="dateOfBirthMonth" tabindex="4" class="formInputText" id="BirthMonthTextBox" style="height: 30px;" aria-label="Month: Acceptable format M M" size="2" maxlength="2" placeholder="MM">
+                            /
+                        </td>
+                        <td>
+                            <input name="dateOfBirthDay" tabindex="5" class="formInputText" id="BirthDayTextBox" style="height: 30px;" aria-label="Day: Acceptable format D D" size="2" maxlength="2" placeholder="DD">
+                            /
+                        </td>
+                        <td>
+                            <input name="dateOfBirthYear" tabindex="6" class="formInputText" id="BirthYearTextBox" style="height: 30px;" aria-label="Year: Acceptable format Y Y Y Y" size="4" maxlength="4" placeholder="YYYY">
+                        </td>
+                    </tr>
+
+
+<!--
+                    <tr>
+                        <td>
+                            <input name="ssn" tabindex="1" class="formInputText" id="SocialSecurityTextBox" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="16" maxlength="11">
+                        </td>
+                        <td>
+                            <input name="firstName" tabindex="2" class="formInputText" id="FirstNameTextBox" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="16" maxlength="30">
+                        </td>
+                        <td>
+                            <input name="lastName" tabindex="3" class="formInputText" id="LastNameTextBox" required="required" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="16" maxlength="30">
+                        </td>
+                        <td>
+                            <input name="dateOfBirthMonth" tabindex="4" class="formInputText" id="BirthMonthTextBox" style="height: 30px;" aria-label="Month: Acceptable format M M" onkeyup="checkSubmit(event)" onfocus="clearField(this)" type="number" size="2" maxlength="2" min="1" max="12" placeholder="MM">
+                            /
+                        </td>
+                        <td>
+                            <input name="dateOfBirthDay" tabindex="5" class="formInputText" id="BirthDayTextBox" style="height: 30px;" aria-label="Day: Acceptable format D D" onkeyup="checkSubmit(event)" onfocus="clearField(this)" type="number" size="2" maxlength="2" min="1" max="31" placeholder="DD">
+                            /
+                        </td>
+                        <td>
+                            <input name="dateOfBirthYear" tabindex="6" class="formInputText" id="BirthYearTextBox" style="height: 30px;" aria-label="Year: Acceptable format Y Y Y Y" onkeyup="checkSubmit(event)" onfocus="clearField(this)" type="number" size="4" maxlength="4" min="1918" max="2020" placeholder="YYYY">
+                        </td>
+                    </tr>
+-->
+
+
+
+                </tbody>
+            </table>
+
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <img tabindex="7" class="showHide" id="showHideImage" role="button" onkeydown="showHideTableFromKeydown(additionalSearchTable, this, showHideText, event)" onclick="showHideTable(additionalSearchTable, this, showHideText)" alt="Show additional search criteria." src="bah_expand">
+                            <span id="showHideText">Show Additional Search Criteria</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <!--       <table id="addSearchCriteriaDescTable">
+                <tr><td>Additional search criteria includes: Middle Name, Sex, Mother's Maiden Name, Home Phone Number and Address, Birth City and State</td></tr>
+            </table>-->
+            <table id="additionalSearchTable" style="display: none;">
+                <!--           <table id="additionalSearchTable">           -->
+                <tbody>
+                    <tr>
+                        <td class="auto-style1">
+                            <label for="AddMiddleNameTextBox">Middle</label>
+                        </td>
+                        <td>
+                            <label for="AddGenderTextBox">Sex</label>
+                        </td>
+                        <td colspan="2">
+                            <label for="AddMMNTextBox">Mother's Maiden Name</label>
+                        </td>
+                        <td>
+                            <label for="AddPhoneNoTextBox">Home Phone</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input name="middleName" tabindex="8" class="formInputText" id="AddMiddleNameTextBox" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="16" maxlength="30">
+                        </td>
+                        <td>
+                            <input name="personGender" tabindex="9" class="formInputText" id="AddGenderTextBox" style="height: 30px;" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="4" maxlength="1" value="">
+                        </td>
+                        <td colspan="2">
+                            <input name="motherMaidenName" tabindex="10" class="formInputText" id="AddMMNTextBox" style="height: 30px;" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="16" maxlength="15">
+                        </td>
+                        <td>
+                            <input name="phoneNo" tabindex="11" class="formInputText" id="AddPhoneNoTextBox" style="height: 30px;" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="16" maxlength="15">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="AddHomeStreetTextBox">Street</label>
+                        </td>
+                        <td>
+                            <label for="AddHomeCityTextBox">City</label>
+                        </td>
+                        <td>
+                            <label for="AddHomeStateTextBox">State</label>
+                        </td>
+                        <td>
+                            <label for="AddHomeZipTextBox">Zip</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input name="streetAddress" tabindex="12" class="formInputText" id="AddHomeStreetTextBox" style="height: 30px;" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="17" maxlength="30">
+                        </td>
+                        <td>
+                            <input name="cityAddress" tabindex="13" class="formInputText" id="AddHomeCityTextBox" style="height: 30px;" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="16" maxlength="25">
+                        </td>
+                        <td>
+                            <input name="stateAddress" tabindex="14" class="formInputText" id="AddHomeStateTextBox" style="height: 30px;" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="4" maxlength="2">
+                        </td>
+                        <td>
+                            <input name="zipAddress" tabindex="15" class="formInputText" id="AddHomeZipTextBox" style="height: 30px;" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="9" maxlength="15">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="AddBirthCityTextBox">Birth City</label>
+                        </td>
+                        <td>
+                            <label for="AddBirthStateTextBox">Birth State</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input name="cityAddress" tabindex="16" class="formInputText" id="AddBirthCityTextBox" style="height: 30px;" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="16" maxlength="25">
+                        </td>
+                        <td>
+                            <input name="stateAddress" tabindex="17" class="formInputText" id="AddBirthStateTextBox" style="height: 30px;" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="4" maxlength="2">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table>
+                <tbody>
+                    <tr>
+                        <td style="padding-top: 10px;" colspan="4">
+                            <button tabindex="18" id="SearchByNameButton" aria-label="Search by Traits">Search</button>
+                            <button tabindex="19" id="clearNameFieldsButton" aria-label="Reset Search by Traits">Reset</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </fieldset>
+        <table>
+            <tbody>
+                <tr>
+                    <td class="auto-style1">
+                        <h3>Section 2 - Search By EDIPI</h3>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <fieldset>
+            <legend>The search criteria for a search by EDIPI includes the EDIPI</legend>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <label for="EdipiTextBox">*EDIPI</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input name="edipi" tabindex="20" class="formInputText" id="EdipiTextBox" onkeyup="checkSubmitEDIPI(event)" onfocus="clearField(this)" size="16" maxlength="10">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-top: 10px;">
+                            <button tabindex="21" id="SearchByIdentifierButton" aria-label="Search by EDIPI">Search</button>
+                            <button tabindex="22" id="clearIdentifierFieldsButton" aria-label="Reset Search by EDIPI">Reset</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </fieldset>
+</div>
+    <div style="font-family: undefined;"><br></div>
+    <div style="clear: both; font-family: undefined;"></div>
+    <div id="validationFailedDiv" role="alert" style="color: rgb(128, 0, 0); clear: both; font-family: undefined; font-size: 1em; font-weight: bold; display: none;" aria-label="Search validation failed message"></div>
+<!-- The search requires some additional information. Please follow the instructions above to execute your search. -->
+    <div id="resultsFieldSetDiv" style="width: 100%; font-family: undefined; float: left; display: none;">
+        <h3>Section 3 - Search Results</h3>
+        <div style="clear: both;"></div>
+        <div id="searchResultsMessageDiv" style="color: rgb(128, 0, 0); font-size: 1em; font-weight: bold; display: none;" aria-label="Search Results Message"></div>
+        <fieldset id="SearchResultFieldSet">
+            <legend style="display: none;">Search Results</legend>
+            <table id="personSearchResultsTable" style="width: 100%;"></table>
+        </fieldset>
+    </div>
+    <div id="notFoundDiv" style="width: 100%; font-family: undefined; float: left; display: none;">
+        <fieldset id="notFoundFieldset">
+            <legend>No Records Found</legend>
+            <hr style="border: 1px solid gray; border-image: none;">
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <h3 style="padding-bottom: 5px;">Veteran Not Found?</h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button tabindex="23" id="createNewVeteranButton" aria-label="Create New Contact">Create Contact</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </fieldset>
+    </div>
+    <div class="waitDialog" id="tmpDialog" style="font-family: undefined;">
+        <p>Working on it. Please wait ...</p>
+    </div>
+    <div class="waitDialog" id="stationTmpDialog" style="font-family: undefined;">
+        <p>MVI returned one veteran; fetching stations. Please wait ...</p>
+    </div>
+    <div class="waitDialog" id="deathAndSensitivityTmpDialog" style="font-family: undefined;">
+        <p>Checking if veteran is deceased and/or sensitive. Please wait ...</p>
+    </div>
+    <div class="waitDialog" id="creatingVeteranTmpDialog" style="font-family: undefined;">
+        <p>Creating new veteran. Please wait ...</p>
+    </div>
+    <script type="text/javascript">
+        document.querySelector("#mviSearch").addEventListener("keydown", checkForMaxReached);
+        document.querySelector("#mviSearch").addEventListener("focus", checkForMaxReached);
+        document.querySelector("#mviSearch").addEventListener("keydown", checkSubmit);
+
+        function checkForMaxReached(e) {
+            if (e.keyCode !== 9) {
+                if (e.target.id !== "BirthMonthTextBox" ||
+                    e.target.id !== "BirthDayTextBox" ||
+                    e.target.id !== "BirthYearTextBox") {
+                    var maxLength = parseInt(e.target.getAttribute("maxlength"));
+                    var currentLength = e.target.value.length;
+
+
+                    if (maxLength !== null) {
+                        if (maxLength === currentLength) {
+                            document.querySelector("#validationFailedDiv").textContent =
+                                "Max length reached for " + e.target.id;
+                            $("#validationFailedDiv").show();
+                        } else {
+                            document.querySelector("#validationFailedDiv").textContent = "";
+                            $("#validationFailedDiv").hide();
+                        }
+                    }
+                }
+            } else {
+                $("#validationFailedDiv").hide();
+                document.querySelector("#validationFailedDiv").textContent = "";
+            }
+            e.stopPropagation();
+        }
+
+        // Overriding Function to Update Show/Hide Table
+        function showHideTable(tblObj, imgObj, msgObj) {
+            console.log(msgObj.innerText);
+            if (tblObj.style.display != "") { // show table & display -
+                tblObj.style.display = "";
+                imgObj.alt = "Hide Additional Search Criteria";
+                imgObj.src = "bah_collapse"; //"expand_collapse_minus.gif"; 
+                msgObj.innerText = "Hide Additional Search Criteria";
+            } else { // hide table & display +
+                tblObj.style.display = "none";
+                imgObj.alt = "Show Additional Search Criteria";
+                imgObj.src = "bah_expand"; //"expand_collapse_plus.gif";
+                msgObj.innerText = "Show Additional Search Criteria";
+            }
+        }
+
+        function showHideTableFromKeydown(tblObj, imgObj, msgObj, event) {
+
+            if (event.keyCode === 13 || event.keyCode === 32) {
+                if (tblObj.style.display != "") { // show table & show -
+                    tblObj.style.display = "";
+                    imgObj.alt = "Hide Additional Search Criteria";
+                    imgObj.src = "bah_collapse"; //"expand_collapse_minus.gif";
+                    msgObj.innerText = "Hide Additional Search Criteria";
+                } else { // hide table & show +
+                    tblObj.style.display = "none";
+                    imgObj.alt = "Show Additional Search Criteria";
+                    imgObj.src = "bah_expand"; // "expand_collapse_plus.gif";
+                    msgObj.innerText = "Show Additional Search Criteria";
+                }
+
+                imgObj.focus();
+            }
+        }
+
+    </script>
+</body></html>

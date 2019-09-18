@@ -1,0 +1,10 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US">Delays the execution of the subactions of a hosted control until a specified set of replacement parameters becomes available. A time-out value may be specified to limit the amount of time to wait for the replacement parameters to become available. If no time-out is specified, it will wait indefinitely or until the session ends. This action applies to all the hosted control types.</SPAN>&nbsp;</FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>Milliseconds</STRONG></TD>
+<TD>(Optional) The time, in milliseconds, to indicate the time to wait for the replacement parameters to become available.</TD></TR></TBODY></TABLE>
+<P>Any other parameters passed to this action are passed to the subactions as event style parameters.</P></BODY></HTML>

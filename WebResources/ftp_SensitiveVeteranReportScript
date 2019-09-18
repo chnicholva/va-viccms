@@ -1,0 +1,69 @@
+function openSensitiveVetReport() {
+	var oDataPath = Xrm.Page.context.getClientUrl() + "/XRMServices/2011/OrganizationData.svc/";
+	var query = "SystemUserSet(guid'" + Xrm.Page.context.getUserId() + "')/systemuserroles_association?$select=Name,RoleId&$filter=Name eq 'VCCM ISO'";
+	
+	$.ajax({
+		type : "GET",
+		contentType : "application/json; charset=utf-8",
+		datatype : "json",
+		url : oDataPath + query,
+		beforeSend : function (XMLHttpRequest) {
+			//Specifying this header ensures that the results will be returned as JSON.
+			XMLHttpRequest.setRequestHeader("Accept", "application/json");
+		},
+		success : function (data, textStatus, XmlHttpRequest){
+			debugger;
+			var userHasRole = false;
+			if(!!data) {
+				userHasRole = data.d.results.length == 1;
+				if(userHasRole){
+					var reportURL = buildReportUrl("filter", "Sensitive Veteran Audit", "F3D6B3D2-D5E8-E611-944A-0050568D743D", "AuthorizedUser");
+					window.open(reportURL);
+				}
+				else{
+					alert("You are not authorized to view this report.")
+				}
+			}
+		},
+		error : function (XMLHttpRequest, textStatus, errorThrown) {
+			alert("Error retrieving roles for current user: " + errorThrown);
+		},
+		async : true,
+		cache : false
+	});
+}
+  
+function buildReportUrl(action, fileName, id, code) {
+	var reportUrl = Xrm.Page.context.getClientUrl() +
+		"/crmreports/viewer/viewer.aspx?action=" + encodeURIComponent(action) +
+		"&helpID=" + encodeURIComponent(fileName) +
+		"&id=%7b" + encodeURIComponent(id) + "%7d"; +
+		"p:code=" + code;
+	return reportUrl;
+}
+
+function isUserInISORole(){
+	var userHasRole = false;
+	var oDataPath = Xrm.Page.context.getClientUrl() + "/XRMServices/2011/OrganizationData.svc/";
+	var query = "SystemUserSet(guid'" + Xrm.Page.context.getUserId() + "')/systemuserroles_association?$select=Name,RoleId&$filter=Name eq 'VCCM ISO'";
+	$.ajax({
+		type : "GET",
+		contentType : "application/json; charset=utf-8",
+		datatype : "json",
+		url : oDataPath + query,
+		beforeSend : function (XMLHttpRequest) {
+			//Specifying this header ensures that the results will be returned as JSON.
+			XMLHttpRequest.setRequestHeader("Accept", "application/json");
+		},
+		success : function (data, textStatus, XmlHttpRequest){
+			debugger;
+			userHasRole = !!data && data.d.results.length == 1;
+		},
+		error : function (XMLHttpRequest, textStatus, errorThrown) {
+			alert("Error retrieving roles for current user: " + errorThrown);
+		},
+		async : false,
+		cache : false
+	});
+	return userHasRole;
+}

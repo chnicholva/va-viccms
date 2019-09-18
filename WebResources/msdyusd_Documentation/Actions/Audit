@@ -1,0 +1,30 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">Adds an audit entry to the Unified Service Desk audit logs.</SPAN><o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>Name</STRONG></TD>
+<TD><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">Name of the audit log.<SPAN style="mso-spacerun: yes">&nbsp; </SPAN>Note: The name is matched against the $Global audit flag to determine whether auditing is active for this name.</SPAN></TD></TR>
+<TR>
+<TD><STRONG>Action</STRONG></TD>
+<TD><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">String representing the action that's being audited.</SPAN></TD></TR>
+<TR>
+<TD><STRONG>TargetApplication</STRONG></TD>
+<TD><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">String representing the target application for the audit.</SPAN></TD></TR>
+<TR>
+<TD><STRONG>CustomerId</STRONG></TD>
+<TD><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">String representing the customer ID.</SPAN></TD></TR>
+<TR>
+<TD><STRONG>ContextId</STRONG></TD>
+<TD><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">String representing the context ID.</SPAN></TD></TR>
+<TR>
+<TD><STRONG>ApplicationId</STRONG></TD>
+<TD><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">The ID of the hosted control for the auditing.</SPAN></TD></TR>
+<TR>
+<TD><STRONG>AgentState</STRONG></TD>
+<TD><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">String representing the agent state.</SPAN></TD></TR>
+<TR>
+<TD><STRONG>ActionData</STRONG></TD>
+<TD><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">This is the data to write out to the audit entry. If this parameter isn't explicitly provided, it will use all the remainder lines in the Data Parameter field of the action.</SPAN></TD></TR></TBODY></TABLE><BR><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">For more information, see  <a href="https://technet.microsoft.com/library/dn633604.aspx">Configure auditing in Unified Service Desk</a>.</SPAN></BODY></HTML>

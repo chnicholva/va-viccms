@@ -1,0 +1,46 @@
+n52_table{
+border-collapse:collapse;
+
+}
+ 
+n52_th{
+font-family:Arial, sans-serif;
+font-size:14px;
+font-weight:bold;
+padding:5px 5px;
+background-color:#f0f0f0;
+text-align:left;
+}
+ 
+n52_td{
+font-family:Arial, sans-serif;
+font-size:14px;
+font-weight:normal;
+padding:5px 5px;
+color:#333;
+background-color:#fff;
+
+}
+ 
+n52_tr{
+}
+
+n52_td_twocolumn_firstlast{
+font-size:14px;
+font-weight:normal;
+color:#333;
+background-color:#f0f0f0;
+text-align:right;
+padding:5px 5px;
+font-weight:bold;
+}
+
+n52_td_twocolumn{
+font-size:14px;
+font-weight:normal;
+color:#333;
+background-color:#fff;
+text-align:right;
+padding:5px 5px;
+
+}

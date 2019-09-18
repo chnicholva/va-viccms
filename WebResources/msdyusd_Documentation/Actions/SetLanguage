@@ -1,0 +1,10 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">Sets the current language to be checked by the spell checker in the hosted control.<SPAN style="mso-spacerun: yes">&nbsp;&nbsp; </SPAN>This is often set in the Loaded event for the hosted control</SPAN>.<o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG></STRONG></TD>
+<TD>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><FONT face=Calibri><SPAN style="mso-ansi-language: EN-US">Sepcify the language identifier in the <strong>Data</strong> field of the action call.<SPAN style="mso-spacerun: yes">&nbsp;&nbsp; </SPAN>The string should conform to the IETF RFC 3066 (</SPAN><SPAN lang=EN><A href="http://www.ietf.org/rfc/rfc3066.txt"><SPAN style="mso-ansi-language: EN-US" lang=EN-US><FONT color=#0000ff>http://www.ietf.org/rfc/rfc3066.txt</FONT></SPAN></A></SPAN><SPAN style="mso-ansi-language: EN-US">)<o:p></o:p></SPAN></FONT></P><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">For more information, see the <a href="https://msdn.microsoft.com/library/vstudio/system.windows.markup.xmllanguage.getlanguage.aspx">GetLanguage method</a>.</SPAN></TD></TR></TBODY></TABLE></BODY></HTML>

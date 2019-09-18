@@ -1,0 +1,163 @@
+<html>
+<head>
+    <title>SOAP JavaScript Client Test</title>
+    <script type="text/javascript">
+        function retrieveDemographics() {
+            try {
+
+                //debugger;
+                var eligibility;
+                var veteran;
+                var unemployable;
+                var svcCI;
+                var percentage;
+                var sensitivityFlag;
+                var add1;
+                var add2;
+                var add3;
+                var city;
+                var state;
+                var zip;
+                var country;
+                var key = "1008591788V476978";
+                var request ='<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" ' +
+                                'xmlns:sch="http://jaxws.webservices.esr.med.va.gov/schemas" ' +
+                                'xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">' +
+                            '<soapenv:Header>' +
+                                '<wsse:Security SOAP-ENV:mustUnderstand="1" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">' +
+                                    '<wsse:UsernameToken xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">' +
+                                        '<wsse:Username>CRMSvcUsr</wsse:Username>' +
+                                        '<wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">4rfv$RFV</wsse:Password>'+
+                                    '</wsse:UsernameToken>' +
+                                '</wsse:Security>' +
+                            '</soapenv:Header>' +
+  
+                            '<soapenv:Body>' +
+                                '<sch:getEESummaryRequest>' +
+                                '<!--You may enter the following 4 items in any order-->' +
+                                    '<sch:key>000000'+key+'000000</sch:key>' +
+                                    '<sch:requestName>allEEData</sch:requestName>' +
+                                    '<sch:keyType>vpid</sch:keyType>' +
+                                '</sch:getEESummaryRequest>' +
+                            '</soapenv:Body>' +
+                        '</soapenv:Envelope>';
+                var query = new XMLHttpRequest();
+                query.open('POST', 'http://jaxws.webservices.esr.med.va.gov', false);
+                query.onreadystatechange = function(){
+                    if (query.readyState == 4 && query.status==200){
+                        eligibility = query.responseXML.getElementsByTagName("primaryEligibility")[0].children[2].childNodes[0].nodeValue;
+                        veteran = query.responseXML.getElementsByTagName("veteran")[0].childNodes[0].nodeValue;
+                        unemployable = query.responseXML.getElementsByTagName("unemployable")[0].childNodes[0].nodeValue;
+                        svcCI = query.responseXML.getElementsByTagName("serviceConnectedIndicator")[0].childNodes[0].nodeValue;
+                        percentage = query.responseXML.getElementsByTagName("ratedDisability")[0].children[0].childNodes[0].nodeValue;
+                        sensitivityFlag = query.responseXML.getElementsByTagName("sensitivityInfo")[0].children[0].childNodes[0].nodeValue;
+                        var adds=query.responseXML.getElementsByTagName("addresses");
+                        var perm;
+                        for (i=0; i<adds.children.length; i++){
+                            if (adds.children[i].children[0].childNodes[0].nodeValue === "Permanent"){
+                                perm = i;
+				
+                            }
+			
+                        }
+                        var pa= query.responseXML.getElementsByTagName("addresses")[0].children[perm];
+		
+                        for (i=0; i<pa.children.length; i++){
+                            if (pa.children[i].childNodes[0].nodeName === "line1"){
+                                add1 = pa.children[i].childNodes.nodeValue;
+                            }
+			
+                        }
+		
+                        for (i=0; i<pa.children.length; i++){
+                            if (pa.children[i].childNodes[0].nodeName === "line2"){
+                                add2 = pa.children[i].childNodes.nodeValue;
+                            }
+			
+                        }
+		
+                        for (i=0; i<pa.children.length; i++){
+                            if (pa.children[i].childNodes[0].nodeName === "line3"){
+                                add3 = pa.children[i].childNodes.nodeValue;
+                            }
+			
+                        }
+		
+                        for (i=0; i<pa.children.length; i++){
+                            if (pa.children[i].childNodes[0].nodeName === "city"){
+                                city = pa.children[i].childNodes.nodeValue;
+                            }
+			
+                        }
+		
+                        for (i=0; i<pa.children.length; i++){
+                            if (pa.children[i].childNodes[0].nodeName === "state"){
+                                state = pa.children[i].childNodes.nodeValue;
+                            }
+			
+                        }
+		
+                        for (i=0; i<pa.children.length; i++){
+                            if (pa.children[i].childNodes[0].nodeName === "zip"){
+                                zip = pa.children[i].childNodes.nodeValue;
+                            }
+			
+                        }
+		
+                        for (i=0; i<pa.children.length; i++){
+                            if (pa.children[i].childNodes[0].nodeName === "country"){
+                                country = pa.children[i].childNodes.nodeValue;
+                            }
+			
+                        }
+                        Xrm.Page.getAttribute("ftp_primaryeligibilitycode").setValue(eligibility);
+                        if(veteran === "true"){
+                            Xrm.Page.getAttribute("ftp_patienttype").setValue("veteran");
+                        }
+                        else{
+                            Xrm.Page.getAttribute("ftp_patienttype").setValue("Non-Veteran");
+                        }
+                        Xrm.Page.getAttribute("ftp_unemployable").setValue(unemployable);
+                        if(svcCI === "true"){
+                            Xrm.Page.getAttribute("ftp_serviceconnected").setValue(true);
+                        }
+                        else{
+                            Xrm.Page.getAttribute("ftp_serviceconnected").setValue(false);
+                        }
+                        if (percentage != null){
+                            Xrm.Page.getAttribute("ftp_scpercent").setValue(percentage);
+                        }
+                        if (sensitivityFlag === "true"){
+                            Xrm.Page.getAttribute("ftp_sensitiveveteran").setValue(true);
+                        }
+                        else{
+                            Xrm.Page.getAttribute("ftp_sensitiveveteran").setValue(false);
+			
+                        }
+                        Xrm.Page.getAttribute("address1_line1").setValue(line1);
+                        Xrm.Page.getAttribute("address1_line2").setValue(line2);
+                        Xrm.Page.getAttribute("address1_line3").setValue(line3);
+                        Xrm.Page.getAttribute("address1_city").setValue(city);
+                        Xrm.Page.getAttribute("address1_stateorprovince").setValue(state);
+                        Xrm.Page.getAttribute("address1_country").setValue(country);
+                        Xrm.Page.getAttribute("address1_postalcode").setValue(zip);
+                    }
+                };
+                query.send(request);
+            }
+            catch (err) {
+                //Display Error....
+                alert("Error: " + err.message);
+
+            }
+        }
+    </script>
+</head>
+<body>
+    <form name="Demo" action="" method="post">
+        <div>
+            <input type="button" value="Soap2" onclick="retrieveDemographics();" />
+        </div>
+    </form>
+</body>
+</html>

@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>View Editor Configuration</title>
+    <!--below meta tag forces to load in compatibale mode with hightest document mode-->
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10" />
+    <script src="../../ClientGlobalContext.js.aspx" type="text/javascript"></script>
+    <script src="./js/jquery.js" type="text/javascript"></script>
+    <script src="./js/XrmServiceToolkit.js" type="text/javascript"></script>
+    <script src="./js/tribridge.vieweditorentity.js" type="text/javascript"></script>
+    <script src="./js/kendo.js" type="text/javascript"></script>
+    <script src="./js/tribridge.crmsdk.js" type="text/javascript"></script>
+    <script src="./js/tribridge.crmsdk.metadata.js" type="text/javascript"></script>
+    <script src="./js/tribridge.helper.js" type="text/javascript"></script>
+    <script src="./js/tribridge.functions.js" type="text/javascript"></script>
+    <script src="./js/tribridge.CRUD.js" type="text/javascript"></script>
+    <script src="./js/SDK.MetaData.js" type="text/javascript"></script>
+    <script src="./js/kendo.vieweditor.js" type="text/javascript"></script>
+
+    <!--<link href="./css/kendo.common.min.css" rel="stylesheet" type="text/css" />-->
+    <link href="./css/kendo.silver.min.css" rel="stylesheet" type="text/css" />
+    <link href="./css/kendo.dataviz.min.css" rel="stylesheet" type="text/css" />
+    <link href="./css/ViewEditor.css" rel="stylesheet" type="text/css" />
+</head>
+
+
+<body id="mainbody">
+    <div id="container" style="margin: 5px;">
+        <div id="dvViewConfig">
+            <div class="headerDiv" id="View ConfigHeader">
+                <span class="Header" title="View Configuration">View Configuration</span><br />
+            </div>
+            <table id="tblViewEditor" cellpadding="2" cellspacing="0">
+                <tr>
+                    <td id="tdPrimaryEntity" style="width: 30%;">Primary Entity
+                    </td>
+                    <td align="left" id="tdPriamryEntityddl" class="tdtxt" style="width: 70%;">
+                        <input id="ddlPrimaryEntity" style="width: 100%;" title="Select the entity here for the view which you want to configure" />
+                        <!-- <select id="ddlPrimaryEntity" tabindex="1" class="pickList">
+                                <!-- <option id="optSelect" value="-1">--Select Entity--</option>-->
+                        <!-- </select>-->
+                    </td>
+                </tr>
+                <tr>
+                    <td style="line-height: 5px;">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td id="tdGridType">Grid Type
+                    </td>
+                    <td align="left">
+                        <select id="ddlGridType" tabindex="1" style="width: 100%; background-color: white; border-radius: 0px;" title="Home/ Associated (Home-For home page view, Associated-For subgrid)">
+                            <option id="optHome" value="399300000">Home Page</option>
+                            <option id="optSubGrid" value="399300001">Associated</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="line-height: 5px;">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td id="tdRelatedEntity">Related Entity</td>
+                    <td align="left">
+                        <select id="ddlRelatedEntity" tabindex="1" style="width: 100%;" title="Select the related entity on which the subgrid will be placed in case of Associated gid type"></select>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="line-height: 5px;">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td id="tdPrimaryEntityView">Primary Entity View</td>
+                    <td align="left">
+                        <select id="ddlPrimaryEntityView" tabindex="1" style="width: 100%;" title="The view which you want to configure"></select>
+                    </td>
+                </tr>
+            </table>
+            <div class="Footer">
+                <button id="btnCancel" class="button">
+                    Cancel</button>
+                &nbsp;
+                <button id="btnSave" class="button">
+                    Save</button>
+            </div>
+        </div>
+    </div>
+    <div id="savingLoader">
+        <div id="loader">
+            &nbsp;
+        </div>
+    </div>
+    <!-- <div id="preloader">
+        <div id="status">
+            &nbsp;
+        </div>
+    </div>-->
+    <script>
+        $(document).ready(function () {
+            var functionName = "Document Ready:>>";
+            try {
+                onLoad();
+            } catch (e) {
+                throwError(e, functionName);
+            }
+        });
+        //Show Loader
+        //Show Loader
+        function ShowLoading() {
+            try {
+                $("#savingLoader").fadeIn();
+                $("#loader").delay(350).fadeIn("fast");
+
+            } catch (e) {
+
+            }
+        }
+
+        //Hide Loader
+        function HideLoading() {
+            try {
+                $("#savingLoader").fadeOut(); // will first fade out the loading animation
+                $("#loader").delay(350).fadeOut("fast"); // will fade out the white DIV that covers the website.
+            } catch (e) {
+                //hideLoading();
+            }
+        }
+    </script>
+</body>
+</html>

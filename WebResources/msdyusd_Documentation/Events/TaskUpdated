@@ -1,0 +1,9 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Invoked when a new agent script task is reached.&nbsp; <o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>task</STRONG></TD>
+<TD>The name of the agent script task that was reached.&nbsp;&nbsp; For the main menu, which isn't a listed task in the configuration of agent scripts, this event is invoked with the following value in this parameter: [Main Menu].</TD></TR></TBODY></TABLE></BODY></HTML>

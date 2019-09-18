@@ -1,0 +1,3 @@
+<HTML><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-ansi-language: EN-US; mso-fareast-language: JA; mso-bidi-language: AR-SA">Copies a value or series of values to context variables.<SPAN style="mso-spacerun: yes">&nbsp;&nbsp; </SPAN>Context variables can be serialized with the session.<SPAN style="mso-spacerun: yes">&nbsp; </SPAN>This action takes a series of name=value pairs as data parameters, where name is the context variable name.<SPAN style="mso-spacerun: yes">&nbsp;&nbsp; </SPAN></SPAN><FONT size=2 face="Tahoma, Verdana, Arial"></FONT></BODY></HTML>

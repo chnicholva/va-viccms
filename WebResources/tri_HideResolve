@@ -1,0 +1,50 @@
+function HideResolve(){
+	//debugger;
+    //This function will return a json object with every attribute from an entity for a single record synchronously 
+    try {
+        //Perform REST call
+        var context = Xrm.Page.context;
+        var serverUrl = context.getClientUrl();
+        var ODATA_ENDPOINT = "/XRMServices/2011/OrganizationData.svc";
+        //Format Entity Guid
+		var Guid = Xrm.Page.data.entity.getId();
+        var EntityIdnobracket = Guid.replace(/({|})/g, '');
+        //Construct the JSON Query
+        var selectString = "?$filter=ftp_RequestId/Id eq guid'" + EntityIdnobracket + "'";
+        var jsonQuery = serverUrl + ODATA_ENDPOINT + "/ftp_actiontakenSet" + selectString;
+
+        //Initialize the return value
+        var EntityData = null;
+        $.ajax({
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            datatype: "json",
+            url: jsonQuery,
+            beforeSend: function (XMLHttpRequest) {
+                //Specifying this header ensures that the results will be returned as JSON.
+                XMLHttpRequest.setRequestHeader("Accept", "application/json");
+            },
+            success: function (data, textStatus, XmlHttpRequest) {
+                //Get the data values
+                EntityData = data;
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert('Fail: Ajax Error in RetrieveAllAttributesByEntitySync: ' + errorThrown);
+            },
+            async: false,
+            cache: false
+        });
+        //Return the data result
+        //return EntityData;
+		if (EntityData.d.results.length > 0){
+		return false;
+		}
+		else{
+		return false;
+		}
+    }
+    catch (err) {
+        //Display Error
+        alert("An error occured in the RetrieveAllAttributesByEntitySync function.  Error Detail Message: " + err);
+    }
+}

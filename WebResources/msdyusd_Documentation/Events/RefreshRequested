@@ -1,0 +1,9 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Invoked when a refresh was requested on the current page.&nbsp;&nbsp; Refresh can either be requested by the user pressing the F5 key or the Refresh action being called by the application.&nbsp;&nbsp; </FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>url</STRONG></TD>
+<TD>The URL displayed when the refresh was requested.</TD></TR></TBODY></TABLE><BR>If this event is handled, meaning that actions were added to it, the application won't perform its default logic.&nbsp;&nbsp; Typically this event is used to re-run a series of actions to handle the refresh request, rather than relying on the browser's refresh function.&nbsp;&nbsp; For example, you may rerun the automations to auto-populate certain fields.<BR><BR>If you don't add actions to this event, the system will call the default browser refresh command.</BODY></HTML>

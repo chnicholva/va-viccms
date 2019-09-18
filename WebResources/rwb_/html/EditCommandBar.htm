@@ -1,0 +1,308 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Ribbon Workbench 2016</title>
+
+    <!-- CRM2013/2015 Styles -->
+    <link href="../css/sparkle_jquery_ui.css" rel="stylesheet" />
+    <link href="../css/sparkle.css" rel="stylesheet" />
+    <link href="../css/rwb.css" rel="stylesheet" />
+ 
+
+</head>
+<body class="sparkle-xrm">
+    
+  
+    <div class="sparkle-wait-blockout" data-bind="fadeVisible: isBusy">
+        <table height="100%" width="100%">
+            <tr>
+                <td align="center" valign="middle">
+                    <img src="../css/images/transparent_spacer.gif" />
+                    <div id="progressbar" style="width: 200px" data-bind="fadeVisible:isBusyProgress()>0 && isBusyProgress()<100, progressBar: isBusyProgress"></div>
+                    <div class="progress-label" data-bind="text: isBusyMessage">Ribbon Workbench 2016</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div data-bind="visible:isBusy" style="display:none">
+        <!-- ko with:NewsFeedItem-->
+        <div id="newsfeed" data-bind="fadeVisible: IsVisible">
+            <a data-bind="attr:{href:Link}" target="_blank">
+                <img data-bind="attr:{'src':ImageSrc}" /><span data-bind="text:Title"></span>
+            </a>
+        </div>
+        <!-- /ko -->
+    </div>
+
+    <div id="topbar">
+        <div id="topbar-left">
+            <span id="logo">Ribbon Workbench 2016</span> <span id="versionbeta" data-bind="text:Version"></span> <span id="author" data-bind="text:ResourceStrings.Author"></span>
+            <a href data-bind="click:OpenSolutionCommand" class="topButton"><span class="icon icon-open"></span><span data-bind="text:ResourceStrings.OpenSolution"></span></a>
+            <a href data-bind="click:PublishCommand" class="topButton"><span class="icon icon-publish"></span><span data-bind="text:ResourceStrings.Publish"></span></a>
+        </div>
+        <div id="topbar-right">
+
+            <span id="solutionName" data-bind="text:SolutionUniqueName"></span>
+            <a href="http://ribbonworkbench.uservoice.com" target="_blank" class="topButton"><span class="icon icon-help"></span><span data-bind="text:ResourceStrings.HelpLink"></span></a>
+        </div>
+    </div>
+
+    <div id="main">
+        <div id="designSurface" class="ui-layout-north">
+            <div class="ui-layout-content" style="overflow: auto" data-bind="scrollintoview: $root.EnsureControlVisible">
+                <div data-bind="visible:RenderingCommandBar">
+                    <div class="commandBarHolder">
+                        <div class="control" data-bind="text:ResourceStrings.Rendering">
+                           
+                        </div>
+                    </div>
+                </div>
+                <!--ko with: SelectedRibbon -->
+                <div data-bind="foreach: TabGroups">
+                    <div class="commandBarHolder">
+                        <div data-bind="text: Id" class="ribbon-title"></div>
+                        <div class="scroll">
+                            <div data-bind="foreach: Tabs" class="commandBarParent">
+                                <div class="cb-holder" data-bind="attr:{'id':GetControlId($data)},css:{'tab-customised':$data.Customised}">
+                                    <div class="cb-top-title"><span data-bind="text: Id"></span></div>
+                                    <div data-bind="sortable: {options: { cancel:'.nodraggroup',appendTo:'body', opacity: 0.5, delay: 50,  refreshPositions:true, connectWith: 'groupParent' },connectClass: 'groupParent', data: Groups, afterMove: $root.Group_OnAfterMove(), beforeMove: $root.Group_OnBeforeMove()}" class="groupParent">
+                                        <div class="groupParent" data-bind="contextMenu:{ data:$data,
+                                             controller:$root,
+                                             populate:'GetGroupContextMenu',
+                                             trigger:'right' ,
+                                             select:'OnGroupMenuSelect'
+                                             }, attr:{'id':GetControlId($data)},click:$root.Group_OnClick(),css:{'group-customised':$data.Customised ,selected:$data==$root.EditingItem(),nodraggroup: !($data.Customised()) }">
+                                            <div data-bind="foreach: LayoutSections" class="groupParent">
+                                                <div class="cb-holder">
+
+
+                                                    <div class="commandBarGroup" data-bind="sortable: {
+    options: { cancel:'.nodrag',appendTo:'body', placeholder: 'drop-placeholder',  refreshPositions:true, delay: 50 },
+            data: Controls,
+            afterMove: $root.Control_OnAfterMove(),
+            beforeMove: $root.Control_OnBeforeMove(),
+            afterAdd: $root.highlightFadeIn
+        }">
+
+                                                        <div class="control" data-bind="if: IsControlVisible($data,$root), click: $root.Control_OnClick(),clickBubble: false,
+    attr: { 'id': GetControlId($data)},
+    css: {
+        nodrag: !($data.Customised()),
+        strikethrough: $data.HiddenBySolution,
+        selected: $data == $root.SelectedControl()
+
+    }">
+                                                            <!--ko if: __type().substring(0,18)=="SectionPlaceholder" -->
+                                                            <div class="control-placeholder" data-bind="text:TemplateAlias"></div>
+                                                            <!--/ko -->
+                                                            <!--ko if: __type().substring(0,18)!="SectionPlaceholder" -->
+                                                            <div data-bind="css: { customised: $data.Customised },
+    contextMenu: {
+        data: $data,
+        controller: $root,
+        populate: 'GetContextMenu',
+        trigger: 'right',
+        select: 'OnMenuSelect'
+    }">
+
+                                                                <img data-bind="attr: { src: ExpandTokenisedUrl(Image16by16()) }" /><span data-bind="text:LabelTextText"></span>
+                                                                <!-- ko if:IsFlyout($data) -->
+                                                                <span class="flyoutdropdown image-downarrow"></span>
+                                                                <!--/ko-->
+
+                                                            </div>
+                                                            <!--/ko-->
+                                                        </div>
+                                                    </div>
+                                                    <div class="layoutsection-title"><span data-bind="text:ClientUI.Model.LayoutSection.GetTemplateAlias($data)"></span>&nbsp;</div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--/ko-->
+
+                <div data-bind="template: { name: 'flyout-editor', data: SelectedFlyoutRoot }"></div>
+            </div>
+            <div id="designSurface-footer">
+                <div id="render-type-buttons">
+                    <input type="radio" id="radio-commandbar" name="radio" value="CommandBar" checked="checked" data-bind="checked:RenderType"><label for="radio-commandbar"><!--ko text:ResourceStrings.ShowCommandBarButtons--><!--/ko--></label>
+                    <input type="radio" id="radio-ribbon" name="radio" value="Ribbon" data-bind="checked:RenderType"><label for="radio-ribbon"><!--ko text:ResourceStrings.ShowRibbonButtons--><!--/ko--></label>
+                    <input type="radio" id="radio-modern" name="radio" value="Modern" data-bind="checked:RenderType"><label for="radio-modern"><!--ko text:ResourceStrings.ShowModernButtons--><!--/ko--></label>
+                </div>
+            </div>
+        </div>
+
+        <div id="solutionElementPanel" class="ui-layout-center">
+            <div data-bind="visible:IsBusyRefresh" style="display:none">
+                <span class="sparkle-wait-blockout">
+                    <img src="../css/images/transparent_spacer.gif" />
+                </span>
+            </div>
+            <div class="header">
+                <div id="solutiontab-buttons">
+                    <input type="radio" id="radio-solution" name="tabs" value="0" checked="checked" data-bind="checked:SelectedSolutionTab"><label for="radio-solution"><!--ko text:ResourceStrings.SolutionElements--><!--/ko--></label>
+                    <input type="radio" id="radio-xml" name="tabs" value="1" data-bind="checked:SelectedSolutionTab"><label for="radio-xml"><!--ko text:ResourceStrings.Xml--><!--/ko--></label>
+                    <input type="radio" id="radio-messages" name="tabs" value="2" data-bind="checked:SelectedSolutionTab"><label for="radio-messages"><!--ko text:ResourceStrings.Messages--><!--/ko-->&nbsp;(<!--ko text:MessagesCount --><!--/ko-->)</label>
+                    <input type="radio" id="radio-clipboard" name="tabs" value="3" data-bind="checked:SelectedSolutionTab"><label for="radio-clipboard"><!--ko text:ResourceStrings.Clipboard--><!--/ko--></label>
+                </div>
+            </div>
+            <div class="header">
+                <span>
+                    <span>
+                        Entity:
+                        <select data-bind="options: Ribbons,
+    optionsText: 'EntityLogicalName',
+    value: SelectedRibbonUI"></select>
+                    </span>
+                </span>
+                <span data-bind="if:SelectedSolutionTab()==1">
+                    <button type="button" class="dialogButton" data-bind="click:$root.RefreshXml,disable:SelectedRibbon()==null,text:ResourceStrings.Refresh"></button>
+                </span>
+            </div>
+            <div class="ui-layout-content" style="overflow: auto">
+                <div data-bind="if:SelectedSolutionTab()==0">
+                    <!--ko template:{name:'solution-elements-template'} --><!-- /ko -->
+                </div>
+                <div data-bind="if:SelectedSolutionTab()==1">
+                    <!-- ko with:SelectedRibbon-->
+                    <pre class="ribbonxmlcode allow-text-selectable"><code data-bind="syntaxhighlight:UpdatedRibbonDiffXmlString"></code></pre>
+                    <!-- /ko -->
+                </div>
+                <div data-bind="visible:SelectedSolutionTab()==2">
+                    <div id="messagesGrid"></div>
+                </div>
+                <div data-bind="visible:SelectedSolutionTab()==3">
+                    <!--<textarea spellcheck="false" id="clipboard" data-bind="value:Clipboard"></textarea>-->
+                    <pre class="ribbonxmlcode allow-text-selectable"><code data-bind="syntaxhighlight:Clipboard, highlight-lang:'JSON'"></code></pre>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div id="propertiesPanel" class="ui-layout-east">
+            <div class="header">
+                <span data-bind="text:ResourceStrings.PropertiesPanel"></span><span data-bind="text: GetEditorType().name"></span>
+
+                <span class="header-select">
+                    <span data-bind="text:ResourceStrings.Language"></span>
+                    <select data-bind="options: Languages,
+        optionsText: 'name',
+        value: SelectedLanguage"></select>
+                </span>
+            </div>
+            <div class="ui-layout-content" style="overflow: auto">
+                <!--ko template: {name: 'undo-panel',data: ClientUI.Model.UndoStacks.PropertiesUndoStack}-->
+                <!-- /ko -->
+                <div data-bind="template: { name: 'properties-' + GetEditorType().value, data: EditingItem }"></div>
+            </div>
+        </div>
+
+        <!-- Toolbox-->
+        <div id="toolbox" class="ui-layout-west">
+
+            <!--ko template:{name:'toolbox-template'} -->
+            <!--/ko-->
+            <div class="header" data-bind="text:ResourceStrings.SmartButtonsToolBox"></div>
+            <span class="smartbuttons-toolbox">
+                <span data-bind="ifnot:SmartButtonsLoaded">
+                    <span data-bind="text:ResourceStrings.LoadingSmartButtons"></span><br />
+                </span>
+                <span class="content-with-links" data-bind="if:SmartButtonsLoaded" >
+                    <span data-bind="visible:SmartButtons.Controls().length==0">
+                        <span data-bind="text:ResourceStrings.SmartButtons"></span> <br /><a target="_blank" title="Learn more about smart buttons" href="http://ribbonworkbench.uservoice.com/knowledgebase/articles/896958" data-bind="text:ResourceStrings.LearnMoreLink"></a>
+                    </span>
+                    <div class="toolbox-items" data-bind="foreach: SmartButtons.Controls">
+                        <div class="control" data-bind="draggable: {
+    data: $data,
+    connectClass:ClientUI.View.EditCommandBarView.GetToolboxConnectedClass($root,$data) ,
+    options: {
+        appendTo:'body',
+        scroll:false,
+        refreshPositions:true,
+        helper2: function () {
+            return window.xrmjQuery(this).clone().appendTo('body').css('zIndex', 5).show();
+        }
+    }
+} ">
+                            <img data-bind="attr: { src: ExpandTokenisedUrl($data.Image16by16()) }"/><span data-bind="text:$data.LabelTextText"></span>
+                        </div>
+                    </div>
+                </span>
+            </span>
+               
+</div>
+    </div>
+
+    <!-- Start of Scripts-->
+    <script src="../../ClientGlobalContext.js.aspx" type="text/javascript"></script>
+
+    <!-- Client Code -->
+    <script src="../js/ClientUI.js" type="text/javascript"></script>
+
+    <script type="text/javascript" id="layout">
+        var outerLayout;
+
+        window.xrmjQuery(document).ready(function ($) {
+
+            // create the OUTER LAYOUT
+            outerLayout = $("#main").layout({
+                defaults: {
+                    size: "auto"
+                , livePaneResizing: true
+                , enableCursorHotkey: false
+                , minSize: 50
+                , buttonClass: "button"	// default = 'ui-layout-button'
+
+                , togglerLength_open: 35			// WIDTH of toggler on north/south edges - HEIGHT on east/west edges
+                , togglerLength_closed: 35			// "100%" OR -1 = full height
+
+                , togglerTip_open: "Close This Pane"
+                , togglerTip_closed: "Open This Pane"
+                , resizerTip: "Resize This Pane"
+                    //	effect defaults - overridden on some panes
+                , fxName: "slide"		// none, slide, drop, scale
+                },
+
+                north: {
+                    size: "350",
+                    minSize: "100"
+                },
+                west: {
+                    size: 120,
+                    minWidth: 60
+                },
+                center: {
+                    size: "30%",
+                    minWidth: 200,
+                    onresize: ClientUI.View.EditCommandBarView.ResizeGrid
+
+                },
+                east: {
+                    size: "60%",
+                    minWidth: 200
+                }
+            }
+);
+
+        }(window.xrmjQuery));
+
+    </script>
+
+    <script type="text/javascript" id="bootstrap">
+
+        // Fix for GlobalContext issue that causes ctrl-v not to work
+        if (typeof(Mscrm)!='undefined') Mscrm.GlobalEvents.documentUnload();
+        ClientUI.View.EditCommandBarView.Init();
+
+    </script>
+</body>
+</html>

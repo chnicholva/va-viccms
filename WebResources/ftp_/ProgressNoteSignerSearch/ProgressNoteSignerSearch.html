@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Progress Note Signer Search</title>
+    <!-- NOTE: ClientGlobalContext.js.aspx URL below is set with ../../ because the web resource that needs it is installed in a 2 level folder structure -->
+    <script type="text/javascript" src="../../ClientGlobalContext.js.aspx"></script>
+    <!-- Telerik KendoUI is required by this application, CRM must contain the Tribridge Adoption Essentials component "TribridgeIPCRMKuiFrameworkNS_Managed_2015_4_0001_target_CRM_7.0"  --> 
+    <script type="text/javascript" src="../../triipcrm_/TR_KU_V2015_2_902/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../../triipcrm_/TR_KU_V2015_2_902/js/kendo.all.min.js"></script>
+    <!-- Telerik KendoUI Office 365 Stylesheet --> 
+    <link href="../../triipcrm_/TR_KU_V2015_2_902/css/kendo.common_office365.min.css" rel="stylesheet" type="text/css" />
+    <link href="../../triipcrm_/TR_KU_V2015_2_902/css/kendo.office365.min.css" rel="stylesheet" type="text/css" />
+    <!-- Progress Note Signer Search Custom Stylesheet -->
+    <link href="css/ProgressNoteSignerSearchStyle.css" rel="stylesheet" />
+    <!--Control Library /-->
+    <script type="text/javascript" src="js/ProgressNoteSignerSearchScriptLib.js"></script>
+    <script type="text/javascript" src="../ViaServiceLibrary/js/ViaServiceLibrary.js"></script>
+</head>
+<body class="ProgressNoteSignerSearchForm">
+    <div id="ProgressNoteSignerSearchForm">
+        <table class="stdTable">
+            <tr>
+                <td colspan="2"><div id="lblTitle" class="headerMainLeft" title="Search for Signers">Search for Signers</div></td>
+            </tr>
+            <tr>
+                <td colspan="2"><div id="lblSubTitle" class="headerSubLeft" title="Enter your search criteria">Enter your search criteria</div></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <br /><b>Search text (Last, First)</b>&nbsp;&nbsp;<input id="searchtext" type="text" value="" onkeypress="pnss_searchKeyPress(event)" style="width:60%" title="Enter a signer name to search for." />
+                    <input name="searchbutton" id="searchbuttonid" type="image" src="img/btn_search.gif" alt="Begin Search" onclick="pnss_searchLookupEntity();" style="cursor:pointer; vertical-align:bottom" title="Begin Search" />
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr class="fieldHeader">
+                <td title="Signers Grid Header"><b>Signers</b></td>
+                <td title="Selected Signers Grid Header"><b>Selected Signers</b></td>
+            </tr>
+            <tr>
+                <td><div id="ku_lookupgrid" class="kendoGridBorder"></div></td>
+                <td><div id="ku_selectedgrid" class="kendoGridBorder"></div></td>
+            </tr> 
+            <tr>
+                <td></td>
+                <td style="text-align:right">
+                    <input id="btnSelect" type="button" class= "k-button" value="Apply Selected Signers" title="Click here to apply the selected signers." style="cursor:pointer;" onclick="pnss_applyProgressNoteSigners();" />
+                    <input id="btnCancel" type="button" class= "k-button" value="Cancel Selection" title="Click here to cancel the selection process." style="cursor:pointer;" onclick="pnss_cancelProgressNoteSigners();" />
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function ($) {
+            //Actions/Functions to execute as soon as the form is at a ready state.
+            try {
+                //Construct the initial CRM Lookup Control
+                pnss_formLoad();
+            }
+            catch (err) {
+                //Display Error....
+                alert("ProgressNoteSignerSearch.html Script Document Ready Error: " + err.message);
+            }
+        });
+    </script>
+
+</body>
+</html>
+

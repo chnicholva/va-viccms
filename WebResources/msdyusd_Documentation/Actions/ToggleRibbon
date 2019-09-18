@@ -1,0 +1,4 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US">Collapses or expands the ribbon.<SPAN style="mso-spacerun: yes">&nbsp;&nbsp; </SPAN>If you hide the ribbon in the Navigate action call, it won't be displayed and this action won't work.<SPAN style="mso-spacerun: yes">&nbsp; </SPAN>This action will work only when the ribbon was initially loaded.<o:p></o:p></SPAN></P><o:p></o:p></FONT></SPAN><FONT size=2 face="Tahoma, Verdana, Arial"></FONT></BODY></HTML>

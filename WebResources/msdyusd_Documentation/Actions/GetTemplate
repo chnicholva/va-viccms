@@ -1,0 +1,12 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Retrieves the contents of a merged email template.<o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>name</STRONG></TD>
+<TD>The name of the email template to retrieve. For example: name=Email Response Template 1</TD></TR>
+<TR>
+<TD><STRONG>id</STRONG></TD>
+<TD>The ID of the entity to associate with the template in the merge operation.</TD></TR></TBODY></TABLE><BR>The results get stored in the GlobalManager#template replacement parameter.</BODY></HTML>

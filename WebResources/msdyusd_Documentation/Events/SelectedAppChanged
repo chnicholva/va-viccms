@@ -1,0 +1,12 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Invoked when the focus on a panel has changed.&nbsp;&nbsp; This applies to hosted controls where focus can be determined, such as tab-based panels.<o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>Panel</STRONG></TD>
+<TD>The panel where the application focus changed.</TD></TR>
+<TR>
+<TD><STRONG>Selection</STRONG></TD>
+<TD>The name of the hosted control that has the focus now.</TD></TR></TBODY></TABLE></BODY></HTML>

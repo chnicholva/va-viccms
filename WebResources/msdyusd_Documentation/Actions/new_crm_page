@@ -1,0 +1,12 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Creates a new entity record in Microsoft Dynamics CRM, and treats it like it was a popup from the hosted control specified.&nbsp;&nbsp; The window navigation rules will be evaluated to determine the location where it should be displayed in the agent desktop.</FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>LogicalName</STRONG></TD>
+<TD>The logical name of the entity to create a new instance of.</TD></TR>
+<TR>
+<TD><STRONG></STRONG></TD>
+<TD>The rest of the parameters should consist of name=value pairs, which will prepopulate the values in the CRM form for the new entity record.</TD></TR></TBODY></TABLE></BODY></HTML>

@@ -1,0 +1,3 @@
+<HTML><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY><FONT size=2 face="Tahoma, Verdana, Arial">Shows the current page outside of the Unified Service Desk agent desktop.&nbsp;&nbsp; When displayed outside, Unified Service Desk will no longer be in control of the window and will not interact with it through automations or data capture.</FONT></BODY></HTML>

@@ -1,0 +1,4 @@
+<HTML><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Closes the active window in this hosted control.<SPAN style="mso-spacerun: yes">&nbsp;&nbsp; </SPAN>If the active window is the only window displayed in the hosted control, the control itself will be closed.<SPAN style="mso-spacerun: yes">&nbsp;&nbsp; </SPAN>For Microsoft Dynamics CRM pages that don't allow multiple pages, this is equivalent to the Close action.<?xml:namespace prefix = o ns = "urn:schemas-microsoft-com:office:office" /><o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT></BODY></HTML>

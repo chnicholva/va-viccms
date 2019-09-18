@@ -1,0 +1,12 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Adds a "things to do" entry to the Todo List hosted control.</FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>Todo</STRONG></TD>
+<TD>Text of the "things to do" entry to display to the user.</TD></TR>
+<TR>
+<TD><STRONG>Data</STRONG></TD>
+<TD>Data passed back through the TodoSelected event as the replacement parameter.&nbsp; This isn't displayed to the user but may contain useful information for the administrator to act on.</TD></TR></TBODY></TABLE></BODY></HTML>

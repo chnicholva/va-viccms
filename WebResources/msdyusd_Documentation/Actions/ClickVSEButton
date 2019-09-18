@@ -1,0 +1,11 @@
+<HTML xmlns:o="urn:schemas-microsoft-com:office:office">
+<HEAD>
+    <BASE>
+    <META charset=utf-8>
+</HEAD>
+<BODY>
+    <P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Uses data driven adapters to click a button control on the VSE interface.</FONT></SPAN></P>
+    <P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>The control must already be defined in the hosted control's Automation XML.</FONT></SPAN></P>
+    <P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Pass the name of the control by itself in the action call data.</FONT></SPAN></P>
+</BODY>
+</HTML>

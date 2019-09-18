@@ -1,0 +1,12 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Invoked when an agent sends an IM.<o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>SessionId</STRONG></TD>
+<TD>The ID of the session where the IM was received.</TD></TR>
+<TR>
+<TD><STRONG>Text</STRONG></TD>
+<TD>The text that was sent in the IM.</TD></TR></TBODY></TABLE></BODY></HTML>

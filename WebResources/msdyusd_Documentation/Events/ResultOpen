@@ -1,0 +1,11 @@
+<HTML><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY><FONT size=2 face="Tahoma, Verdana, Arial">Invoked when a search result is opened for reading content in the hosted control.&nbsp;</FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>title</STRONG></TD>
+<TD>The title of the article that needs to be displayed in the content page.</TD></TR>
+<TR>
+<TD><STRONG>answer</STRONG></TD>
+<TD>The answer data of the article that needs to be displayed in the content page.</TD></TR></TBODY></TABLE></BODY></HTML>

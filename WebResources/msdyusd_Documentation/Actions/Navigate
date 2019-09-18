@@ -1,0 +1,29 @@
+<HTML><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY><FONT size=2 face="Tahoma, Verdana, Arial"><p>Navigates to a URL.</p>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>url</STRONG></TD>
+<TD>The URL to navigate to.</TD></TR>
+<TR>
+<TD><STRONG>NoScan</STRONG></TD>
+<TD>Set this to "True" to prevent the data parameters from being captured from the target page. Otherwise, set to "False" or skip this parameter.</TD></TR>
+<TR>
+<TD><STRONG>HideRibbon</STRONG></TD>
+<TD>Set this to "True" to navigate to the inner frame instead of loading the ribbon in a Microsoft Dynamics CRM page. Otherwise, set to "False" or skip this parameter.</TD></TR>
+<TR>
+<TD><STRONG>Hidenav</STRONG></TD>
+<TD>Set this to "True" to collapse the left navigation panel after the CRM page is loaded. Otherwise, set to "False" or skip this parameter.</TD></TR>
+<TR>
+<TD><STRONG>Frame</STRONG></TD>
+<TD>When frames exist on the page, use this parameter to specify the name of the frame to navigate to instead of navigating to the main page.</TD></TR>
+<TR>
+<TD><STRONG>postdata</STRONG></TD>
+<TD>Data that is sent to the server as part of an HTTP POST transaction. A POST transaction is typically used to send data gathered by an HTML page. In Unified Service Desk, this data can be received from any event triggered using "http://event/?" with HTTP post. Example: [[postdata]+]. 
+<br/>Or, the data can be passed as encoded string with its header type in the intended format.
+</TD></TR>
+<TR>
+<TD><STRONG>header</STRONG></TD>
+<TD>A string value that contains additional HTTP headers to send to the server. When a postdata parameter is used in the Navigate action, it's recommended to pass the header value, too. Example: Content-Type:application/x-www-form-urlencoded.
+<br/>If a Unified Service Desk POST event triggers the Navigate action, the default value of this parameter should be header=[[header]+].</TD></TR></TBODY></TABLE></FONT></BODY></HTML>

@@ -1,0 +1,212 @@
+﻿﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <link rel="stylesheet" href="..\..\north52_purecss.css">
+    <title></title>
+    <script src="..\..\ClientGlobalContext.js.aspx" type="text/javascript"></script>
+    <script src="..\JScript\jquery.1.11.min.js" type="text/javascript"></script>
+    <script src="..\JScript\sdk.metadata.js" type="text/javascript"></script>
+    <script src="..\JScript\sdk.rest.js" type="text/javascript"></script>
+    <script src="..\JScript\rest.sync.js" type="text/javascript"></script>
+    <script src="..\JScript\process.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var _retrievedSettings = null;
+        var _newAttachment = {};
+        var _entityName = parent.Xrm.Page.data.entity.getEntityName();
+
+        function _arrayBufferToBase64(buffer) { // Convert Array Buffer to Base 64 string
+            var binary = '';
+            var bytes = new Uint8Array(buffer);
+            var len = bytes.byteLength;
+            for (var i = 0; i < len; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+           
+            return window.btoa(binary);
+        }
+
+        // function behind the onclick of Upload Attachment button
+        function save() {
+            var bError = false;
+            var sError = "";
+
+            if (document.getElementById("title").value == "") {
+                bError = true;
+                sError += " - Title is a required field.\n";
+            }
+
+            if (document.getElementById("uploadFile").value == "") {
+                bError = true;
+                sError += " - A file must be selected.\n";
+            }
+
+            if (bError) {
+                window.alert(sError);
+            }
+            else {
+                document.getElementById("btnUpload").textContent = "Working...";
+                document.getElementById("btnUpload").disabled = true;
+
+                var file = document.getElementById("uploadFile").files[0];
+                var subject = document.getElementById("title").value;
+
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function (evt) {
+                        var fileContents = _arrayBufferToBase64(reader.result);
+                        var filename = parent.Xrm.Page.data.entity.getPrimaryAttributeValue() + "-" + file.name;
+                        _newAttachment.ftp_filename_text = filename;
+                        _newAttachment.ftp_title_text = subject;
+                        _newAttachment.ftp_name = filename;
+
+                        //Create new Attachment record with partial file info and call the Action.
+                        //Action will call the plugin and fill in the rest of the Attachment record.
+                        createAttachment(fileContents);
+
+                    }
+                    reader.readAsArrayBuffer(file);
+                }
+
+            }
+        }
+
+        // function for Creating Attachment record using SDK REST
+        function createAttachment(fileContents) {
+            // Get Id and entity Name from the parent opener (Interaction or Request)
+            var id = parent.Xrm.Page.data.entity.getId();
+            var parentEntity = { Id: id, LogicalName: _entityName };
+            if (_entityName == "ftp_interaction") {
+                _newAttachment.ftp_interactionid = parentEntity;
+                //_newAttachment.ftp_veteranid = parent.Xrm.Page.getAttribute("ftp_veteran");
+            }
+            if (_entityName == "incident") {
+                _newAttachment.ftp_requestid = parentEntity;
+                //_newAttachment.ftp_veteranid = parent.Xrm.Page.getAttribute("customerid");
+            }
+            
+            try {
+                SDK.REST.createRecord(
+                    _newAttachment,
+                    "ftp_attachment",
+                    function (result) {
+                        var newId = "{" + result.ftp_attachmentId + "}";
+                        // Call the Action that uploads the file to Sharepoint
+                        callUploadAttachmentAction(fileContents, newId)
+                    },
+                    function (error) {
+                        Xrm.Utility.alertDialog(error.message, null);
+                        refreshForm();
+                    }
+                );
+            }
+            catch (err) {
+                Xrm.Utility.alertDialog("An error occurred when trying to create Attachment record. Error: " + err.message, null);
+                refreshForm();
+            }
+        }
+
+        // function to call custom action that triggers plugin to upload file to sharepoint
+        function callUploadAttachmentAction(docBody, attachmentId) {
+            //Load the input parameters
+            var inputParams = [
+                { key: "Target", type: Process.Type.EntityReference, value: { id: attachmentId, entityType: "ftp_attachment" } },
+                { key: "FileName", type: Process.Type.String, value: _newAttachment.ftp_filename_text },
+                { key: "Title", type: Process.Type.String, value: _newAttachment.ftp_title_text },
+                { key: "FileBody", type: Process.Type.String, value: docBody }
+            ];
+            //Call the custom action
+            Process.callAction("ftp_UploadAttachment", inputParams, successCallback, errorCallback);
+        }
+
+        function successCallback(params) {
+            Xrm.Utility.alertDialog("The document was successfully attached.", null);
+            refreshForm();
+        }
+        function errorCallback(error, trace) {
+            Xrm.Utility.alertDialog("An error occurred when trying to upload the Attachment. Error Detail: " + error, null);
+            refreshForm();
+        }
+
+        function refreshForm() {
+            document.getElementById("title").value = "";
+            clearFileInput(document.getElementById("uploadFile"));
+            document.getElementById("btnUpload").textContent = "Upload Attachment";
+            document.getElementById("btnUpload").disabled = false;
+            //refresh attachments subgrid
+            var subgrid = parent.Xrm.Page.ui.controls.get("attachmentsSubGrid");
+            subgrid.refresh();
+        }
+
+        function clearFileInput(ctrl) {
+            try {
+                ctrl.value = null;
+            } catch (ex) { }
+            if (ctrl.value) {
+                ctrl.parentNode.replaceChild(ctrl.cloneNode(true), ctrl);
+            }
+        }
+
+    </script>
+    <style type="text/css">
+        caption {
+            text-align: left;
+            font-weight: bold;
+            font-family: Segoe UI,Tahoma,Arial;
+            font-size: 12px;
+            color: #000000;
+        }
+
+        th {
+            font-weight: normal;
+        }
+
+        body {
+            font-family: Segoe UI,Tahoma,Arial;
+            font-size: 11px;
+            color: #444444;
+        }
+
+        input {
+            font-family: Segoe UI,Tahoma,Arial;
+            font-size: 11px;
+            color: #444444;
+        }
+
+        td {
+            font-family: Segoe UI,Tahoma,Arial;
+            font-size: 11px;
+            color: #444444;
+        }
+
+        .hover {
+            text-decoration: underline;
+        }
+
+        .display dataTable no-footer {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <form name="frmMain" action="#" method="post">
+        <div id="container">
+            <span id="notification"></span>
+            <table class="display" id="addAttachment" cellspacing="6">
+                <tbody>
+                    <tr>
+                        <td>Title</td>
+                        <td><input name="title" id="title" type="text"></td>
+                    </tr>
+                    <tr>
+                        <td>File</td>
+                        <td><input name="uploadFile" id="uploadFile" type="file"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><button name="btnUpload" class="pure button button-warning" id="btnUpload" onclick="save();" type="button">Upload Attachment</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </form>
+</body>
+</html>

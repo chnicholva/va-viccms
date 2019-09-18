@@ -1,0 +1,15 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Sets the width of the top panel in a HorizontalSplit panel.<o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>height</STRONG></TD>
+<TD>
+<P>The height of the top panel.&nbsp; The interpretation of this parameter depends on the "Type" parameter.</P></TD></TR>
+<TR>
+<TD><STRONG>type</STRONG></TD>
+<TD>
+<P>The type of number specified in the height parameter.</P>
+<P>Auto: Is just tall enough to fit the controls inside of it.<BR>Pixel: The height parameter is a pixel value.<BR>Star: Takes all of the available height after the rest of the form is calculated.&nbsp; The height parameter is used as a fractional amount of the available space.&nbsp; For example, height=2 and type=star means 2* in Windows Presentation Foundation (WPF).</P></TD></TR></TBODY></TABLE></BODY></HTML>

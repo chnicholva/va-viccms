@@ -1,0 +1,21 @@
+<HTML xmlns:o="urn:schemas-microsoft-com:office:office">
+<HEAD>
+    <BASE>
+    <META charset=utf-8>
+</HEAD>
+<BODY>
+    <P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Uses data driven adapters to set the value of a textbox control on the VSE interface.</FONT></SPAN></P>
+    <TABLE border=1>
+        <TBODY>
+            <TR>
+                <TD><STRONG>controlName</STRONG></TD>
+                <TD>Name of the control to set. This control must already be defined in the hosted control's Automation XML.</TD>
+            </TR>
+            <TR>
+                <TD><STRONG>controlValue</STRONG></TD>
+                <TD>Text value to put into the named control</TD>
+            </TR>
+        </TBODY>
+    </TABLE>
+</BODY>
+</HTML>

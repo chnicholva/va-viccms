@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Request Notes Control</title>
+    <!-- NOTE: ClientGlobalContext.js.aspx URL below is set with ../../ because the web resource that needs it is installed in a 3 level folder structure -->
+    <script type="text/javascript" src="../../../ClientGlobalContext.js.aspx"></script>
+    <!-- Telerik KendoUI is required by this application, CRM must contain the Tribridge Adoption Essentials component "TribridgeIPCRMKuiFrameworkNS_Managed_2015_4_0001_target_CRM_7.0"  --> 
+    <script type="text/javascript" src="../../../triipcrm_/TR_KU_V2015_2_902/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../../../triipcrm_/TR_KU_V2015_2_902/js/kendo.all.min.js"></script>
+    <!-- Telerik KendoUI Office 365 Stylesheet --> 
+    <link href="../../../triipcrm_/TR_KU_V2015_2_902/css/kendo.common_office365.min.css" rel="stylesheet" type="text/css" />
+    <link href="../../../triipcrm_/TR_KU_V2015_2_902/css/kendo.office365.min.css" rel="stylesheet" type="text/css" />
+    <!-- Request Notes Control Stylesheet -->
+    <link href="css/RequestNotesControlStyle.css" rel="stylesheet" />
+    <!-- Request Notes Control Application Library -->
+    <script type="text/javascript" src="js/RequestNotesControlScriptLib.js"></script>
+</head>
+<body class="RequestNotesControlForm">
+    <div id="RequestNotesControlForm">
+        <table class="stdTable">
+            <tr>
+                <td>
+                    <div id="ku_requestnotesgrid" class="kendoGridBorder"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div id ="RequestNotesButtons" style="text-align:center;">
+                        <input id="btnRefreshNotesGrid" type="button" class="CrmButton" value="Refresh Comments Grid" title="Select to Refresh the comments listed in the grid." onclick="rnco_buttonRefreshNotes();" />
+                        <input id="btnApplySelectedNotes" type="button" class="CrmButton" value="Apply Selected Comments" title="Select to add the selected Comments to the Progress Note." onclick="rnco_buttonApplyNotes();" />
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+        <script type="text/javascript">
+            $(document).ready(function ($) {
+                //Actions/Functions to execute as soon as the form is at a ready state.
+                try {
+                    //Construct the initial Lookup
+                    rnco_formLoad();
+                }
+                catch (err) {
+                    //Display Error....
+                    alert("RequestNotesControl.html Script Document Ready Error: " + err.message);
+                }
+            });
+    </script>
+</body>
+</html>

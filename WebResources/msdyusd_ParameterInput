@@ -1,0 +1,4 @@
+<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>Web Resource with Border</TITLE>
+<META charset=utf-8></HEAD>
+<BODY style="BORDER-RIGHT-WIDTH: 0px; MARGIN: 0px; PADDING-LEFT: 0px; BORDER-TOP-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; PADDING-TOP: 0px">
+<P>Style applied but border still appears.</P></BODY></HTML>

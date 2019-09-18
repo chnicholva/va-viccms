@@ -1,0 +1,9 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Blocks the processing until the page is completely loaded.<SPAN style="mso-spacerun: yes">&nbsp;&nbsp; </SPAN>Note: For some webpages (particularly Microsoft Dynamics CRM pages) that have multiple frames, the action waits for only the main frame to complete loading.<SPAN style="mso-spacerun: yes">&nbsp;&nbsp; </SPAN></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>Milliseconds</STRONG></TD>
+<TD>Indicates the time, in milliseconds, to wait for the page to completely load. Optional.</TD></TR></TBODY></TABLE></BODY></HTML>

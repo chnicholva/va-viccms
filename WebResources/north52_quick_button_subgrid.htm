@@ -1,0 +1,237 @@
+<html><head><title>North52 BPA - Quick Button</title>
+<script src="ClientGlobalContext.js.aspx"></script>
+
+<script src="north52_/javascript/jquery" type="text/javascript"></script>
+
+<script src="north52_/javascript/north52_dialog_helper" type="text/javascript"></script>
+
+<script src="north52_/javascript/n52.json2" type="text/javascript"></script>
+
+<script src="north52_/javascript/n52.rest" type="text/javascript"></script>
+
+<script src="north52_/javascript/n52.clientside" type="text/javascript"></script>
+
+<link href="north52_purecss.css" rel="stylesheet" type="text/css">
+
+<style type="text/css">
+
+html, body{ height: 100%; overflow: auto;  border-width: 0px; }
+
+body {  padding-top: 5;  margin: 0;  }
+
+</style>
+
+<script type="text/javascript">
+
+var N52QuickButton = {}; 
+
+ $(document).ready(function () {
+ 			N52QuickButton.Initialize(false);
+     });
+
+
+N52QuickButton.Click = function()
+{
+
+
+
+N52QuickButton.SetDisable();
+N52QuickButton.PreSave();
+
+
+	var sgname=N52QuickButton.GetSubGridName();
+	var rows=N52QuickButton.GetSelectedRows(sgname);
+	
+	if(rows.length > 0)
+	{
+		// Clear warning message if set
+		parent.Xrm.Page.ui.clearFormNotification('sgmsg1');
+	
+		for(j=0;j<rows.length;j++)
+		{		
+                        var executionContext= N52.Clientside.BuildExecutionObject('n52clientside', rows[j].id);
+			var localexecutionContext =  jQuery.extend(true, {}, executionContext);
+                         var formulaParams = N52.Clientside.BuildFormulaParameters(localexecutionContext, N52QuickButton.GetShortCode(), null);
+			N52.Clientside.ExecuteFormulasNative(localexecutionContext, formulaParams , N52.Clientside.RetrieveFormulaCallBack, N52QuickButton.CompleteCallBack) 
+		}
+	}
+	else
+	{
+		// If No rows selected display a warning
+		parent.Xrm.Page.ui.setFormNotification('No Rows selected in Sub Grid', 'WARNING', 'sgmsg1');
+
+		N52QuickButton.Initialize(false);
+	
+	}
+
+}
+
+
+N52QuickButton.GetQuerystring= function(e)
+{
+   var t=e.replace(/[\[]/,"\\[").replace(/[\]]/,"\\]");
+   var n=new RegExp("[\\?&]"+t+"=([^&#]*)");
+
+   var r=n.exec(window.location.href);
+
+   if(r==null)
+     return null;
+
+return r[1];
+}
+
+N52QuickButton.GetShortCode= function()
+{
+     var e=N52QuickButton.GetQuerystring("data");
+     var t=decodeURIComponent(e);
+     var n=t.split("|");
+
+return n[0];
+}
+
+N52QuickButton.GetButtonDescription= function()
+{
+     var e=N52QuickButton.GetQuerystring("data");
+     var t=decodeURIComponent(e);
+     var n=t.split("|");
+
+return n[1] == null ? 'Click Me' : n[1];
+}
+
+N52QuickButton.GetButtonStyle= function()
+{
+     var e= N52QuickButton.GetQuerystring("data");
+     var t=decodeURIComponent(e);
+     var n=t.split("|");
+
+return n[2] == null ? 'pure-button button-success' : n[2];
+}
+
+
+
+N52QuickButton.GetRefreshMode= function()
+{
+     var e=N52QuickButton.GetQuerystring("data");
+     var t=decodeURIComponent(e);
+     var n=t.split("|");
+
+return n[4] == null ? 'none' : n[4];
+}
+
+
+N52QuickButton.GetExecutionParams= function()
+{
+     var e=N52QuickButton.GetQuerystring("data");
+     var t=decodeURIComponent(e);
+     var n=t.split("|");
+     
+     if (n.length >= 6)
+     	return n[5];
+     else
+     	return ':*:CreateUpdate::0:217890000:217890000:217890000';
+}
+
+N52QuickButton.PreSave= function()
+{
+
+var refreshMode = N52QuickButton.GetRefreshMode().toLowerCase();
+
+	if (refreshMode == 'presaveonly')
+		parent.Xrm.Page.data.entity.save();
+	else if (refreshMode == 'presaveandrefresh')
+		parent.Xrm.Page.data.entity.save();
+		
+}
+
+N52QuickButton.GetSelectedRows= function(name)
+{
+
+var selectedEntityReferences = [];
+var selectedRows = parent.Xrm.Page.getControl(name).getGrid().getSelectedRows();
+
+selectedRows.forEach(function (selectedRow, i) {
+ selectedEntityReferences.push(selectedRow.getData().getEntity().getEntityReference());
+});
+
+return selectedEntityReferences;
+
+}
+
+N52QuickButton.GetSubGridName= function()
+{
+     var e=N52QuickButton.GetQuerystring("data");
+     var t=decodeURIComponent(e);
+     var n=t.split("|");
+
+return n[3];
+}
+
+
+N52QuickButton.CompleteCallBack= function()
+{
+
+var refreshMode = N52QuickButton.GetRefreshMode().toLowerCase();
+
+	if (refreshMode == 'presaveandrefresh')
+	{
+		parent.Xrm.Page.data.refresh(false);
+	}
+		
+	N52QuickButton.Initialize(false);
+        N52QuickButton.Reset();
+}
+
+N52QuickButton.SetDisable = function()
+{
+
+$('#n52button').attr('disabled', true);
+$('#n52button').text('In-Progress...'); 
+
+ 	
+}
+
+N52QuickButton.Initialize= function(status)
+{
+
+var buttonDescription=N52QuickButton.GetButtonDescription();
+var buttonStyle =N52QuickButton.GetButtonStyle();
+
+
+$('#n52button').attr("disabled", status);
+$('#n52button').text(buttonDescription); 
+$('#n52button').attr("class", buttonStyle );
+}
+
+N52QuickButton.Reset = function()
+{
+
+window['n52ExecutionContext'] = null;
+window['n52AllowSaveEvent'] = null;
+
+ 	
+}
+N52QuickButton.QuickButtonEnable = function()
+{
+
+$('#n52button').attr('disabled', false);
+ 	
+}
+
+N52QuickButton.QuickButtonDisable = function()  
+{
+
+$('#n52button').attr('disabled', true);
+ 	
+}
+
+N52QuickButton.Refresh= function()
+{
+N52QuickButton.Initialize(false);
+N52QuickButton.PostRefresh();
+}
+
+
+
+
+</script>
+<meta charset="utf-8"><meta><meta><meta><meta><meta></head><body style="-ms-word-wrap: break-word;"><button id="n52button" onclick="N52QuickButton.Click();" type="button">Click ME</button></body></html>

@@ -1,0 +1,56 @@
+function callIsUserInRole() {
+    $(document).ready(function () {
+
+    var userId = Xrm.Page.context.getUserId();
+    var result = isUserInRole("FtP TAN", userId);
+
+    if (result) { 
+          //   var theControl = Xrm.Page.getControl("ftp_sensitiveveteran");
+
+var theControl = Xrm.Page.ui.control.get("ftp_sensitiveveteran");
+
+
+debugger;
+             if(theControl  != null){
+                   Xrm.Page.getControl("ftp_sensitiveveteran").setFocus();
+               }
+        }
+
+});
+}
+
+isUserInRole = function(roleName, userId)
+{
+    /// <summary>
+    /// Returns true of the current user has the given security role
+    /// </summary>
+
+    var roleFound = false;
+    var serverUrl = Xrm.Page.context.getClientUrl();
+    var oDataEndpointUrl = serverUrl + "/XRMServices/2011/OrganizationData.svc/";
+    oDataEndpointUrl += "RoleSet?$top=1&$filter=Name eq '" + roleName + "'";
+
+    $.ajax({
+        type: "GET",
+        async: false,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        url: oDataEndpointUrl,
+                    beforeSend: function (XMLHttpRequest) {
+                XMLHttpRequest.setRequestHeader('Accept', 'application/json');
+         },
+        success: function(data)
+        {
+            if (data != null && data.d.results.length > 0)
+            {
+                roleFound = true;
+            }
+        },
+        error: function(request, status, error)
+        {
+            alert(request.responseText + " : " + status + " : " + error);
+        }
+    });
+
+    return roleFound;
+}

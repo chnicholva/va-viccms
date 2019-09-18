@@ -1,0 +1,16 @@
+function SetFacilityValue() {
+//debugger;
+var fieldName = Xrm.Page.getAttribute("ftp_facilityid");
+
+    if (fieldName != null) {
+        var lookupValue = new Array();
+        lookupValue[0] = new Object();
+        lookupValue[0].id = 'FBA41029-6816-E611-9436-0050568D743D';
+        lookupValue[0].name = "516-Bay Pines, FL";
+        lookupValue[0].entityType = "ftp_facility";
+        Xrm.Page.getAttribute("ftp_facilityid").setValue(lookupValue);
+	Xrm.Page.getAttribute("ftp_facility").setValue("516");
+    }
+
+}
+

@@ -1,0 +1,77 @@
+<html>
+<head>
+    <title>SOAP JavaScript Client Test</title>
+    <script type="text/javascript">
+        function soap() {
+            //debugger;
+            try {
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.open('POST', 'http://jaxws.webservices.esr.med.va.gov', false);
+
+                // build SOAP request
+                var sr =
+                    '<?xml version="1.0" encoding="utf-8"?>' +
+                    '<soapenv:Envelope ' + 
+                        'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
+                        'xmlns:api="http://127.0.0.1/Integrics/Enswitch/API" ' +
+                        'xmlns:xsd="http://www.w3.org/2001/XMLSchema" ' +
+                        'xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">' +
+                        '<soapenv:Body>' +
+                            '<api:some_api_call soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">' +
+                                '<username xsi:type="xsd:string">login_username</username>' +
+                                '<password xsi:type="xsd:string">password</password>' +
+                            '</api:some_api_call>' +
+                        '</soapenv:Body>' +
+                    '</soapenv:Envelope>';
+
+                var sr2 =
+                    '<?xml version="1.0" encoding="utf-8"?>' +
+                    '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" ' +
+                        'xmlns:sch="http://jaxws.webservices.esr.med.va.gov/schemas" ' +
+                        'xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">' +
+                        '<soapenv:Header>' +
+                            '<wsse:Security SOAP-ENV:mustUnderstand="1" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">' +
+                                '<wsse:UsernameToken xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">' +
+                                    '<wsse:Username>CRMSvcUsr</wsse:Username>' +
+                                    '<wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">4rfv$RFV</wsse:Password>' +
+                                '</wsse:UsernameToken>' +
+                            '</wsse:Security>' +
+                        '</soapenv:Header>' +
+                        '<soapenv:Body>' +
+                            '<sch:getEESummaryRequest>' +
+                            '<sch:key>0000001008591788V476978000000</sch:key>' +
+                            '<sch:requestName>allEEData</sch:requestName>' +
+                            '<sch:keyType>vpid</sch:keyType>' +
+                            '</sch:getEESummaryRequest>' +
+                        '</soapenv:Body>' +
+                    '</soapenv:Envelope>';
+
+                xmlhttp.onreadystatechange = function () {
+                    if (xmlhttp.readyState == 4) {
+                        if (xmlhttp.status == 200) {
+                            alert('done.');
+                        }
+                    }
+                }
+                // Send the POST request
+                xmlhttp.setRequestHeader('Content-Type', 'text/xml');
+                xmlhttp.send(sr2);
+                // send request
+                // ...
+            }
+            catch (err) {
+                //Display Error....
+                alert("Error: " + err.message);
+
+            }
+        }
+    </script>
+</head>
+<body>
+    <form name="Demo" action="" method="post">
+        <div>
+            <input type="button" value="Soap" onclick="soap();" />
+        </div>
+    </form>
+</body>
+</html>

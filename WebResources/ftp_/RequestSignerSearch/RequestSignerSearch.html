@@ -1,0 +1,73 @@
+<html><head><meta></head><body class="RequestSignerSearchForm" onfocusout="parent.setEmailRange();" style="overflow-wrap: break-word;">﻿
+
+
+    <title>Request Signer Search</title>
+    <!-- NOTE: ClientGlobalContext.js.aspx URL below is set with ../../ because the web resource that needs it is installed in a 2 level folder structure -->
+    <script type="text/javascript" src="../../ClientGlobalContext.js.aspx"></script>
+    <!-- Telerik KendoUI is required by this application, CRM must contain the Tribridge Adoption Essentials component "TribridgeIPCRMKuiFrameworkNS_Managed_2015_4_0001_target_CRM_7.0"  --> 
+    <script type="text/javascript" src="../../triipcrm_/TR_KU_V2015_2_902/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../../triipcrm_/TR_KU_V2015_2_902/js/kendo.all.min.js"></script>
+    <!-- Telerik KendoUI Office 365 Stylesheet --> 
+    <link href="../../triipcrm_/TR_KU_V2015_2_902/css/kendo.common_office365.min.css" rel="stylesheet" type="text/css">
+    <link href="../../triipcrm_/TR_KU_V2015_2_902/css/kendo.office365.min.css" rel="stylesheet" type="text/css">
+    <!-- Request Signer Search Custom Stylesheet -->
+    <link href="css/RequestSignerSearchStyle.css" rel="stylesheet">
+    <!--Control Library /-->
+    <script type="text/javascript" src="js/RequestSignerSearchScriptLib.js"></script>
+
+
+    <div id="RequestSignerSearchForm">
+        <table class="stdTable">
+            <tbody><tr>
+                <td colspan="2"><div id="lblTitle" class="headerMainLeft" title="Search for Users">Search for Users</div></td>
+            </tr>
+            <tr>
+                <td colspan="2"><div id="lblSubTitle" class="headerSubLeft" title="Enter your search criteria">Enter your search criteria here</div></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <br><b>Search text</b>&nbsp;&nbsp;<input id="searchtext" type="text" value="" onkeypress="rss_searchKeyPress(event)" style="width:65%" title="Enter a user name to search for.">
+                    <input name="searchbutton" id="searchbuttonid" type="image" src="img/btn_search.gif" alt="Begin Search" onclick="rss_searchLookupEntity();" style="cursor:pointer; vertical-align:bottom" title="Begin Search">
+                    <input type="checkbox" id="myfacilityusers" style="cursor:pointer;" title="Check to include My Facility Users Only" checked="checked"><b>My Facility Users Only</b>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr class="fieldHeader">
+                <td title="Users Grid Header"><b>Users</b></td>
+                <td title="Selected Users Grid Header"><b>Selected Users</b></td>
+            </tr>
+            <tr>
+                <td><div id="ku_lookupgrid" class="kendoGridBorder"></div></td>
+                <td><div id="ku_selectedgrid" class="kendoGridBorder"></div></td>
+            </tr> 
+            <tr>
+                <td></td>
+                <td style="text-align:right">
+                    <input id="btnSelect" type="button" class="k-button" value="Apply Selected Users" title="Click here to apply the selected users." style="cursor:pointer;" onclick="rss_applyRequestSigners();">
+                    <input id="btnCancel" type="button" class="k-button" value="Cancel Selection" title="Click here to cancel the selection process." style="cursor:pointer;" onclick="rss_cancelRequestSigners();">
+                </td>
+            </tr>
+        </tbody></table>
+
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function ($) {
+            //Actions/Functions to execute as soon as the form is at a ready state.
+            try {
+                //Construct the initial CRM Lookup Control
+                rss_formLoad();
+            }
+            catch (err) {
+                //Display Error....
+                alert("RequestSingerSearch.html Script Document Ready Error: " + err.message);
+            }
+        });
+    </script>
+
+
+
+</body></html>

@@ -1,0 +1,51 @@
+<html><head><meta><meta></head><body onfocusout="parent.setEmailRange();" style="overflow-wrap: break-word;">﻿
+	
+		<meta charset="utf-8">
+	
+	
+		<button id="createButton" onclick="run()">Create Combo Request</button>
+		<script>
+		    function run() {
+debugger;
+		        var Xrm = window.parent.Xrm;
+		        var thisEntityId = Xrm.Page.data.entity.getId();
+		        if (!!thisEntityId) {
+		            Xrm.Page.ui.clearFormNotification("ComboRequestButtonClickBeforeSaveError");
+		            var ownerValue = Xrm.Page.getAttribute("ownerid").getValue();
+		            var customerValue = Xrm.Page.getAttribute("customerid").getValue();
+		            var callbackNumber = Xrm.Page.getAttribute("ftp_callbacknumber").getValue();
+		            var interactionValue = Xrm.Page.getAttribute("tri_ftp_interaction_incidentid").getValue();
+					var cachedICNValue = Xrm.Page.getAttribute("ftp_cachedicnid").getValue();
+		            if (!!ownerValue && !!customerValue && !!callbackNumber) {
+		                Xrm.Page.ui.clearFormNotification("ComboRequestButtonMissingFieldsError");
+		                var parameters = {
+		                    ftp_ownerid: ownerValue[0].id,
+		                    ftp_owner: ownerValue[0].name,
+		                    ftp_veteran: customerValue[0].id,
+		                    ftp_veteranname: customerValue[0].name,
+		                    ftp_callback: callbackNumber,
+		                    //ftp_notes: Xrm.Page.getAttribute("description").getValue(),
+		                    originatingEntityId_0: thisEntityId,
+		                    originatingEntityType_0: Xrm.Page.data.entity.getEntityName(),
+		                    originatingEntityName_0: Xrm.Page.data.entity.getPrimaryAttributeValue(),
+		                    //tri_ftp_interaction_incidentid: interactionValue[0].id
+							ftp_cachedicnid: cachedICNValue[0].id,
+		                };
+
+		                if (!!interactionValue) parameters.requestLinkedInteractionId_0 = interactionValue[0].id;
+						//if (!!cachedICNValue) parameters.ftp_cachedicnid = cachedICNValue[0].id;
+
+		                var windowOptions = { openInNewWindow: true };
+		                Xrm.Utility.openEntityForm("ftp_multiplereasons", null, parameters, windowOptions);
+		            }
+		            else {
+		                Xrm.Page.ui.setFormNotification("Ensure that you have data in the Veteran, Owner, and Callback Number fields before creating a combo request.", "ERROR", "ComboRequestButtonMissingFieldsError");
+		            }
+		        }
+		        else {
+		            Xrm.Page.ui.setFormNotification("Save this request before creating and linking a combo request to it.", "WARNING", "ComboRequestButtonClickBeforeSaveError");
+		        }
+		    }
+		</script>
+	
+</body></html>

@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>DropDownList Control</title>
+    <!-- NOTE: ClientGlobalContext.js.aspx URL below is set with ../../ because the web resource that needs it is installed in a 3 level folder structure -->
+    <script type="text/javascript" src="../../../ClientGlobalContext.js.aspx"></script>
+    <!-- Telerik KendoUI is required by this application, CRM must contain the Tribridge Adoption Essentials component "TribridgeIPCRMKuiFrameworkNS_Managed_2015_4_0001_target_CRM_7.0"  --> 
+    <script type="text/javascript" src="../../../triipcrm_/TR_KU_V2015_2_902/js/jquery.min.js"></script>
+    <!-- Checkbox Optionset Control Custom Stylesheet -->
+    <link href="css/DropDownListControlStyle.css" rel="stylesheet" />
+    <!--Control Library /-->
+    <script type="text/javascript" src="js/DropDownListControlScriptLib.js"></script>
+</head>
+<body class ="DropDownListForm">
+    <div id="ddlc_dropdownList" tabindex="0">
+        <select id="dropdownlist" style="width:95%; cursor:pointer; font-size:100%;" onchange="ddlc_dropdownSelected()" size="1"></select>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function ($) {
+            //Actions/Functions to execute as soon as the form is at a ready state.
+            try {
+                //Construct the initial dropdownlist control
+                ddlc_formLoad();
+            }
+            catch (err) {
+                //Display Error....
+                alert("DropDownListControl.html Script Document Ready Error: " + err.message);
+            }
+        });
+    </script>
+</body>
+</html>

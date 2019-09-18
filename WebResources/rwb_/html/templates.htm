@@ -1,0 +1,903 @@
+﻿ <!-- Message dialog -->
+<script type="text/html" id="dialog-message-view">
+    <span data-bind="css:vm.MessageTypeClass" class="dialog-icon-float"></span>
+    <div class="dialog-scroll">
+        <span style="white-space: pre-wrap" data-bind="text:vm.Message"></span>
+    </div>
+    <div class="content-with-links" data-bind="if:vm.HelpLink!=null">
+        <a href target="_blank" data-bind="attr:{'href':vm.HelpLink}, text:ResourceStrings.LearnMoreAboutFixLink"></a>
+    </div>
+</script>
+
+<!-- Auto Update Template -->
+<script type="text/html" id="dialog-auto-update-view">
+    <div class="sparkle-wait-blockout" data-bind="fadeVisible: vm.isBusy">
+        <table height="100%" width="100%">
+            <tr>
+                <td align="center" valign="middle">
+                    <img src="../css/images/transparent_spacer.gif" />
+                </td>
+            </tr>
+        </table>
+    </div>
+    <span class="update-dialog-image dialog-image-overlay"></span>
+    <h3 data-bind="text:ResourceStrings.UpdateAvailable"></h3>
+    <div class="error-dialog-scroll">
+        <span style="white-space: pre-wrap" data-bind="text:vm.Message"></span>
+    </div>
+</script>
+
+<!-- Error Dialog Template -->
+<script type="text/html" id="dialog-error-view">
+    <div class="sparkle-wait-blockout" data-bind="fadeVisible: vm.isBusy">
+        <table height="100%" width="100%">
+            <tr>
+                <td align="center" valign="middle">
+                    <img src="../css/images/transparent_spacer.gif" />
+                </td>
+            </tr>
+        </table>
+    </div>
+    <span class="error-dialog-image dialog-image-overlay"></span>
+    <h3 data-bind="text:ResourceStrings.Error_DialogTitle"></h3>
+
+    <div class="error-dialog-scroll">
+        <span style="white-space: pre-wrap" data-bind="text:vm.Message"></span>
+    </div>
+    <div data-bind="ifnot: vm.Sent">
+        <h3 data-bind="text:ResourceStrings.Error_LetUsKnow"></h3>
+        <label for="email-address" data-bind="text:ResourceStrings.YourEmail"></label><input type="text" id="email-address" data-bind="value:vm.Email" />
+        <label for="additional-info" data-bind="text:ResourceStrings.Error_WhatWereYouDoing"></label><textarea style="height:40px;width:100%" type="text" id="additional-inf" data-bind="value:vm.MoreInfo" />
+        <button value="Send" data-bind="click:vm.SendErrorCommand, text:ResourceStrings.SendError"></button>
+    </div>
+    <div data-bind="if: vm.Sent">
+        <h3 data-bind="text:ResourceStrings.Error_Thankyou"></h3>
+    </div>
+</script>
+
+<!-- Select Solution Dialog Template -->
+<script type="text/html" id="dialog-select-solution">
+    <div class="sparkle-xrm">
+        <span class="dialog-icon-float info-dialog-image"></span>
+        <span class="content-with-links" data-bind="html:ResourceStrings.SelectSolution_Info"></span>
+        <div style="margin-top:16px">
+            <input type="text" data-bind="value:vm.SearchTerm, valueUpdate: 'afterkeydown',enterKey:vm.SearchSolutionsCommand()" style="width:200px" />
+            <button value="Search" data-bind="click:vm.SearchSolutionsCommand(), text:ResourceStrings.Search">Search</button>
+        </div>
+        <div class="solutions-grid" data-bind="attr:{id:'grid' + dialogId}"></div>
+    </div>
+</script>
+
+<!-- Flyout Template -->
+<script type="text/html" id="flyout-editor">
+
+    <div data-bind="if: $data">
+        <div data-bind="if: $data.FlyoutOpen">
+
+            <div class="flyoutContainer" data-bind="attr: { 'id': 'flyout_' + $data.Id() }, position: { within: '#designSurface', target: 'div#' + GetControlId($data) }">
+                <div class="flyoutScroll">
+                    <!-- ko if:typeof(Controls)!='undefined' && Controls!=null && Controls()!=null && Controls().length==0-->
+                    <span class="empty-menu-section" data-bind="text:ResourceStrings.DragControlsHere"></span>
+                    <!-- /ko-->
+                    <div class="menuSection" data-bind="sortable: {
+    options: { cancel:'.nodrag',placeholder: 'drop-placeholder', delay: 50 },
+    data: Controls,
+    afterMove: $root.Control_OnAfterMove(),
+    beforeMove: $root.Control_OnBeforeMove()
+}">
+
+                        <div class="menuItems">
+                            <div class="control menucontrol" data-bind="click:$root.Control_OnClick(),
+                                 attr:{ 'id':GetControlId($data) },
+                                 css:{
+                                 nodrag:!($data.Customised()),
+                                 strikethrough:$data.HiddenBySolution,
+                                 selected:$data==$root.SelectedControl(),
+                                 flyoutOpen:FlyoutOpen}
+                                 ">
+
+                                <div class="menucontrol" data-bind="css: { customised: $data.Customised },
+    contextMenu: {
+        data: $data,
+        controller: $root,
+        populate: 'GetContextMenu',
+        trigger: 'right',
+        select: 'OnMenuSelect'
+    }">
+                                    <!--ko if:ControlType()!=6 -->
+                                    <img data-bind="attr: { src: ExpandTokenisedUrl(Image16by16()) }" />
+                                    <span data-bind="text:LabelTextText"></span>
+                                    <!-- ko if:IsFlyout($data) -->
+                                    <span class="flyoutdropdown image-rightarrow"></span>
+                                    <!--/ko-->
+                                    <!--/ko-->
+                                    <!--ko if:ControlType()==6 -->
+                                    <div data-bind="text:GetRibbonProperty($data,'TitleText','---')"></div>
+                                    <!-- /ko-->
+                                </div>
+
+                            </div>
+                            <!--ko template: { name: 'flyout-editor', data: $data }-->
+                            <!--/ko-->
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</script>
+
+<!--Button Properties Editor-->
+<script type="text/html" id="properties-control">
+    <div class="propertiesBox">
+        <table columns="2" label="General" valign="top" cellspacing="0" cellpadding="0" width="100%" class="formTable">
+            <colgroup>
+                <col width="130" />
+                <col />
+                <col width="130" />
+                <col />
+            </colgroup>
+            <tbody>
+                <!--ko template: { name: 'properties-editor', data: $data } -->
+                <!--/ko-->
+            </tbody>
+        </table>
+    </div>
+</script>
+
+<!-- Parameter List-->
+<script type="text/html" id="parameter-list">
+
+    <ul class="parameter-list" data-bind="sortable: {options: { opacity:0.5, delay: 50, axis: 'y', connectWith: 'ul.parameter-list', handle:'>h3' }, connectClass: 'parameter-list', data: $data.Parameters}">
+        <li class="propertiesBox parametersBox" data-bind="contextMenu: {
+    data: $data,
+    controller: ClientUI.Model.CommandActionParameterController,
+    populate: 'GetContextMenu',
+    trigger: 'right',
+    select: 'OnMenuSelect'
+}">
+            <h3 class="movable"><span class="drag-dots"></span><span data-bind="expandable:{ item:$data,accordianItems:$parent.Parameters }"><span data-bind="text:GetRibbonTypeName($data)"></span><span class="item-description" data-bind="text:GetElementDescription($data)"></span></span></h3>
+            <div data-bind="if: $data._expanded">
+                <table columns="2" label="General" valign="top" cellspacing="0" cellpadding="0" width="100%" class="formTable">
+                    <colgroup>
+                        <col width="130" />
+                        <col />
+                        <col width="130" />
+                        <col />
+                    </colgroup>
+                    <tbody>
+                        <!-- ko template: { name: 'properties-editor', data: $data }-->
+                        <!-- /ko -->
+                </table>
+            </div>
+        </li>
+
+    </ul>
+    <a href="" class="clickable" data-bind="contextMenu: {
+    data: $data,
+    controller: ClientUI.Model.CommandActionParameterController,
+
+    populate: 'GetAddActionParameterMenu',
+    trigger: 'left',
+    select: 'AddActionParameterMenuSelect'
+}"><span class="image-plus-green"></span><span>Add Parameter</span></a>
+
+
+</script>
+
+<!--Command Properties Editor -->
+<script type="text/html" id="properties-command">
+    <div class="propertiesBox">
+        <table columns="2" label="General" valign="top" cellspacing="0" cellpadding="0" width="100%" class="formTable">
+            <colgroup>
+                <col width="130" />
+                <col />
+                <col width="130" />
+                <col />
+
+            </colgroup>
+            <tbody>
+                <!--ko template: { name: 'properties-editor', data: $data } -->
+                <!--/ko-->
+            </tbody>
+        </table>
+    </div>
+    <div class="header" data-bind="expandable: { item: $data,stateAttribute:'_actionsExpanded' }">Actions</div>
+    <!-- ko if:(Actions().length==0) -->
+    <span data-bind="text:ResourceStrings.UseAddAction"></span>
+    <!-- /ko -->
+    <div data-bind="animateVisible:$data._actionsExpanded,effectIn:'slideDown',effectOut:'slideUp'">
+        <ul class="actions-list " data-bind="sortable: { options: {opacity:0.5, delay: 50, axis: 'y', connectWith: 'ul.actions-list', handle: '>div>h3', helper:'clone',start:$root.RefreshPositions,tolerance:'pointer',helperf:function() {return xrmjQuery('<span class=sort-helper>aaaaa</span>');} }, connectClass: 'actions-list', data: Actions }">
+            <li>
+                <div class="propertiesBox " data-bind="contextMenu: {
+    data: $data,
+    controller: ClientUI.Model.CommandActionController,
+    populate: 'GetContextMenu',
+    trigger: 'right',
+    select: 'OnMenuSelect'
+}">
+
+                    <h3 class="movable"><span class="drag-dots"></span><span data-bind="expandable: { item: $data }"><span data-bind="text: GetRibbonTypeName($data)"></span><span class="item-description" data-bind=" text:GetElementDescription($data)"></span></span></h3>
+                    <div data-bind="if: $data._expanded,animateVisible:_expanded,effectIn:'slideDown',effectOut:'slideUp'">
+                        <table columns="2" label="General" valign="top" cellspacing="0" cellpadding="0" width="100%" class="formTable">
+                            <colgroup>
+                                <col width="130" />
+                                <col />
+                                <col width="130" />
+                                <col />
+                            </colgroup>
+                            <tbody>
+                                <!-- ko template: { name: 'properties-editor', data: $data }-->
+                                <!-- /ko -->
+                        </table>
+                        <div>
+                            <!-- ko template: {name:'parameter-list'}--><!-- /ko -->
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <a href="" title="Add Action" class="clickable" data-bind="contextMenu: {
+    data: $data,
+    controller: ClientUI.Model.CommandActionController,
+    populate: 'GetAddActionMenu',
+    trigger: 'left',
+    select: 'AddActionMenuSelect'
+}"><span class="image-plus-grey"></span><span data-bind="text:ResourceStrings.AddAction"></span></a>
+    </div>
+
+    <div class="header" data-bind="expandable: { item: $data,stateAttribute:'_dislayrulesExpanded' }"><span data-bind="text:ResourceStrings.DisplayRules"></span></div>
+    <div data-bind="animateVisible:$data._dislayrulesExpanded,effectIn:'slideDown',effectOut:'slideUp'">
+        <!-- ko if:(DisplayRules().length==0) -->
+        <span data-bind="text:ResourceStrings.UseAddDisplayRule"></span>
+        
+        <!-- /ko -->
+        <ul class="displayrule-list" data-bind="sortable: {options: { opacity:0.5, delay: 50, axis: 'y', connectWith: 'ul.displayrule-list', handle:'>h3' }, connectClass: 'displayrule-list',data: $data.DisplayRules}">
+            <li class="propertiesBox rulestepBox" data-bind="contextMenu: {
+    data: [$data,$parent],
+    controller: ClientUI.Model.DisplayRuleController,
+    populate: 'GetContextMenuOnCommandReference',
+    trigger: 'right',
+    select: 'OnMenuSelect'
+}">
+                <h3 class="movable"><span class="drag-dots"></span><span data-bind="text:$data.Id" /></h3>
+
+            </li>
+
+        </ul>
+        <a href title="Add Rule" class="clickable" data-bind="contextMenu: {
+    data: $data,
+    controller: ClientUI.Model.DisplayRuleController,
+
+    populate: 'GetAddRuleMenu',
+    trigger: 'left',
+    select: 'OnAddRule'
+}"><span class="image-plus-green"></span><span data-bind="text:ResourceStrings.AddDisplayRule"></span></a>
+    </div>
+    <div class="header" data-bind="expandable: { item: $data,stateAttribute:'_enablerulesExpanded' }"><span data-bind="text:ResourceStrings.EnableRules"></span></div>
+    <div data-bind="animateVisible:$data._enablerulesExpanded,effectIn:'slideDown',effectOut:'slideUp'">
+        <!-- ko if:(EnableRules().length==0) -->
+        <span data-bind="text:ResourceStrings.UseAddEnableRule"></span>
+        <!-- /ko -->
+        <ul class="enablerule-list" data-bind="sortable: {options: { opacity:0.5, delay: 50, axis: 'y', connectWith: 'ul.enablerule-list', handle:'>h3' }, connectClass: 'enablerule-list', data: $data.EnableRules}">
+            <li class="propertiesBox rulestepBox" data-bind="contextMenu: {
+    data: [$data,$parent],
+    controller: ClientUI.Model.EnableRuleController,
+    populate: 'GetContextMenuOnCommandReference',
+    trigger: 'right',
+    select: 'OnMenuSelect'
+}">
+                <h3 class="movable"><span class="drag-dots"></span><span data-bind=" text:$data.Id" /></h3>
+
+            </li>
+
+        </ul>
+        <a href title="Add Rule" class="clickable" data-bind="contextMenu: {
+    data: $data,
+    controller: ClientUI.Model.EnableRuleController,
+
+    populate: 'GetAddRuleMenu',
+    trigger: 'left',
+    select: 'OnAddRule'
+}"><span class="image-plus-green"></span><span data-bind="text:ResourceStrings.AddEnableRule"></span></a>
+    </div>
+
+</script>
+
+<!-- Display Rules Editor -->
+<script type="text/html" id="properties-displayrule">
+    <!--ko template:{name:'properties-generic'} -->
+    <!--/ko-->
+    <!-- ko ifnot:IsCore-->
+    <div class="header"><span data-bind="text:ResourceStrings.DisplaySteps"></span></div>
+    <!-- ko if:(Steps().length==0) -->
+    <span data-bind="text:ResourceStrings.UseAddStepToDefineConditions"></span>
+    <!-- /ko -->
+    <ul class="actions-list " data-bind="sortable: { options: { opacity:0.5, delay: 50, axis: 'y', connectWith: 'ul.displayrules-list', handle: '>div>h3' },
+    connectClass: 'displayrules-list', data: Steps }">
+        <li>
+            <!--ko template:{name:'properties-rulestep'} -->
+            <!--/ko-->
+        </li>
+    </ul>
+    <a href title="Add Rule" class="clickable" data-bind="contextMenu: {
+    data: $data,
+    controller: ClientUI.Model.RuleStepController,
+
+    populate: 'GetAddStepMenu',
+    trigger: 'left',
+    select: 'OnAddRule'
+}"><span class="image-plus-green"></span><span data-bind="text:ResourceStrings.AddStep"></span></a>
+    <!-- /ko -->
+</script>
+
+<!-- Enable Rules Editor -->
+<script type="text/html" id="properties-enablerule">
+    <!--ko template:{name:'properties-generic'} -->
+    <!--/ko-->
+    <!-- ko ifnot:IsCore-->
+    <div class="header"><span data-bind="text:ResourceStrings.EnableSteps"></span></div>
+    <!-- ko if:(Steps().length==0) -->
+    <span data-bind="text:ResourceStrings.UseAddStepToDefineConditions"></span>
+    <!-- /ko -->
+    <ul class="displayrules-list" data-bind="sortable: { options: { opacity:0.5, delay: 50, axis: 'y', connectWith: 'ul.displayrules-list', handle: '>div>h3' },
+        connectClass: 'displayrules-list', data:Steps }">
+        <li>
+            <!--ko template:{name:'properties-rulestep'} -->
+            <!--/ko-->
+        </li>
+    </ul>
+    <a href title="Add Step" class="clickable" data-bind="contextMenu: {
+        data: $data,
+        controller: ClientUI.Model.RuleStepController,
+
+        populate: 'GetAddStepMenu',
+        trigger: 'left',
+        select: 'OnAddRule'
+    }"><span class="image-plus-green"></span><span data-bind="text:ResourceStrings.AddStep"></span></a>
+    <!-- /ko -->
+</script>
+
+<!-- OR Properties Template -->
+<script type="text/html" id="properties-or">
+
+    <ul class="actions-list " data-bind="sortable: {options:{ opacity:0.5, delay:50, axis:'y' , connectWith:'ul.orgroup-list' , handle:'>div>h3' },connectClass:'orgroup-list' , data:Or}">
+        <li data-bind="if:(typeof(OrRules)!='undefined')">
+
+            <div data-bind="if: $index() > 0" class="or-branch">OR</div>
+
+            <!-- ko if:(OrRules().length==0) -->
+            <span data-bind="text:ResourceStrings.UseAddStepToInsertOr"></span>
+            <!-- /ko -->
+            <ul class="displayrules-list " data-bind="sortable: { options: { opacity: 0.5, delay: 50, axis: 'y', connectWith: 'ul.displayrules-list', handle: '>div>h3' }, connectClass: 'displayrules-list', data: OrRules }">
+                <li>
+
+                    <!--ko template:{name:'properties-rulestep'} -->
+                    <!--/ko-->
+                </li>
+            </ul>
+            <a href title="Add Step" class="clickable" data-bind="contextMenu: {
+    data: $data,
+    controller: ClientUI.Model.RuleStepController,
+
+    populate: 'GetAddStepMenu',
+    trigger: 'left',
+    select: 'OnAddRule'
+}"><span class="image-plus-green"></span><span data-bind="text:ResourceStrings.AddStep"></span></a>
+            <a href title="Or Group menu" class="clickable" data-bind="contextMenu: {
+    data: $data,
+    controller: ClientUI.Model.RuleStepController,
+    populate: 'GetOrGroupMenu',
+    trigger: 'left',
+    select: 'OnOrGroupMenu'
+}"><span class="image-contextmenu"></span></a>
+        </li>
+
+    </ul>
+    <!-- ko if: Or!=null-->
+    <a href title="Add Or Step" class="clickable" data-bind="click: ClientUI.Model.RuleStepController.OnAddOrGroup"><span class="image-plus-green"></span><span>OR</span></a>
+    <!-- /ko -->
+
+</script>
+
+<!-- Rule Step Template -->
+<script type="text/html" id="properties-rulestep">
+    <div class="propertiesBox rulestepBox" data-bind="contextMenu: {
+    data: $data,
+    controller: ClientUI.Model.RuleStepController,
+    populate: 'GetContextMenu',
+    trigger: 'right',
+    select: 'OnMenuSelect'
+}">
+
+        <h3 class="movable" data-bind="expandable: { item: $data }"><span class="drag-dots"></span><span data-bind="text:GetRibbonTypeName($data)" /><span class="item-description" data-bind="text:GetElementDescription($data)"></span></h3>
+        <div data-bind="if: $data._expanded">
+            <table columns="2" label="General" valign="top" cellspacing="0" cellpadding="0" width="100%" class="formTable">
+                <colgroup>
+                    <col width="130" />
+                    <col />
+                    <col width="130" />
+                    <col />
+                </colgroup>
+                <tbody>
+                    <!-- ko template: { name: 'properties-editor', data: $data }-->
+                    <!-- /ko -->
+            </table>
+
+            <div id="parameters-area" data-bind="if:GetRibbonType($data)=='CustomRule'">
+                <!-- ko template:{name:'parameter-list'} -->
+                <!-- /ko -->
+
+            </div>
+            <div data-bind="if:(typeof(Or)!='undefined' && Or!=null)">
+                <!-- ko template:{name:'properties-or'} -->
+                <!-- /ko -->
+            </div>
+
+        </div>
+    </div>
+
+</script>
+
+<!-- Form Field editor -->
+<script type="text/html" id="property-form-field">
+    <!--ko if:type=='section'-->
+    <td class="sparkle-FieldLabel-LeftAlign" colspan="4">
+        <label class="properties-section" data-bind="text: label">
+        </label>
+    </td>
+    <!--/ko-->
+    <!--ko if:type!='section'-->
+    <td class="sparkle-FieldLabel-LeftAlign FormSection_CellPadding sparkle-Field-Required">
+        <div data-bind="visible: visible">
+            <label data-bind="text: label">
+            </label>
+            <!--ko if:required=='2'-->
+            <img alt="Required" src="../css/images/transparent_spacer.gif" class="sparkle-imagestrip-frm_required"><!--/ko-->
+        </div>
+    </td>
+    <td class="property-field"style="overflow: hidden;" data-bind="attr: { 'colspan': (colSpan > 1 ? 3 : 1) }">
+        <!--ko if:type=='spacer'-->
+        <div>
+        </div>
+        <!--/ko -->
+        <!--ko if:type=='text'-->
+        <div class="sparkle-input-Container" data-bind="xrmtextbox: field, visible: visible">
+            <input type="text" maxlength="256" data-bind="attr: { 'readonly': disable }" class="sparkle-Input sparkle-Text sparkle-input-textbox-part">
+        </div>
+        <!--/ko-->
+        <!--ko if:type=='numeric'-->
+        <div class="sparkle-input-Container" data-bind="xrmnumeric: field, minvalue: minvalue, maxvalue: maxvalue, precision: precision, visible: visible">
+            <input type="text" maxlength="256" data-bind="attr: { 'readonly': disable }" class="sparkle-Input sparkle-Text sparkle-input-textbox-part">
+        </div>
+        <!--/ko-->
+        <!--ko if:type=='money'-->
+        <div class="sparkle-input-Container" data-bind="xrmmoney: field, minvalue: minvalue, maxvalue: maxvalue, xrmcurrencysymbol: $parent.transactioncurrencyid, visible: visible">
+            <table style="width: 100%" cellspacing="0" cellpadding="0" class="sparkle-control-layout-table">
+                <tr>
+                    <td><span class="sparkle-input-currencyprefix-part"></span></td>
+                    <td width="100%">
+                        <input type="text" maxlength="256" data-bind="attr: { 'readonly': disable }" class="sparkle-Input sparkle-Text sparkle-input-textbox-part">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!--/ko-->
+        <!--ko if:type=='datetime'-->
+        <table style="width: 100%" cellspacing="0" cellpadding="0" class="sparkle-control-layout-table" data-bind="datepicker: field, timeofday: field, visible: visible">
+            <tr>
+                <td class="sparkle-input-Container">
+                    <input type="text" class="sparkle-Input sparkle-input-datepicker-part" data-bind="disable: disable" />
+                </td>
+                <td class="sparkle-input-datepicker-button sparkle-input-button-margin-after">
+                    <input type="button" class="sparkle-input-datepicker-button-part" data-bind="disable: disable" />
+                </td>
+                <td class="sparkle-input-Container" data-bind="validationOptions: { messageTemplate: 'xrmControlValidationMessage2' }">
+                    <input type="text" data-bind="disable: disable" class="sparkle-Input sparkle-input-timeofday-part" />
+                </td>
+                <td class="sparkle-input-dropdownbutton">
+                    <input type="button" data-bind="disable: disable" class="sparkle-input-timeofday-button-part" />
+                </td>
+            </tr>
+        </table>
+        <!--/ko-->
+        <!--ko if:type=='lookup'-->
+        <table style="width: 100%" cellspacing="0" cellpadding="0" class="sparkle-control-layout-table" data-bind="lookup: field, queryCommand: queryCommand, typeCodeAttribute: typeCodeAttribute, idAttribute: idAttribute, nameAttribute: nameAttribute, visible: visible">
+            <tr>
+                <td class="sparkle-input-Container">
+                    <input data-bind="attr: { 'readonly': disable }" type="text" class="sparkle-Input sparkle-Text sparkle-input-lookup-part" />
+                </td>
+                <td class="sparkle-input-lookup">
+                    <input data-bind="attr: { 'readonly': disable }" class="sparkle-input-lookup-button-part" type="button" />
+                </td>
+        </table>
+        <!--/ko-->
+        <!--ko if:type=='textlookup'-->
+        <table style="width: 100%" cellspacing="0" cellpadding="0" class="sparkle-control-layout-table" data-bind="textlookup: field, queryCommand: queryCommand, typeCodeAttribute: typeCodeAttribute, idAttribute: idAttribute, nameAttribute: nameAttribute, visible: visible">
+            <tr>
+                <td class="sparkle-input-Container">
+                    <input data-bind="attr: { 'readonly': disable }" type="text" class="sparkle-Input sparkle-Text sparkle-input-lookup-part" />
+                </td>
+                <td class="sparkle-input-lookup">
+                    <input data-bind="attr: { 'readonly': disable }" class="sparkle-input-lookup-button-part" type="button" />
+                </td>
+        </table>
+        <!--/ko-->
+        <!--ko if:type=='picklist'-->
+        <div data-bind="visible: visible">
+            <select data-bind="disable:disable, options: options, optionsText: 'name', value: field, optionsCaption: ' '"></select>
+        </div>
+        <!--/ko-->
+        <!--ko if:type=='picklist-value'-->
+        <div data-bind="visible: visible">
+            <select data-bind="disable:disable, options: options, optionsValue: 'value', optionsText: 'name', value: field, optionsCaption: ' '"></select>
+        </div>
+        <!--/ko-->
+        <!--ko if:type=='optionset'-->
+        <div data-bind="optionset: field, optionSetOptions: { entityLogicalName: entityLogicalName, attributeLogicalName: attributeLogicalName, allowEmpty: allowEmpty }, visible: visible">
+            <select style="width: 100%" class="sparkle-input-optionset-part" data-bind="disable:disable"></select>
+        </div>
+        <!--/ko-->
+        <!--ko if:type=='duration'-->
+        <table style="width: 100%" cellspacing="0" cellpadding="0" class="sparkle-control-layout-table" data-bind="duration: field, visible: visible">
+            <tr>
+                <td class="sparkle-input-Container">
+                    <input type="text" data-bind="disable: disable" class="sparkle-Input sparkle-Text sparkle-input-duration-part" />
+                </td>
+                <td class="sparkle-input-dropdownbutton">
+                    <input class="sparkle-input-duration-button-part" data-bind="disable: disable" type="button" />
+                </td>
+        </table>
+        <!--/ko-->
+        <!--ko if:type=='bool'-->
+        <input type="checkbox" data-bind="checked: field, disable: disable, visible: visible" class="sparkle-Input sparkle-control-checkbox" />
+        <!--/ko-->
+        <!--ko if:type=='multiline-text'-->
+        <div class="sparkle-input-Container" data-bind="visible: visible">
+            <textarea data-bind="value: field, valueUpdate: 'keyup', disable: disable" class="sparkle-Input sparkle-Text" rows="5"></textarea>
+        </div>
+        <!--/ko-->
+    </td>
+    <!--/ko-->
+</script>
+
+<!-- Editor Template -->
+<script type="text/html" id="properties-editor">
+    <!-- ko with:$root.GetEditorProperties()($data) -->
+    <!--ko foreach:$data-->
+    <!--ko if:(($index() % 2)==0) -->
+
+    <tr>
+
+        <!--ko template: { name: 'property-form-field', data: {
+                        label: Label,
+                        field:Value,
+                        required:0,
+                        type:PropertyType,
+                        disable:Disable,
+                        options:Options,
+                        visible:true,
+                        queryCommand: QueryCommand,
+                        idAttribute: IdAttribute,
+                        nameAttribute:NameAttribute,
+                        typeCodeAttribute:null,
+                        precision:Precision,
+                        minvalue: null,
+                        maxvalue: null,
+                        colSpan: ColSpan
+                        } }-->
+        <!--/ko-->
+        <!-- ko if: $index()<($parent.length-1) && ColSpan==1 -->
+        <!--ko template: { name: 'property-form-field', data: {
+                        label: $parent[$index()+1].Label,
+                        field:$parent[$index()+1].Value,
+                        required:0,
+                        type:$parent[$index()+1].PropertyType,
+                        disable:$parent[$index()+1].Disable,
+                        options:$parent[$index()+1].Options,
+                        visible:true,
+                        queryCommand: $parent[$index()+1].QueryCommand,
+                        idAttribute: $parent[$index()+1].IdAttribute,
+                        nameAttribute:$parent[$index()+1].NameAttribute,
+                        typeCodeAttribute:null,
+                        precision:$parent[$index()+1].Precision,
+                        minvalue: null,
+                        maxvalue: null,
+                        colSpan: ColSpan
+                        } }-->
+        <!--/ko-->
+        <!--/ko-->
+    </tr>
+
+    <!-- /ko -->
+    <!-- /ko -->
+    <!-- /ko -->
+</script>
+
+<!-- Generic Properties Editor-->
+<script type="text/html" id="properties-generic">
+    <div class="propertiesBox">
+        <table columns="2" label="General" valign="top" cellspacing="0" cellpadding="0" width="100%" class="formTable">
+            <colgroup>
+                <col width="130" />
+                <col />
+                <col width="130" />
+                <col />
+            </colgroup>
+            <tbody>
+                <!--ko template: { name: 'properties-editor', data: $data } -->
+                <!--/ko-->
+            </tbody>
+        </table>
+    </div>
+</script>
+
+<!-- Empty Properties Editor -->
+<script type="text/html" id="properties-empty">
+    Select an item to view it's properties
+</script>
+
+<!-- Undo Panel Template -->
+<script type="text/html" id="undo-panel">
+    <!--ko if animateVisible:UndoVisible-->
+    <div class="undo-shelf" data-bind="animateVisible: UndoVisible, effectIn: 'slideDown', effectOut: 'slideUp'">
+        <span data-bind="text: UndoMessage"></span>
+
+
+        <a href title="Undo" class="clickable" data-bind="click: Undo()"><span class="undo-icon image-undo"></span><span data-bind="text:ResourceStrings.Undo"></span></a>
+        <a href title="Dismiss" class="clickable undo-dismiss" data-bind="click: Dismiss()"><span class="undo-icon image-close-white"></span><span data-bind="text:ResourceStrings.Dismiss"></span></a>
+    </div>
+    <!--/ko-->
+</script>
+
+<!-- Toolbox template -->
+<script type="text/html" id="toolbox-template">
+    <div class="header" data-bind="text:ResourceStrings.Toolbox"></div>
+    <div class="toolbox-items" data-bind="foreach: Toolbox.Controls">
+        <div class="control" data-bind="draggable: {
+    data: $data,
+    connectClass:ClientUI.View.EditCommandBarView.GetToolboxConnectedClass($root,$data) ,
+    options: {
+        appendTo:'body',
+        scroll:false,
+        refreshPositions:true,
+        helper2: function () {
+            return window.xrmjQuery(this).clone().appendTo('body').css('zIndex', 5).show();
+        }
+    }
+} ">
+            <span data-bind="attr: { class: 'toolbox-image ' + Id() }"></span><span data-bind="text:$data.LabelTextText"></span>
+        </div>
+    </div>
+</script>
+
+<!-- Solution Elements Template -->
+<script type="text/html" id="solution-elements-template">
+
+    <!--ko template: {name: 'undo-panel',data: ClientUI.Model.UndoStacks.SolutionElementsUndoStack}-->
+    <!-- /ko -->
+    <!--ko with: SelectedRibbon -->
+    <div id="solution-element-accordion">
+        <!-- Solution Tabs -->
+        <div id="solution-tabs" class="listitem-row">
+            <h3 data-bind="expandable: { item: SolutionTabs }"><span data-bind="text:ResourceStrings.Tabs"></span> (<span data-bind="text:SolutionTabs.ChildNodes().length"></span>)</h3>
+            <div class="solution-element" data-bind="if: SolutionTabs._expanded">
+                <!--ko foreach:SolutionTabs.ChildNodes-->
+                <div class="solution-element-row">
+                    <a href data-bind="css: { selected: $root.EditingItem() == $data }, click: $root.EditItemCommand()"><div><span class="solution-item-icon tab"></span><span data-bind="text:Id"></span></div></a>
+                </div>
+                <!--/ko-->
+            </div>
+        </div>
+        <!-- Solution Groups -->
+        <div id="solution-groups" class="listitem-row">
+            <h3 data-bind="expandable: { item: SolutionGroups }"><span data-bind="text:ResourceStrings.Groups"></span> (<span data-bind="text:SolutionGroups.ChildNodes().length"></span>)</h3>
+            <div class="solution-element" data-bind="if: SolutionGroups._expanded">
+                <!--ko foreach:SolutionGroups.ChildNodes-->
+                <div class="solution-element-row" data-bind="contextMenu:{data:$data,controller:$root,populate:'GetGroupContextMenu', trigger:'right' ,select:'OnGroupMenuSelect'}">
+                    <a href data-bind="css: { selected: $root.EditingItem() == $data }, click: $root.EditItemCommand()"><div><span class="solution-item-icon group"></span><span data-bind="text:Id"></span></div></a>
+                </div>
+                <!--/ko-->
+            </div>
+        </div>
+        <!-- Solution Buttons -->
+        <div id="solution-controls" class="listitem-row">
+            <h3 data-bind="expandable: { item: SolutionButtons }"><span data-bind="text:ResourceStrings.Buttons"></span> (<span data-bind="text:SolutionButtons.ChildNodes().length"></span>)</h3>
+            <div class="solution-element" data-bind="if: SolutionButtons._expanded">
+                <!--ko foreach:SolutionButtons.ChildNodes-->
+                <div class="solution-element-row" data-bind="css: { selected: $root.EditingItem() == $data }, contextMenu: {
+        data: $data,
+        controller: $root,
+        populate: 'GetContextMenu',
+        trigger: 'right',
+        select: 'OnMenuSelect'
+    }">
+                    <a href data-bind="click: $root.EditItemCommand()"><div><span class="solution-item-icon control"></span><span data-bind="text:Id"></span></div></a>
+                </div>
+                <!--/ko-->
+            </div>
+        </div>
+
+        <!-- Hide Actions-->
+        <div id="solution-hide-actions" class="listitem-row">
+            <h3 data-bind="expandable: { item: SolutionHideActions }"><span data-bind="text:ResourceStrings.HideActions"></span> (<span data-bind="text:SolutionHideActions.ChildNodes().length"></span>)</h3>
+            <div class="solution-element" data-bind="if: SolutionHideActions._expanded">
+                <!--ko foreach:SolutionHideActions.ChildNodes-->
+                <div class="solution-element-row">
+                    <a href data-bind="css: { selected: $root.EditingItem() == $data }, click: $root.EditItemCommand(), contextMenu: {
+    data: $data,
+    controller: ClientUI.Model.HideCustomActionController,
+    populate: 'GetContextMenu',
+    trigger: 'right',
+    select: 'OnMenuSelect'
+}"><div><span class="solution-item-icon hideaction"></span><span data-bind="text:Id"></span></div></a>
+                </div>
+                <!--/ko-->
+            </div>
+        </div>
+
+        <!-- Commands -->
+        <div id="solution-command" class="listitem-row" data-bind="contextMenu: {
+    data: $data,
+    controller: ClientUI.Model.CommandDefinitionController,
+    populate: 'GetSolutionElementsContextMenu',
+    trigger: 'right',
+    select: 'OnSolutionElementsMenuSelect'
+}">
+            <h3 data-bind="expandable: { item: SolutionCommands }">
+                <span data-bind="text:ResourceStrings.Commands"></span> (<span data-bind="text: SolutionCommands.ChildNodes().length"></span>)
+                <span class="solution-element-add-new">
+                    <a href class="clickable" data-bind="click: $root.AddNewCommandCommand(),clickBubble: false"><span class="image-add-new"></span></a>
+                </span>
+            </h3>
+            <div class="solution-element">
+                <div class="solution-element-items" data-bind="if: SolutionCommands._expanded">
+                    <!--ko foreach:SolutionCommands.ChildNodes-->
+                    <div class="solution-element-row">
+                        <a href data-bind="contextMenu:{data:$data,controller:ClientUI.Model.CommandDefinitionController,populate:'GetContextMenu' ,trigger:'right' ,select:'OnMenuSelect' },
+                           css:{ selected:$root.EditingItem()==$data },
+                           click:$root.EditItemCommand()
+                           "><div><span class="solution-item-icon command"></span><span data-bind="text:Id"></span></div></a>
+                    </div>
+                    <!--/ko-->
+                </div>
+            </div>
+        </div>
+
+        <!-- Display Rules -->
+        <div id="solution-displayrules" class="listitem-row" data-bind="contextMenu: {
+    data: $data,
+    controller: ClientUI.Model.DisplayRuleController,
+    populate: 'GetSolutionElementsContextMenu',
+    trigger: 'right',
+    select: 'OnSolutionElementsMenuSelect'
+}">
+            <h3 data-bind="expandable: { item: SolutionDisplayRules }">
+                <span data-bind="text:ResourceStrings.DisplayRules"></span> (<span data-bind="text:SolutionDisplayRules.ChildNodes().length"></span>)
+                <span class="solution-element-add-new">
+                    <a href class="clickable" data-bind="click: $root.AddNewDisplayRuleCommand(),clickBubble: false"><span class="image-add-new"></span></a>
+                </span>
+            </h3>
+            <div class="solution-element" data-bind="if: SolutionDisplayRules._expanded">
+                <!--ko foreach:SolutionDisplayRules.ChildNodes-->
+                <div class="solution-element-row">
+                    <a href data-bind="contextMenu:{
+                       data:[$data, $parent],
+                       controller:ClientUI.Model.DisplayRuleController,
+                       populate:'GetContextMenu' ,
+                       trigger:'right' ,
+                       select:'OnMenuSelect'
+                       },
+                       css:{ selected:$root.EditingItem()==$data },
+                       click:$root.EditItemCommand()
+                       "><div><span class="solution-item-icon displayrule"></span><span data-bind="text:Id"></span></div></a>
+                </div>
+                <!--/ko-->
+
+            </div>
+        </div>
+
+        <!-- Enable Rules -->
+        <div id="solution-enable-rules" class="listitem-row" data-bind="contextMenu: {
+    data: $data,
+    controller: ClientUI.Model.EnableRuleController,
+    populate: 'GetSolutionElementsContextMenu',
+    trigger: 'right',
+    select: 'OnSolutionElementsMenuSelect'
+}">
+            <h3 data-bind="expandable: { item: SolutionEnableRules }">
+                <span data-bind="text:ResourceStrings.EnableRules"></span> (<span data-bind="text:SolutionEnableRules.ChildNodes().length"></span>)
+                <span class="solution-element-add-new">
+                    <a href class="clickable" data-bind="click: $root.AddNewEnableRuleCommand(),clickBubble: false"><span class="image-add-new"></span></a>
+                </span>
+            </h3>
+            <div class="solution-element" data-bind="if: SolutionEnableRules._expanded">
+                <!--ko foreach:SolutionEnableRules.ChildNodes-->
+                <div class="solution-element-row">
+                    <a href data-bind="contextMenu:{
+                       data:[$data, $parent],
+                       controller:ClientUI.Model.EnableRuleController,
+                       populate:'GetContextMenu' ,
+                       trigger:'right' ,
+                       select:'OnMenuSelect'
+                       },
+                       css:{ selected:$root.EditingItem()==$data },
+                       click:$root.EditItemCommand()
+                       "><span class="solution-item-icon enablerule"></span><span data-bind="text:Id"></span></a>
+                </div>
+                <!--/ko-->
+
+            </div>
+        </div>
+    </div>
+    <!--/ko-->
+</script>
+
+<!-- Properties Panel Template -->
+<script type="text/html" id="properties-panel-template">
+
+    <div class="header">
+        <span data-bind="ResourceStrings.Properties"></span>: <span data-bind="text: GetEditorType().name"></span>
+
+        <span class="header-select">
+            <span data-bind="text:ResourceStrings.Languages"></span>:
+            <select data-bind="options: Languages,
+    optionsText: 'name',
+    value: SelectedLanguage"></select>
+        </span>
+
+    </div>
+    <div class="ui-layout-content" style="overflow: auto">
+        <!--ko template: {name: 'undo-panel',data: ClientUI.Model.UndoStacks.PropertiesUndoStack}-->
+        <!-- /ko -->
+        <div data-bind="template: { name: 'properties-' + GetEditorType().value, data: EditingItem }"></div>
+    </div>
+</script>
+
+   <!-- Smart Button Dialog Template -->
+<script type="text/html" id="dialog-add-smartbutton">
+    <div class="propertiesBox">
+        <table columns="2" label="General" valign="top" cellspacing="0" cellpadding="0" width="100%" class="formTable">
+            <colgroup>
+                <col width="130" />
+                <col />
+                <col width="130" />
+                <col />
+            </colgroup>
+            <tbody>
+                <!-- ko with:$root.vm.GetEditorProperties()() -->
+                <!--ko foreach:$data-->
+
+                <tr>
+                    <!--ko template: { name: 'property-form-field', data: {
+                    label: Label,
+                    field:Value,
+                    required:0,
+                    type:PropertyType,
+                    disable:Disable,
+                    options:Options,
+                    visible:true,
+                    queryCommand: QueryCommand,
+                    idAttribute: IdAttribute,
+                    nameAttribute:NameAttribute,
+                    typeCodeAttribute:null,
+                    precision:Precision,
+                    minvalue: null,
+                    maxvalue: null,
+                    colSpan: 1
+                    } }-->
+                    <!--/ko-->
+
+                </tr>
+
+
+                <!-- /ko -->
+                <!-- /ko -->
+            </tbody>
+        </table>
+    </div>
+
+</script>

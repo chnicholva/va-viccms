@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>VIA Service Connector</title>
+    <!-- Telerik KendoUI is required by this application, CRM must contain the Tribridge Adoption Essentials component "TribridgeIPCRMKuiFrameworkNS_Managed_2015_4_0001_target_CRM_7.0"  --> 
+    <script type="text/javascript" src="../../triipcrm_/TR_KU_V2015_2_902/js/jquery.min.js"></script>
+    <!-- Test Application Stylesheet -->
+    <link href="css/ViaServiceConnectorStyle.css" rel="stylesheet" />
+    <!--Via Service Connector Application Library -->
+    <script type="text/javascript" src="js/ViaServiceConnectorScriptLib.js"></script>
+</head>
+<body class="ViaServiceConnectorForm">
+    <div id="ViaServiceConnectorForm">
+        <table class="stdTable">
+            <tr>
+                <td><div id="lblSubTitle" class="headerSubLeft" title="VIA Service Connector Application Details">VIA Service Connector Application Details</div></td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Requesting Application Code</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="vsc_requestingAppCode" type="password" value="" onkeyup="vsc_AppCodeKeyUp()" title="Enter your VIA Requesting Application Code" maxlength="50" style="width:250px;" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Consuming Application Token</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="vsc_consumingAppToken" type="password" value="" onkeyup="vsc_AppTokenKeyUp()" title="Enter your VIA Consuming Application Token" maxlength="50" style="width:250px;"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Consuming Application Password</b>&nbsp;&nbsp;&nbsp;&nbsp;<input id="vsc_consumingAppPassword" type="password" value="" onkeyup="vsc_AppPasswordKeyUp()" title="Enter your VIA Consuming Application Password" maxlength="50" style="width:250px;"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function ($) {
+            //Actions/Functions to execute as soon as the form is at a ready state.
+            try {
+                //Populate with existing CRM values
+                vsc_formLoad();
+            }
+            catch (err) {
+                //Display Error....
+                alert("ViaServiceConnector.html Script Document Ready Error: " + err.message);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Sets the agent state.<o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>state</STRONG></TD>
+<TD>
+<P>The state to change to. Specify one of the following:</P>
+<P>login<BR>available<BR>acw<BR>logout<BR>aux</P></TD></TR>
+<TR>
+<TD><STRONG>reasoncode</STRONG></TD>
+<TD>If logout or aux is specified in the "state" parameter, this parameter should specify the numeric reason code to apply to the action.&nbsp; If no reason code is specified, "0" is assumed.&nbsp; For aux (auxiliary), if no reason code is specified, acw (after call work) is assumed.</TD></TR></TBODY></TABLE></BODY></HTML>

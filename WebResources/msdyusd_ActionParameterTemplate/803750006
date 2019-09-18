@@ -1,0 +1,23 @@
+<template type="803750006">
+  <action name="GotoTask">
+    <![CDATA[
+    <<Task Name>>
+    ]]>
+  </action>
+  <action name="ShowSendButton">
+  </action>
+  <action name="Back">
+  </action>
+  <action name="GoHome">
+  </action>
+  <action name="ClearAnswerHistory">
+  </action>
+  <action name="ClearHistory">
+  </action>
+  <action name="RegisterVisitedAnswerList">
+    <![CDATA[
+    name=
+    step=
+    ]]>
+  </action>
+</template>

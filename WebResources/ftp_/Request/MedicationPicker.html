@@ -1,0 +1,51 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Medication Picker</title>
+        <script type="text/javascript" src="../../ClientGlobalContext.js.aspx"></script>
+        
+        <!-- Telerik KendoUI is required by this application, CRM must contain the Tribridge Adoption Essentials component "TribridgeIPCRMKuiFrameworkNS_Managed_2015_4_0001_target_CRM_7.0"  --> 
+        <script type="text/javascript" src="../../triipcrm_/TR_KU_V2015_2_902/js/jquery.min.js"></script>
+        <script type="text/javascript" src="../../triipcrm_/TR_KU_V2015_2_902/js/kendo.all.min.js"></script>
+        
+        <!-- Telerik KendoUI Office 365 Stylesheet --> 
+        <link href="../../triipcrm_/TR_KU_V2015_2_902/css/kendo.common_office365.min.css" rel="stylesheet" type="text/css" />
+        <link href="../../triipcrm_/TR_KU_V2015_2_902/css/kendo.office365.min.css" rel="stylesheet" type="text/css" />
+        
+        <script type="text/javascript" src="../JScript/sdk.rest.js"></script>
+        <script type="text/javascript" src="JScript/MedicationPicker_TestData.js"></script>
+        <script type="text/javascript" src="JScript/MedicationPicker.js"></script>
+        <script type="text/javascript" src="../WebServiceSecurityLib/js/WebServiceSecurityLibrary.js"></script>
+        <link href="css/MedicationPicker.css" rel="stylesheet" />
+    </head>
+    <body>
+        <div id="loadingGifDiv" align="middle" align="center">
+			<table height="100%" width="100%">
+				<tr>
+					<td align="middle" align="center">
+						<img alt="" id="progressImg" src="/_imgs/AdvFind/progress.gif"/>
+						<div/>
+						<p id="progressText"></p>
+					</td>
+				</tr>
+			</table>
+		</div>
+        <div id="MedicationPickerContainer">
+            <div id="titleBarContainer">
+                <table id="titleBarTable">
+                    <tr>
+                        <td id="titleCell"><h3>Medications <span id="lastXMonthsText"></span></h3></td>
+                        <td id="datePickersCell"><span title="Filter on LAST REFILL">Start Date: </span><input id="headerStartDate" /><span title="Filter on LAST REFILL">  End Date:</span><input id="headerEndDate" /></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="medicationGridDivParentDiv"></div>
+        </div>
+        <div id="newRecordMessageContainer">
+            <p>To enable this content, create the record.</p>
+        </div>
+        <div id="errorContainer">
+            <p id="errorText">Error!</p>
+        </div>
+    </body>
+</html>

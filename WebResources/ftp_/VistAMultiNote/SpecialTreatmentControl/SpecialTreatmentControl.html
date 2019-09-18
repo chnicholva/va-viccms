@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Special Treatment Disabilities Control</title>
+        <!-- NOTE: ClientGlobalContext.js.aspx URL below is set with ../../ because the web resource that needs it is installed in a 3 level folder structure -->
+        <script type="text/javascript" src="../../../ClientGlobalContext.js.aspx"></script>
+        <script type="text/javascript" src="../../../triipcrm_/TR_KU_V2015_2_902/js/jquery.min.js"></script>
+        <script type="text/javascript" src="../../../ftp_/JScript/sdk.rest.js"></script>
+        <!-- Special Treatment Disabilities Control Application Library -->
+        <script type="text/javascript" src="js/SpecialTreatmentControlScriptLib.js"></script>
+         
+        <!-- <script type="text/javascript" src="js/SampleJsonData.js"></script> -->
+
+        <!--Secure Services Library -->
+        <script type="text/javascript" src="../../../ftp_/WebServiceSecurityLib/js/WebServiceSecurityLibrary.js"></script>
+
+        <style>
+            table {
+                font-family: arial, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+                font-size: 12px;
+            }
+
+            td, th {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }
+
+            tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+        </style>
+    </head>
+    <body>
+        <table id="specialTreatmentGrid">
+            <tr>
+                <td><b>Service Connection & Rated Disabilities</b></td>
+            </tr>
+        </table>
+        <script>
+            $(document).ready(function () {
+                try {
+                    sptr_FormLoad();
+                }
+                catch (err) {
+                    alert("Special Treatment Disabilities Control Web Resource Document Ready Error: " + err.message);
+                }
+            });
+        </script>
+    </body>
+</html>

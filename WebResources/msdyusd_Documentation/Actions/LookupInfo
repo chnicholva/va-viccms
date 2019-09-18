@@ -1,0 +1,46 @@
+<HTML><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY><FONT size=2 face="Tahoma, Verdana, Arial">Displays a Microsoft Dynamics CRM lookup information dialog box to allow you to select an entity from a list.
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>AllowFilterOff</STRONG></TD>
+<TD>Indicates whether to allow the user to turn off filtering. Set to "0" to prevent the user from turning off filtering; "1" to allow the user to turn off filtering.</TD></TR>
+<TR>
+<TD><STRONG>DefaultType</STRONG></TD>
+<TD>The logical name of the entity to be displayed by default in the lookup. This should be one of the numeric values specified in the "objecttypes" parameter. For example, "1" for accounts and "2" for contacts.</TD></TR>
+<TR>
+<TD><STRONG>DefaultViewId</STRONG></TD>
+<TD>Indicates whether to display the default view. Set it to "0" to hide it; "1" to show it.<BR><SPAN>
+<P><IMG alt="" src="../images/lookupinfo1"> </IMG></P></SPAN></TD></TR>
+<TR>
+<TD><STRONG>DisableQuickFind</STRONG></TD>
+<TD>Indicates whether to display the quick find field. Set it to "0" to show it; "1" to hide it.<BR><SPAN>
+<P><IMG alt="" src="../images/lookupinfo2"> </IMG></P></SPAN></TD></TR>
+<TR>
+<TD><STRONG>DisableViewPicker</STRONG></TD>
+<TD>Indicates whether to display the view selector. Set it to "0" to show it; "1" to hide it.<BR><SPAN>
+<P><IMG alt="" src="../images/lookupinfo3"> </IMG></P></SPAN></TD></TR>
+<TR>
+<TD><STRONG>LookupStyle</STRONG></TD>
+<TD>Indicates whether to allow "Single" or "Multiple" selections in the lookup. The following is an example of "Multiple" selections allowed:<BR><SPAN>
+<P><IMG alt="" src="../images/lookupinfo4"> </IMG></P></SPAN></TD></TR>
+<TR>
+<TD><STRONG>ShowNewButton</STRONG></TD>
+<TD>Indicates whether to show the <strong>New</strong> button. Set it to "1" to display the button; otherwise, set to "0".<BR><SPAN>
+<P><IMG alt="" src="../images/lookupinfo5"> </IMG></P></SPAN></TD></TR>
+<TR>
+<TD><STRONG>ShowPropButton</STRONG></TD>
+<TD>Indicates whether to show the <strong>Properties</strong> button. Set it to "1" to display the button; otherwise, set to "0".<BR><SPAN>
+<P><IMG alt="" src="../images/lookupinfo6"> </IMG></P></SPAN></TD></TR>
+<TR>
+<TD><STRONG>Browse</STRONG></TD>
+<TD>Indicates whether to use the browsing mode in the lookup. Set it to "1" to use the browsing mode; otherwise, set to "0".<BR><SPAN>
+<P><IMG alt="" src="../images/lookupinfo7"> </IMG></P></SPAN></TD></TR>
+<TR>
+<TD><STRONG>Currentid</STRONG></TD>
+<TD>The ID of the current value.</TD></TR>
+<TR>
+<TD><STRONG>objecttypes</STRONG></TD>
+<TD>List of object types from CRM to display. For example, specify "1,2" to display accounts and contacts.<BR><SPAN>
+<P><IMG alt="" src="../images/lookupinfo8"> </IMG></P></SPAN></TD></TR></TBODY></TABLE></FONT></BODY></HTML>

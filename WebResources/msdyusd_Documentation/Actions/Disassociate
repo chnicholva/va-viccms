@@ -1,0 +1,13 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">Disassociates a knowledge base record, which is already associated to the parent entity record.</SPAN><o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TD><STRONG>articleuniqueid</STRONG></TD>
+<TD>The unique ID of the article in Parature, from Microsoft that you want to disassociate. For example: articleuniqueid=7924/8112/Article/41</TD></TR>
+<TD><STRONG>relatedentityrecordid</STRONG></TD>
+<TD>The ID of the parent entity record that the knowledge base record is associated with.</TD></TR>
+<TD><STRONG>entityname</STRONG></TD>
+<TD>The logical name of the parent entity that the knowledge base record is associated with. For example: entitytypename=incident</TD></TR>
+</TBODY></TABLE></BODY></HTML>

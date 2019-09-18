@@ -1,0 +1,808 @@
+/// <reference path="../../JScript/VCCM.USDHelper.js" />
+var _usedOutboundCallScript = false;
+var _currentUserRoleNames = [];
+var currentUserId = Xrm.Page.context.getUserId();
+var intuser_serverUrl = Xrm.Page.context.getClientUrl();
+var intuser_crmOdataEndPoint = "/XRMServices/2011/OrganizationData.svc";
+
+function form_onLoad() {
+    GetRoleNames(onLoad_Callback);
+}
+
+function onLoad_Callback() {
+    showVEFTSurveyInformation();
+    showWHHInformation();
+    showIRISInformation();
+    showMigratedData();
+
+    var formType = Xrm.Page.ui.getFormType();
+
+    var vpacRole;
+    var slaRole;
+    var paRole;
+
+    vpacRole = _currentUserRoleNames.indexOf("VEFT VPAC") > -1;
+    slaRole = _currentUserRoleNames.indexOf("VEFT Service Level Advocate") > -1;
+    paRole = (_currentUserRoleNames.indexOf("VEFT Patient Advocate") > -1 || _currentUserRoleNames.indexOf("VEFT Patient Advocate Supervisor") > -1);
+
+    Xrm.Page.getControl("ftp_patientadvocateid").addPreSearch(function () {
+        addPALookupFilter(vpacRole);
+    });
+
+    var callBackNumberAttr = Xrm.Page.getAttribute("ftp_callbacknumber");
+    if (!!callBackNumberAttr) {
+        //fires formatTelephoneNumber()
+        callBackNumberAttr.fireOnChange();
+    }
+    if (Xrm.Page.ui.getFormType() == 4 || Xrm.Page.ui.getFormType() == 3) {
+        Xrm.Page.ui.tabs.get("ReportofContact").sections.get("ReportofContactbutton_section").setVisible(false);
+        Xrm.Page.ui.tabs.get("RequestDetail").sections.get("AddRequestButton_section").setVisible(false);
+        Xrm.Page.ui.tabs.get("RequestDetail").sections.get("AddEmployeeButton_section").setVisible(false);
+        Xrm.Page.ui.tabs.get("tab_Attachments").sections.get("tab_Attachments_section_AddAttachments").setVisible(false);
+    }
+    else {
+        populateDate();
+        var ROCValue = Xrm.Page.getAttribute("ftp_veftrocnumber_text").getValue();
+        if (!ROCValue) {
+            Xrm.Page.ui.tabs.get("ReportofContact").sections.get("ReportofContactbutton_section").setVisible(false);
+            Xrm.Page.ui.tabs.get("ReportofContact").sections.get("ReportofContactsubgrid_section").setVisible(false);
+            Xrm.Page.ui.tabs.get("RequestDetail").setVisible(false);
+        }
+
+        if (formType == 2) {
+            Xrm.Page.ui.tabs.get("tab_Attachments").sections.get("tab_Attachments_section_AddAttachments").setVisible(true);
+        }
+    }
+
+    if (vpacRole) {
+        Xrm.Page.ui.controls.get("ftp_assignedservicelineid").setDisabled(true);
+        Xrm.Page.ui.controls.get("ftp_impactedservicelineid").setDisabled(true);
+        Xrm.Page.ui.controls.get("ftp_assigntovpac_bool").setDisabled(true);
+        Xrm.Page.ui.controls.get("ftp_autoresolverequest_bool").setDisabled(false);
+    }
+    else {
+        Xrm.Page.ui.controls.get("ftp_assignedservicelineid").setDisabled(false);
+        Xrm.Page.ui.controls.get("ftp_impactedservicelineid").setDisabled(false);
+        Xrm.Page.ui.controls.get("ftp_assigntovpac_bool").setDisabled(false);
+        Xrm.Page.ui.controls.get("ftp_autoresolverequest_bool").setDisabled(true);
+    }
+
+    if (slaRole) {
+        Xrm.Page.ui.controls.get("ftp_assigntovpac_bool").setDisabled(true);
+        Xrm.Page.ui.controls.get("ftp_impactedservicelineid").setDisabled(true);
+    }
+
+    if (paRole) {
+        Xrm.Page.ui.controls.get("ftp_autoresolverequest_bool").setDisabled(false);
+    }
+
+    getAnyMissingDataFromVeteran();
+
+    if (!!Xrm.Page.getAttribute("ftp_interactedon").getValue() && !Xrm.Page.getAttribute("ftp_requestdate_date").getValue()) {
+        Xrm.Page.getAttribute("ftp_requestdate_date").setValue(Xrm.Page.getAttribute("ftp_interactedon").getValue());
+    }
+    Xrm.Page.getAttribute("ftp_assignedservicelineid").setSubmitMode("always");
+    Xrm.Page.getAttribute("ftp_assigntovpac_bool").setSubmitMode("always");
+    Xrm.Page.getAttribute("ftp_impactedservicelineid").setSubmitMode("always");
+}
+
+function addPALookupFilter(isVPAC) {
+
+    var intuser_userData = intuser_getSingleEntityDataSync('SystemUserSet', 'ftp_FacilitySiteId, ftp_visnid', Xrm.Page.context.getUserId());
+    if (intuser_userData != null) {
+        var intuser_facility = '';
+        var intuser_visn = '';
+        if (intuser_userData.d.ftp_FacilitySiteId != null) { intuser_facility = intuser_userData.d.ftp_FacilitySiteId.Id; }
+        if (intuser_userData.d.ftp_visnid != null) { intuser_visn = intuser_userData.d.ftp_visnid.Id; }
+    }
+
+    var fetchxml = '';
+    if (isVPAC) {
+        fetchxml = "<filter type='and'><condition attribute='ftp_visnid' operator='eq' uitype='ftp_visn' value='" + intuser_visn + "'/></filter>";
+    }
+    else {
+        fetchxml = "<filter type='and'><condition attribute='ftp_facilitysiteid' operator='eq' uitype='ftp_facility' value='" + intuser_facility + "'/></filter>";
+    }
+    Xrm.Page.getControl('ftp_patientadvocateid').addCustomFilter(fetchxml, "systemuser");
+}
+
+function ROC_onChange(context) {
+    checkROC();
+}
+
+function checkROC() {
+    var ROCValue = Xrm.Page.getAttribute("ftp_veftrocnumber_text").getValue();
+    if (ROCValue) {
+        Xrm.Page.ui.tabs.get("ReportofContact").sections.get("ReportofContactbutton_section").setVisible(true);
+        Xrm.Page.ui.tabs.get("ReportofContact").sections.get("ReportofContactsubgrid_section").setVisible(true);
+        Xrm.Page.ui.tabs.get("RequestDetail").setVisible(true);
+    }
+}
+
+function AutoResolveRequest_onChange() {
+    var autoResolve = Xrm.Page.getAttribute("ftp_autoresolverequest_bool").getValue();
+    if (autoResolve) {
+        //Clear and Lock Assign to VPAC and Assigned Service Line
+        Xrm.Page.getAttribute("ftp_assignedservicelineid").setValue(null);
+        Xrm.Page.ui.controls.get("ftp_assignedservicelineid").setDisabled(true);
+        Xrm.Page.getAttribute("ftp_assigntovpac_bool").setValue(0);
+        Xrm.Page.ui.controls.get("ftp_assigntovpac_bool").setDisabled(true);
+        //Unlock Impacted Service Line
+        Xrm.Page.ui.controls.get("ftp_impactedservicelineid").setDisabled(false);
+        //Show Resolution Description
+        Xrm.Page.ui.controls.get("ftp_resolutiondescription_text").setVisible(true);
+    }
+    else {
+        var vpacRole = _currentUserRoleNames.indexOf("VEFT VPAC") > -1;
+        if (!vpacRole) {
+            Xrm.Page.ui.controls.get("ftp_assignedservicelineid").setDisabled(false);
+            Xrm.Page.ui.controls.get("ftp_assigntovpac_bool").setDisabled(false);
+            Xrm.Page.ui.controls.get("ftp_impactedservicelineid").setDisabled(false);
+        }
+        //Hide Resolution Description
+        Xrm.Page.ui.controls.get("ftp_resolutiondescription_text").setVisible(false);
+    }
+}
+
+function Description_onChange(context) {
+    var DescriptionValue = Xrm.Page.getAttribute("ftp_requestdescription_text").getValue();
+    if (DescriptionValue) {
+        Xrm.Page.getAttribute("ftp_isdescriptionpopulated_bool").setValue(1);
+    }
+    else {
+        Xrm.Page.getAttribute("ftp_isdescriptionpopulated_bool").setValue(0);
+    }
+}
+function veft_CloseInteraction() {
+    var txt;
+    var r = confirm("Click OK to Close this Interaction.");
+    if (r == true) {
+        N52QuickRibbon.ExecuteFormulaOnForm('FVN');
+    }
+}
+
+function contactmethod_onChange() {
+    showVEFTSurveyInformation();
+    showWHHInformation();
+    showIRISInformation();
+}
+
+function showMigratedData() {
+    //only show Migrated Data section if ftp_patsmigrated_bool is true
+    if (Xrm.Page.getAttribute("ftp_patsmigrated_bool").getValue()) {
+        Xrm.Page.ui.tabs.get("ReportofContact").sections.get("ReportofContact_migrated_section").setVisible(true);
+    }
+    else {
+        Xrm.Page.ui.tabs.get("ReportofContact").sections.get("ReportofContact_migrated_section").setVisible(false);
+    }
+}
+
+function showVEFTSurveyInformation() {
+    //only show VEFT Survey Information section if ftp_contactmethod_code = VEFT (100000006)
+    if (Xrm.Page.getAttribute("ftp_contactmethod_code").getValue() == 100000006) {
+        Xrm.Page.ui.tabs.get("ReportofContact").sections.get("ReportofContact_veftsurvey_section").setVisible(true);
+    }
+    else {
+        Xrm.Page.ui.tabs.get("ReportofContact").sections.get("ReportofContact_veftsurvey_section").setVisible(false);
+    }
+}
+function showIRISInformation() {
+    var migrated = Xrm.Page.getAttribute("ftp_patsmigrated_bool").getValue();
+
+    //only show IRIS Information section if ftp_contactmethod_code = IRIS (100000007) and record was not migrated
+    if (Xrm.Page.getAttribute("ftp_contactmethod_code").getValue() == 100000007 && (!migrated)) {
+        Xrm.Page.ui.tabs.get("ReportofContact").sections.get("ReportofContact_iris_section").setVisible(true);
+    }
+    else {
+        Xrm.Page.ui.tabs.get("ReportofContact").sections.get("ReportofContact_iris_section").setVisible(false);
+    }
+}
+function showWHHInformation() {
+    //only show White House Hotline Information section if ftp_contactmethod_code = White House Hotline (100000012)
+    var VISNExecRole = false;
+    VISNExecRole = _currentUserRoleNames.indexOf("VEFT VISN Exec") > -1;
+
+    if (Xrm.Page.getAttribute("ftp_contactmethod_code").getValue() == 100000012) {
+        Xrm.Page.ui.tabs.get("ReportofContact").sections.get("ReportofContact_WHH_section").setVisible(true);
+        if (!VISNExecRole) {
+            Xrm.Page.ui.controls.get("ftp_description").setDisabled(true);
+        }
+    }
+    else {
+        Xrm.Page.ui.tabs.get("ReportofContact").sections.get("ReportofContact_WHH_section").setVisible(false);
+    }
+}
+
+function populateDate() {
+    //fill ftp_interactedon if it's empty
+    var currentValue = Xrm.Page.getAttribute("ftp_interactedon").getValue();
+    if (!currentValue) {
+        Xrm.Page.getAttribute("ftp_interactedon").setValue(new Date());
+    }
+}
+
+function getAnyMissingDataFromVeteran() {
+    if (Xrm.Page.ui.getFormType() == 1) {
+
+        /*
+		Phone numbers are filled initially by url parameters from the Veteran Alerts control's "Saved" USD event.
+		But if we are missing any phone numbers or other fields when this form loads for the first time, check the veteran record to see if we can fill in any missing data that ESR did not provide.
+		*/
+
+        var lookupFacility = new Array();
+        lookupFacility[0] = new Object();
+
+        var veteranValue = Xrm.Page.getAttribute("ftp_veteran").getValue();
+        if (!!veteranValue) {
+            SDK.REST.retrieveRecord(
+				veteranValue[0].id,
+				"Contact",
+                "FullName,ftp_currentfacilityid,ftp_HomePhone,ftp_WorkPhone,ftp_MobilePhone",
+				null,
+				function (retrievedContact) {
+				    if (!!retrievedContact) {
+				        Xrm.Page.getAttribute("ftp_contactingentityname_text").setValue(retrievedContact["FullName"]);
+
+				        if (!!retrievedContact["ftp_currentfacilityid"]) {
+				            lookupFacility[0].id = retrievedContact["ftp_currentfacilityid"].Id;
+				            lookupFacility[0].name = retrievedContact["ftp_currentfacilityid"].Name;
+				            lookupFacility[0].entityType = retrievedContact["ftp_currentfacilityid"].LogicalName;
+
+				            Xrm.Page.getAttribute("ftp_veftfacility_code").setValue(lookupFacility);
+				            Xrm.Page.getAttribute("ftp_requestfacilityid").setValue(lookupFacility);
+
+				            setDivision(lookupFacility[0].id);
+				        }
+				        else {
+				            Xrm.Page.getAttribute("ftp_veftfacility_code").setValue(null);
+				            Xrm.Page.getAttribute("ftp_requestfacilityid").setValue(null);
+				        }
+
+				        if (!!retrievedContact["ftp_HomePhone"]) {
+				            Xrm.Page.getAttribute("ftp_callbacknumber").setValue(retrievedContact["ftp_HomePhone"]);
+				            Xrm.Page.getAttribute("ftp_callbacknumber").setSubmitMode("always");
+				        }
+				        else {
+				            Xrm.Page.getAttribute("ftp_homephone").setValue("");
+				            Xrm.Page.getAttribute("ftp_homephone").setSubmitMode("always");
+
+				            if (veteranValue[0].id == '{EBEDDB33-190D-E811-945F-0050568D743D}') {
+				                Xrm.Page.getAttribute("ftp_callbacknumber").setValue("(000)000-0000");
+				            }
+				        }
+
+				        if (!!retrievedContact["ftp_WorkPhone"]) {
+				            Xrm.Page.getAttribute("ftp_businessphone").setValue(retrievedContact["ftp_WorkPhone"]);
+				            Xrm.Page.getAttribute("ftp_businessphone").setSubmitMode("always");
+				        }
+
+				        if (!!retrievedContact["ftp_MobilePhone"]) {
+				            Xrm.Page.getAttribute("ftp_mobilephone").setValue(retrievedContact["ftp_MobilePhone"]);
+				            Xrm.Page.getAttribute("ftp_mobilephone").setSubmitMode("always");
+				        }
+
+				    }
+				},
+				errorHandler
+			);
+        }
+    }
+}
+
+function setDivision(facilityGuid) {
+    if (!!facilityGuid) {
+        SDK.REST.retrieveRecord(
+            facilityGuid,
+            "ftp_facility",
+            "ftp_FacilityCode_text",
+            null,
+            function (retrievedFacility) {
+                if (!!retrievedFacility) {
+                    if (!!retrievedFacility["ftp_FacilityCode_text"]) {
+                        Xrm.Page.getAttribute("ftp_division_text").setValue(retrievedFacility["ftp_FacilityCode_text"]);
+                    }
+                    else {
+                        Xrm.Page.getAttribute("ftp_division_text").setValue("");
+                    }
+                }
+            },
+            errorHandler
+        );
+    }
+}
+
+function usdSave() {
+    var ftype = Xrm.Page.ui.getFormType();
+    if (ftype === 1) {
+        /*
+		interactiontype
+		reasonforrequestid
+		lastNameChecked
+		SSN
+		DOB;
+		 */
+        debugger;
+        Xrm.Page.getAttribute("tri_interactiontype").setRequiredLevel("none");
+        Xrm.Page.getAttribute("tri_reasonforrequest").setRequiredLevel("none");
+        Xrm.Page.getAttribute("ftp_lastname").setRequiredLevel("none");
+        Xrm.Page.getAttribute("ftp_ssn").setRequiredLevel("none");
+        Xrm.Page.getAttribute("ftp_dob").setRequiredLevel("none");
+        Xrm.Page.data.entity.save();
+    } else {
+        alert("ID eq" + Xrm.Page.data.entity.getId());
+        Xrm.Page.getAttribute("tri_interactiontype").setRequiredLevel("required");
+        Xrm.Page.getAttribute("tri_reasonforrequest").setRequiredLevel("required");
+        Xrm.Page.getAttribute("ftp_lastname").setRequiredLevel("required");
+        Xrm.Page.getAttribute("ftp_ssn").setRequiredLevel("required");
+        Xrm.Page.getAttribute("ftp_dob").setRequiredLevel("required");
+    }
+
+}
+
+function formatTelephoneNumber(pContext) {
+    //pass to new formatTelephoneNumberNANP function, for formatting according to North American Numbering Plan
+    if (!!pContext) {
+        var changedAttribute = pContext.getEventSource();
+        if (!!changedAttribute) {
+            var notificationName = changedAttribute.getName() + "_FORMATTINGERROR";
+            Xrm.Page.ui.clearFormNotification(notificationName); //use form-level INFO notifications, so as not to block the save of the record
+            var value = changedAttribute.getValue();
+            if (!!value) {
+                var formattedValue = value;
+                try {
+                    formattedValue = formatTelephoneNumberNANP(value);
+                    changedAttribute.setValue(formattedValue);
+                }
+                catch (e) {
+                    changedAttribute.setValue(formattedValue);
+                    var message = "Error formatting value of " + Xrm.Page.getControl(changedAttribute.getName()).getLabel() + ": " + e.message;
+                    Xrm.Page.ui.setFormNotification(message, "INFO", notificationName);
+                }
+            }
+        }
+    }
+}
+
+function formatTelephoneNumberNANP(pValue) {
+    var formattedValue = pValue;
+    if (!!pValue) {
+        try {
+            var tempValue = pValue.toString().replace(/[^0-9A-Za-z]/g, "").toUpperCase();
+            var leadingZerosWarning = "";
+            while (tempValue[0] == "0") {
+                tempValue = tempValue.substr(1, 99);
+                leadingZerosWarning = ", or leading-zeros";
+            }
+            if (tempValue.length >= 10) {
+                var NAOffset = tempValue.length > 10 && tempValue[0] == "1" ? 1 : 0;
+                var countryCode = tempValue.substr(0, NAOffset);
+                var countryCodeString = countryCode != "" ? countryCode + "-" : "";
+                var areaCode = tempValue.substr(0 + NAOffset, 3);
+                if (areaCode[0] == "0" || areaCode[0] == "1") { throw new Error("Area code (first 3-digit segment of a 10-digit number) cannot start with '0' or '1'"); }
+                if (areaCode.length == 3) {
+                    var centralOfficeCode = tempValue.substr(3 + NAOffset, 3);
+                    if (centralOfficeCode[0] == "0" || centralOfficeCode[0] == "1") { throw new Error("Central office code (second 3-digit segment of a 10-digit number) cannot start with '0' or '1'"); }
+                    if (centralOfficeCode[1] == "1" && centralOfficeCode[2] == "1") { throw new Error("Central office code (second 3-digit segment of a 10-digit number) cannot be in the format 'N11'"); }
+                    if (centralOfficeCode.length == 3) {
+                        var lineNumber = tempValue.substr(6 + NAOffset, 4);
+                        if (lineNumber.length == 4) {
+                            formattedValue = countryCodeString + [areaCode, centralOfficeCode, lineNumber].join("-");
+                        }
+                        else {
+                            throw new Error(pValue + " is not a valid phone number");
+                            //throw new Error(tempValue + " is not a valid phone number of at least 10 characters, not counting parentheses or dashes" + leadingZerosWarning);
+                        }
+                    }
+                    else {
+                        throw new Error(pValue + " is not a valid phone number");
+                        //throw new Error(tempValue + " is not a valid phone number of at least 10 characters, not counting parentheses or dashes" + leadingZerosWarning);
+                    }
+                }
+                else {
+                    throw new Error(pValue + " is not a valid phone number");
+                    //throw new Error(tempValue + " is not a valid phone number of at least 10 characters, not counting parentheses or dashes" + leadingZerosWarning);
+                }
+            }
+            else {
+                throw new Error(pValue + " is not a valid phone number");
+                //throw new Error(pValue + " is not a valid phone number of at least 10 characters, not counting parentheses or dashes" + leadingZerosWarning);
+            }
+        }
+        catch (e) {
+            console.error(e.message);
+            throw e;
+        }
+    }
+    return formattedValue;
+}
+
+function setControlsOptional(controls) {
+    for (var i = 0; i < controls.length; i++) {
+        controls[i].getAttribute().setRequiredLevel("none");
+    }
+}
+
+function setControlsBusinessRequired(controls) {
+    for (var i = 0; i < controls.length; i++) {
+        controls[i].getAttribute().setRequiredLevel("required");
+    }
+}
+
+function navToVeteranOnChange() {
+    var vetLookupValue = Xrm.Page.getAttribute("ftp_veteran").getValue();
+    if (!!vetLookupValue) Xrm.Utility.openEntityForm("ftp_veteran", vetLookupValue[0].id);
+}
+
+function updateIdProofBusinessRulesOnChange() {
+    Xrm.Page.getControl("ftp_lastname").clearNotification("VALIDATION");
+    var lastNameControl = Xrm.Page.getControl("ftp_lastname");
+    var lastNameChecked = lastNameControl.getAttribute().getValue();
+    var dobControl = Xrm.Page.getControl("ftp_ssn");
+    var dobChecked = dobControl.getAttribute().getValue();
+    var ssnControl = Xrm.Page.getControl("ftp_dob");
+    var ssnChecked = ssnControl.getAttribute().getValue();
+
+    if ((!lastNameChecked && !dobChecked && !ssnChecked) //all unchecked
+		 || (lastNameChecked && !dobChecked && !ssnChecked) //two unchecked
+		 || (dobChecked && !ssnChecked && !lastNameChecked) //two unchecked
+		 || (ssnChecked && !lastNameChecked && !dobChecked) //two unchecked
+		 || (lastNameChecked && dobChecked & ssnChecked)) { //all checked
+        setControlsBusinessRequired([lastNameControl, dobControl, ssnControl]); //all check boxes required
+    }
+    else if (lastNameChecked && dobChecked && !ssnChecked) { //two checked
+        setControlsBusinessRequired([lastNameControl, dobControl]);
+        setControlsOptional([ssnControl]); //leave third check box optional
+        ssnControl.clearNotification();
+    }
+    else if (dobChecked && ssnChecked && !lastNameChecked) { //two checked
+        setControlsBusinessRequired([dobControl, ssnControl]);
+        setControlsOptional([lastNameControl]); //leave third check box optional
+        lastNameControl.clearNotification();
+    }
+    else if (ssnChecked && lastNameChecked && !dobChecked) { //two checked
+        setControlsBusinessRequired([ssnControl, lastNameControl]);
+        setControlsOptional([dobControl]); //leave third check box optional
+        dobControl.clearNotification();
+    }
+}
+
+function passesIdProtocol() {
+    var lastNameChecked = Xrm.Page.getAttribute("ftp_lastname").getValue();
+    var dobChecked = Xrm.Page.getAttribute("ftp_ssn").getValue();
+    var ssnChecked = Xrm.Page.getAttribute("ftp_dob").getValue();
+
+    if ((!lastNameChecked && !dobChecked)
+		 || (!dobChecked && !ssnChecked)
+		 || (!ssnChecked && !lastNameChecked)) {
+
+        Xrm.Page.getControl("ftp_lastname").setNotification("Please validate at least two fields before saving.", "VALIDATION");
+        return false;
+    }
+    return true;
+}
+
+function populateSubject() {
+    var subject = "";
+    var vetValue = Xrm.Page.getAttribute("ftp_veteran").getValue();
+    if (!!vetValue) subject += vetValue[0].name;
+    subject += " - " + Xrm.Page.getAttribute("tri_interactiontype").getText();
+    Xrm.Page.getAttribute("ftp_subject").setValue(subject);
+}
+
+function ftp_details_onChange() {
+    var val = Xrm.Page.getAttribute("ftp_details").getValue();
+    val = removeCarriageReturns(val);
+    Xrm.Page.getAttribute("ftp_details").setValue(val);
+}
+
+function removeCarriageReturns(pText) {
+    return !!pText ? pText.replace(/(\r\n|\r|\n)/gm, ". ").replace("..", ".") : "";
+}
+
+function form_onSave(econtext) {
+    var eventArgs = econtext.getEventArgs();
+
+    //prevent auto save
+    if (eventArgs.getSaveMode() == 70) {
+        eventArgs.preventDefault();
+    }
+}
+
+function retrieveTeamsForUser(CallBackParameter) {
+    if (typeof CallBackParameter == "function") {
+        var currentUserId = Xrm.Page.context.getUserId();
+        var oDataPath = Xrm.Page.context.getClientUrl() + "/XRMServices/2011/OrganizationData.svc/";
+        var query = "SystemUserSet(guid'" + currentUserId + "')/teammembership_association?$select=Name,TeamId";
+
+        $.ajax({
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            datatype: "json",
+            url: oDataPath + query,
+            beforeSend: function (XMLHttpRequest) {
+                //Specifying this header ensures that the results will be returned as JSON.
+                XMLHttpRequest.setRequestHeader("Accept", "application/json");
+            },
+            success: function (data, textStatus, XmlHttpRequest) {
+                if (!!data)
+                    CallBackParameter(data.d.results);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("Error retrieving teams for current user: " + errorThrown);
+            },
+            async: true,
+            cache: false
+        });
+    }
+    else {
+        alert("Did not retrieve teams for current user.  CallBackParameter must be a function.");
+        //CallBackParameter must be a function
+    }
+}
+
+function setUpControlledSubstanceRenewalForPharmacyTeamMembers() {
+    try {
+        var reasonForSubstanceRenewalControl = Xrm.Page.getControl("ftp_reasonforcontrolledsubstancerenewal");
+        if (!reasonForSubstanceRenewalControl) return;
+        reasonForSubstanceRenewalControl.getAttribute().setRequiredLevel("none")
+        reasonForSubstanceRenewalControl.setVisible(false);
+        reasonForSubstanceRenewalControl.clearNotification();
+
+        var rfrAtt = Xrm.Page.getAttribute("tri_reasonforrequest");
+        if (!!rfrAtt) {
+            var rfrValue = rfrAtt.getValue();
+            if (!!rfrValue && rfrValue[0].name == "Medication - Renewal Narcotic") {
+                retrieveTeamsForUser(
+					function (retrievedRecords) {
+					    if (retrievedRecords.length < 1) return;
+					    for (var i = 0, l = retrievedRecords.length; i < l; i++) {
+					        var thisTeam = retrievedRecords[i];
+					        if (thisTeam.hasOwnProperty("Name") && thisTeam.Name == "Pharmacy") {
+					            reasonForSubstanceRenewalControl.getAttribute().setRequiredLevel("required");
+					            reasonForSubstanceRenewalControl.clearNotification();
+					            reasonForSubstanceRenewalControl.setVisible(true);
+					            break;
+					        }
+					    }
+					}
+				);
+            }
+            else {
+                reasonForSubstanceRenewalControl.getAttribute().setValue();
+            }
+        }
+    }
+    catch (e) {
+        alert('Error occurred in set Reason for Renewal: ' + e.message);
+    }
+}
+
+function writeToConsole(message) {
+    if (typeof console != 'undefined') console.log(message);
+}
+
+/*used by USD agent script answers*/
+function setupOutboundInteraction(pOutboundCallRFRName) {
+    /*requires SDK.REST library for retrieval of appropriate Reason For Request record*/
+    var retrievedReasons = [];
+    var rfrName = !!pOutboundCallRFRName ? pOutboundCallRFRName : "Pharmacy Outbound Call";
+    var query = "$select=ftp_reasonforrequestId,ftp_reason&$filter=ftp_reason eq '" + rfrName + "' and statecode/Value eq 0&$orderby=CreatedOn desc";
+    SDK.REST.retrieveMultipleRecords(
+		"ftp_reasonforrequest",
+		query,
+		function (retrievedRecords) {
+		    if (!!retrievedRecords && retrievedRecords.length > 0) retrievedReasons = retrievedReasons.concat(retrievedRecords);
+		},
+		errorHandler,
+		function () {
+		    if (retrievedReasons.length > 0) {
+		        var outboundRFR = retrievedReasons[0];
+		        Xrm.Page.getAttribute("tri_interactiontype").setValue(167410009); /*set type to 'Other'*/
+		        Xrm.Page.getAttribute("tri_reasonforrequest").setValue([{ id: outboundRFR.ftp_reasonforrequestId, name: outboundRFR.ftp_reason, entityType: "ftp_reasonforrequest" }]);/*reason for request*/
+		        Xrm.Page.getAttribute("ftp_direction").setValue(true);/*outbound*/
+		        Xrm.Page.getAttribute("tri_firstcallinteraction").setValue(false);/*first call resolution = no, as of 5/30/17*/
+		        Xrm.Page.getAttribute("ftp_interactedwith").setRequiredLevel("none");
+
+		        /*Hide Combo Request button?*/
+
+		        /*Show Outbound Interaction Details tab*/
+		        Xrm.Page.ui.tabs.get("Tab_OutboundPharmacyInteraction").setVisible(true);
+		        Xrm.Page.ui.tabs.get("Tab_OutboundPharmacyInteraction").setDisplayState("expanded");
+		        Xrm.Page.getControl("ftp_outboundinteractionwhoansweredtext").setVisible(false);
+
+		        _usedOutboundCallScript = true;
+		    }
+		    else {
+		        /*
+				could not find the "Pharmacy Outbound Call" reason for request record
+				future: if we setup the proper N:N relationship between ftp_reasonforrequest and ftp_facility entity, we can filter against current user's facility.
+				*/
+		        alert("Script error in setupOutboundInteraction(): Could not find '" + rfrName + "' reason for request.");
+		    }
+		}
+	);
+}
+
+/*used by USD agent script answers*/
+function setOutboundInteractionAddressSelection(pValue) {
+    if (!!pValue) {
+        Xrm.Page.getAttribute("ftp_outboundinteractionaddress").setValue(pValue);
+    }
+}
+
+/*used by USD agent script answers*/
+function setOutboundInteractionSubReasonSelection(pName) {
+    /*
+	find sub-reason record called pName and fill the ftp_outboundinteractionsubreasonid lookup field on this interaction
+	*/
+    if (!!pName) {
+        var retrievedReasons = [];
+        var query = "$select=ftp_subreasonId,ftp_name&$filter=ftp_name eq '" + pName + "' and statecode/Value eq 0&$orderby=CreatedOn desc";
+        SDK.REST.retrieveMultipleRecords(
+			"ftp_subreason",
+			query,
+			function (retrievedRecords) {
+			    if (!!retrievedRecords && retrievedRecords.length > 0) retrievedReasons = retrievedReasons.concat(retrievedRecords);
+			},
+			errorHandler,
+			function () {
+			    if (retrievedReasons.length > 0) {
+			        var subreason = retrievedReasons[0];
+			        Xrm.Page.getAttribute("ftp_outboundinteractionsubreasonid").setValue([{ id: subreason.ftp_subreasonId, name: subreason.ftp_name, entityType: "ftp_subreason" }]);
+			        Xrm.Page.getAttribute("ftp_outboundinteractionsubreasonid").fireOnChange();
+			    }
+			    else {
+			        /*
+					could not find the reason for request record called pName
+					*/
+			        alert("Script error in setOutboundInteractionSubReasonSelection(): Could not find '" + pName + "' sub-reason record.");
+			    }
+			}
+		);
+    }
+}
+
+function ftp_outboundinteractionsubreasonid_onChange() {
+    var reasonValue = Xrm.Page.getAttribute("ftp_outboundinteractionsubreasonid").getValue();
+    var reasonName = !!reasonValue && reasonValue.length == 1 ? reasonValue[0].name : null;
+
+    /*setup ftp_outboundinteractioncallreasonother field */
+    var otherTextControl = Xrm.Page.getControl("ftp_outboundinteractioncallreasonother");
+    if (!!otherTextControl) {
+        otherTextControl.setVisible(reasonName == "Other");
+        otherTextControl.getAttribute().setRequiredLevel(reasonName == "Other" ? "required" : "none");
+        //otherTextControl.setFocus();
+    }
+}
+
+function ftp_outboundinteractionwhoansweredos_onChange() {
+    /*
+		keep the value of ftp_outboundinteractionwhoansweredtext field in-sync with user's selection in the ftp_outboundinteractionwhoansweredos field;
+		if ftp_outboundinteractionwhoansweredos value is 100000005 ("other"), show and require the ftp_outboundinteractionwhoansweredtext field
+	*/
+    var whoAnsweredOSValue = Xrm.Page.getAttribute("ftp_outboundinteractionwhoansweredos").getValue();
+
+    /*setup ftp_outboundinteractionwhoansweredtext field*/
+    var whoAnsweredTextControl = Xrm.Page.getControl("ftp_outboundinteractionwhoansweredtext");
+    if (!!whoAnsweredTextControl) {
+        whoAnsweredTextControl.setVisible(whoAnsweredOSValue == 100000005);
+        whoAnsweredTextControl.getAttribute().setValue((!!whoAnsweredOSValue && whoAnsweredOSValue != 100000005) ? Xrm.Page.getAttribute("ftp_outboundinteractionwhoansweredos").getText() : null);
+        whoAnsweredTextControl.getAttribute().setRequiredLevel(whoAnsweredOSValue == 100000005 ? "required" : "none");
+        if (whoAnsweredOSValue == 100000005) { whoAnsweredTextControl.setFocus(); }
+    }
+}
+
+function tri_firstcallinteraction_onChange() {
+    var fcrAttr = Xrm.Page.getAttribute("tri_firstcallinteraction");
+    var callBackNumberAttr = Xrm.Page.getAttribute("ftp_callbacknumber");
+    if (!!fcrAttr && !!callBackNumberAttr) {
+        callBackNumberAttr.setRequiredLevel(fcrAttr.getValue() == true ? "none" : "required");
+    }
+}
+
+function errorHandler(error) {
+    writeToConsole(error.message);
+    alert(error.message);
+}
+function intuser_executeCrmOdataGetRequest(intuser_jsonQuery, intuser_aSync, intuser_aSyncCallback, intuser_skipCount, intuser_optionArray) {
+    //This function executes a CRM Odata web service call to retrieve Crm data
+    //*intuser_jsonQuery* - a properly formatted CRM Odata Query string (required)
+    //*intuser_aSync* - specify 'true' to execute asynchronously otherwise 'false' (required)
+    //*intuser_aSyncCallback* - specify the name of the return function to call upon completion (required if intuser_aSync = true.  Otherwise '')
+    //*intuser_skipCount* - Initial setting is always '0', increments by 50 per CRM SDK Odata standards (required)
+    //*intuser_optionArray* - is an optional array or single value, that contains additional task specific variables that can be passed between functions (pass 'null' if not used)
+    try {
+        var intuser_entityData = null;
+        $.ajax({
+            type: 'GET',
+            contentType: 'application/json; charset=utf-8',
+            datatype: 'json',
+            url: intuser_jsonQuery,
+            beforeSend: function (XMLHttpRequest) {
+                XMLHttpRequest.setRequestHeader('Accept', 'application/json');
+            },
+            success: function (data, textStatus, XmlHttpRequest) {
+                intuser_entityData = data;
+                if (intuser_aSync == true) {
+                    intuser_aSyncCallback(intuser_entityData, intuser_skipCount, intuser_optionArray);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert('Fail: Ajax Error in intuser_executeCrmOdataGetRequest: ' + errorThrown + " Request: " + intuser_jsonQuery);
+            },
+            async: intuser_aSync,
+            cache: false
+        });
+        return intuser_entityData;
+    }
+    catch (err) {
+        alert('An error occured in the intuser_executeCrmOdataGetRequest function.  Error Detail Message: ' + err);
+    }
+}
+
+function intuser_getSingleEntityDataSync(intuser_entitySetName, intuser_attributeSet, intuser_entityId) {
+    //This function returns a CRM JSON dataset for a single entity record based on the entity id provided Syncronously
+    //*intuser_entitySetName* - is the name of the entity set e.g 'ContactSet'
+    //*intuser_attributeSet* -  is a string containing the Crm Attributes to retrieve e.g. 'FirstName, LastName, Telephone1, EMailAddress1'
+    //*intuser_entityId* - is the Guid for the entity record
+
+    try {
+        var intuser_entityIdNoBracket = intuser_entityId.replace(/({|})/g, '');
+        var intuser_selectString = '(guid' + "'" + intuser_entityIdNoBracket + "'" + ')?$select=' + intuser_attributeSet;
+        var intuser_jsonQuery = intuser_serverUrl + intuser_crmOdataEndPoint + '/' + intuser_entitySetName + intuser_selectString;
+        var intuser_entityData = intuser_executeCrmOdataGetRequest(intuser_jsonQuery, false, '', 0, null);
+        return intuser_entityData;
+    }
+    catch (err) {
+        alert('An error occured in the intuser_getSingleEntityDataSync function.  Error Detail Message: ' + err);
+    }
+}
+
+function GetRoleNames(pCallbackFunction) {
+    _currentUserRoleNames = [];
+    var queryString = "$select=Name&$filter=";
+    Xrm.Page.context.getUserRoles().forEach(
+        function (thisRoleID, i) {
+            queryString += ((i > 0 ? " or " : "") + "RoleId eq guid'" + thisRoleID + "'");
+        }
+    );
+    var retrievedRoles = [];
+    SDK.REST.retrieveMultipleRecords(
+        "Role",
+        queryString,
+        function (retrievedRecords) {
+            if (!!retrievedRecords && retrievedRecords.length > 0) retrievedRoles = retrievedRoles.concat(retrievedRecords);
+        },
+        function (e) {
+            alert(e.message);
+        },
+        function () {
+            retrievedRoles.forEach(
+                function (thisRole, i) {
+                    _currentUserRoleNames.push(thisRole.Name);
+                }
+            );
+
+            if (typeof pCallbackFunction == "function") {
+                pCallbackFunction();
+            }
+        }
+    );
+}
+
+if (typeof (VEFTN52) == "undefined") {
+    VEFTN52 = {
+        __namespace: true
+    };
+}
+
+
+VEFTN52.FireUSDActionToCountRequestsUnderInteraction = function () {
+    try {
+        VCCM.USDHelper.FireUSDEvent("NeedToCountChildRequestsForInteraction");
+    }
+    catch (ex) {
+        //don't throw the error.
+        console.log("error: " + ex.message);
+    }
+};

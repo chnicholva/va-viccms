@@ -1,0 +1,10 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Initiates or completes a conference.<o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG></STRONG></TD>
+<TD>Specify the number to conference with in the <strong>Data</strong> field for the action call.
+<br/>If there's an active call but no selected held call, a new call will be made and the current call will be put on hold and automatically selected.&nbsp; If an active call and a held call are selected, the calls will be merged and the parameter will be ignored.&nbsp; If this parameter is not supplied and two calls aren't selected, the dial pad will display to request the user to enter the number to conference with.</TD></TR></TBODY></TABLE></BODY></HTML>

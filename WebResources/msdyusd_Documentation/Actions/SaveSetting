@@ -1,0 +1,12 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US">Stores a user-specific setting.<SPAN style="mso-spacerun: yes">&nbsp;&nbsp; </SPAN><o:p></o:p></SPAN></P><o:p></o:p></FONT></SPAN><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>name</STRONG></TD>
+<TD><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">Name of the user setting to store.<SPAN style="mso-spacerun: yes">&nbsp;&nbsp; </SPAN>This will display in the $Settings section of the replacement parameters.</SPAN></TD></TR>
+<TR>
+<TD><STRONG>value</STRONG></TD>
+<TD><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">The value of the setting to save.<SPAN style="mso-spacerun: yes">&nbsp;&nbsp; </SPAN></SPAN></TD></TR></TBODY></TABLE></BODY></HTML>

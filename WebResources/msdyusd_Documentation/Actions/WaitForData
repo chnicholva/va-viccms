@@ -1,0 +1,9 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US">Blocks processing until replacement parameters have been captured from the current page</SPAN>.<o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>Milliseconds</STRONG></TD>
+<TD>Indicates the time, in milliseconds, to wait to capture the replacement parameters. Optional.</TD></TR></TBODY></TABLE></BODY></HTML>

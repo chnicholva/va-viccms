@@ -1,0 +1,192 @@
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Web Service Tester</title>
+    <script type="text/javascript" src="../../ClientGlobalContext.js.aspx"></script>
+    <script type="text/javascript" src="../JScript/SDK.REST.js"></script>
+    <script type="text/javascript" src="..\JScript\jquery.1.11.min.js"></script>
+    <script type="text/javascript" src="..\JScript\VCCM.USDHelper.js"></script>
+    <script type="text/javascript" src="..\JScript\VCCM.MHVHelper.js"></script>
+    <script type="text/javascript" src="..\WebServiceTester\js\WebServiceTester.js"></script>
+    <script type="text/javascript" src="..\WebServiceSecurityLib\js\WebServiceSecurityLibrary.js"></script>
+    <style type="text/css">
+        #loadingGifDiv {
+            background-color: rgba(255,255,255,.8);
+            margin: -17px 0px 0px 0px;
+            font-size: 15px;
+            z-index: 1010;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            display: block;
+            cursor: wait;
+        }
+
+        .autoWidth {
+            width: 100%;
+        }
+
+        #MVISearchContainer {
+            display: block;
+        }
+
+        #retrievedSettingsContainer {
+            display: block;
+        }
+
+        #testQueryBuilderContainer {
+            display: block;
+        }
+
+        #testResultContainer {
+            display: block;
+        }
+
+        #facilitySelectionDiv {
+            display: none;
+        }
+
+        #retrievedSettingsTable {
+            font-size: 10px;
+        }
+
+            #retrievedSettingsTable input[type="text"] {
+                font-size: 10px;
+            }
+
+        #secureAPIIntegrationParametersTableContainer {
+            display: none;
+        }
+
+        #secureAPIIntegrationParametersStringifiedContainer {
+            display: none;
+        }
+
+        #postAPIIntegrationParametersTableContainer {
+            display: none;
+        }
+
+        #postAPIIntegrationParametersStringifiedContainer {
+            display: none;
+        }
+    </style>
+</head>
+	<body onload="">
+		<div id="loadingGifDiv" align="middle" align="center">
+			<table height="100%" width="100%">
+				<tr>
+					<td align="middle" align="center">
+						<img alt="" id="progressImg" src="/_imgs/AdvFind/progress.gif"/>
+						<div/>
+						<p id="progressText"></p>
+					</td>
+				</tr>
+			</table>
+		</div>
+		
+		<div>
+			<h1>Web Service Tester</h1>
+		</div>
+		<div id="MVISearchContainer">
+			<h2>MVI Search Criteria</h2>
+			<table>
+				<tr>
+					<td>SSN <input id="mviSSN" type="text" placeholder="SSN" tabindex="1" size="9" maxlength="9" onkeyup="checkSubmitMVI(event)"></td>
+					<td>First Name <input id="mviFirstName" type="text" placeholder="First Name" tabindex="2" onkeyup="checkSubmitMVI(event)"/></td>
+					<td>Last Name <input id="mviLastName" type="text" placeholder="Last Name" tabindex="3" onkeyup="checkSubmitMVI(event)"/></td>
+					<td>DOB
+						<input id="mviDOBMonth" type="text" placeholder="MM" size="2" maxlength="2" tabindex="4" onkeyup="checkSubmitMVI(event)"/>
+						<input id="mviDOBDate" type="text" placeholder="DD" size="2" maxlength="2" tabindex="5" onkeyup="checkSubmitMVI(event)"/>
+						<input id="mviDOBYear" type="text" placeholder="YYYY" size="4" maxlength="4" tabindex="6" onkeyup="checkSubmitMVI(event)"/>
+					</td>
+				</tr>
+				<tr>
+					<td><button id="btn_searchMVI" onclick="searchMVI()">Search MVI</button></td>
+				</tr>
+			</table>
+			<h2>MVI Search Results</h2>
+			<table id="MVISearchResultsTable">
+				<thead>
+					<th></th>
+					<th>Name</th>
+					<th>DOB</th>
+					<th>Stations</th>
+				</thead>
+			</table>
+			
+			<h2>Identifier Results</h2>
+			<table>
+				<tr><td><button id="btn_popStationList" onclick="popStationList();">Pop Stations and Correlating IDs</button></td></tr>
+				<tr><td>ICN</td><td><input id="ICN" type="text" onchange="icn_onChange();" placeholder="ICN"/></td></tr>
+				<tr><td>National ID</td><td><input id="nationalId" type="text" onchange="nationalId_onChange();" placeholder="National ID"/></td></tr>
+				<tr><td>EDIPI (from 200DOD)</td><td><input id="edipi" type="text" onchange="edipi_onChange();" placeholder="EDIPI"/></td></tr>
+				<tr><td>MHV ID (from 200MHI)</td><td><input id="mhvid" type="text" onchange="mhvid_onChange();" placeholder="MHV ID"/></td></tr>
+				<tr>
+					<td>MHV Token (from MHV Session API)</td><td colspan="2"><input id="mhvtoken" type="text" onchange="mhvtoken_onChange();" placeholder="MHV Token goes here" size="40"/></td>
+					<td><button id="btn_getMHVToken" onclick="getMHVToken();">Get Token from MHV Session API</button></td>
+				</tr>
+				<tr>
+					<td>Selected Facility Code (from MVI)</td><td><input id="selectedMVIFacilityCode" type="text" onchange="selectedMVIFacilityCode_onChange();"/></td>
+					<td>DFN at this facility</td><td><input id="selectedMVIFacilityCodeDFN" type="text" onchange="selectedMVIFacilityCodeDFN_onChange();"/></td>
+				</tr>
+				<tr>
+					<td>Preferred Facility Code (from ESR)</td><td><input id="preferredFacilityCodeFromESR" type="text" onchange="preferredFacilityCodeFromESR_onChange();"/></td>
+					<td>DFN at this facility</td><td><input id="preferredFacilityCodeFromESRDFN" type="text" onchange="preferredFacilityCodeFromESRDFN_onChange();"/></td>
+				</tr>
+			</table>
+		</div>
+		<div id="retrievedSettingsContainer">
+			<h2>Active Settings</h2>
+			<button id="btn_refreshSettings" title="Refresh Active Settings from CRM" onclick="getActiveSettings()">Refresh Active Settings from CRM</button>
+			<table id="retrievedSettingsTable" border="1"></table>
+		</div>
+		<div id="testQueryBuilderContainer">
+			<h2>URL builder</h2>
+            <div id="urlBuilderModeRadioDiv">
+				<input id="structureModeRadio" name="urlBuilderModeSelection" type="radio" value="structured" checked onchange="setupQueryBuilder()"/><label for="structureModeRadio">Structured Mode</label><br/>
+				<input id="freeModeRadio" name="urlBuilderModeSelection" type="radio" value="free" onchange="setupQueryBuilder()"/><label for="freeModeRadio">Free Mode</label><br/>
+			</div>
+
+            <div id="postDataObjectBuilder">
+            </div>
+
+			<h3 id="queryBuilderCurrentSettingLabel"></h3>
+			<div id="facilitySelectionDiv">
+				<input id="useMVISelectedFacility" name="facilitySelection" type="radio" value="mvi" checked onchange="setupQueryBuilder()"/><label for="useMVISelectedFacility">Use veteran facility from MVI</label><br/>
+				<input id="useESRPreferredFacility" name="facilitySelection" type="radio" value="esr" onchange="setupQueryBuilder()"/><label for="useESRPreferredFacility">Use veteran preferred facility from ESR (if present)</label><br/>
+			</div>
+			<br/>
+			<div id="userFacilityInfo">
+				<h3>User Facility Info</h3>
+				<button id="btn_impersonateLoriNicholls" onclick="setupImpersonation()">Impersonate Lori Nicholls</button>
+				<button id="btn_useCRMUser" onclick="getUserFromCRM()">Use CRM user details</button><br/>
+				User First Name <input id="userFirstName" type="text" placeholder="from CRM or manual" onchange="userFirstName_onChange()"/>
+				User Last Name <input id="userLastName" type="text" placeholder="from CRM or manual" onchange="userLastName_onChange()"/>
+				User facility code <input id="userFacilityCode" type="text" placeholder="from CRM or manual" onchange="userFacilityCode_onChange()"/><br/>
+				<button id="btn_getVistaUsers" onclick="retrieveVistaUsers()">Get IEN for User</button>
+				<br/>
+				<div title="" class="ms-crm-RefreshDialog-Footer" id="vistaUsersListFormContainer"></div>
+				<br/>
+				<div id="userIENDiv">
+					User IEN for the above facility code <input id="userIEN" type="text" placeholder="IEN from VistA" onchange="userIEN_onChange()"/>
+				</div>
+			</div>
+			<br/>
+			<button id="btn_testGo" onclick="beginTest()">Test!</button><br/>
+			<input class="autoWidth" id="urlToTest" type="text" value="" onkeyup="checkSubmitTest(event)"/>
+            <div id="secureAPIIntegrationParametersTableContainer"></div>
+            <div id="secureAPIIntegrationParametersStringifiedContainer">
+                <p id="secureAPIIntegrationParametersStringifiedText"></p>
+            </div>
+			<div id="postAPIIntegrationParametersTableContainer"></div>
+			<div id="postAPIIntegrationParametersStringifiedContainer">
+				<p id="postAPIIntegrationParametersStringifiedText"></p>
+			</div>
+		</div>
+		<div id="testResultContainer">
+			<h2>Test results</h2>
+			<button id="btn_testReset" onclick="resetTestResultContainer()">Reset Test Area</button><br/>
+			<iframe title="IFrame placeholder" class="autoWidth" style="height:600px;" id="displayframe"></iframe>
+		</div>
+	</body>
+</html>

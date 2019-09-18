@@ -1,0 +1,90 @@
+<html><head>
+
+
+    <title>VIA  Workload Lookup</title>
+    <!-- NOTE: ClientGlobalContext.js.aspx URL below is set with ../../ because the web resource that needs it is installed in a 2 level folder structure -->
+    <script type="text/javascript" src="../../ClientGlobalContext.js.aspx"></script>
+    <!-- Telerik KendoUI is required by this application, CRM must contain the Tribridge Adoption Essentials component "TribridgeIPCRMKuiFrameworkNS_Managed_2015_4_0001_target_CRM_7.0"  --> 
+    <script type="text/javascript" src="../../triipcrm_/TR_KU_V2015_2_902/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../../triipcrm_/TR_KU_V2015_2_902/js/kendo.all.min.js"></script>
+    <!-- Telerik KendoUI Office 365 Stylesheet --> 
+    <link href="../../triipcrm_/TR_KU_V2015_2_902/css/kendo.common_office365.min.css" rel="stylesheet" type="text/css">
+    <link href="../../triipcrm_/TR_KU_V2015_2_902/css/kendo.office365.min.css" rel="stylesheet" type="text/css">
+    <!-- Via Workload Lookup Application Stylesheet -->
+    <link href="css/ViaWorkloadLookupStyle.css" rel="stylesheet">
+    <!--Via Workload Lookup Application Library -->
+    <script type="text/javascript" src="js/ViaWorkloadLookupScriptLib.js"></script>
+    <script type="text/javascript" src="../ViaServiceLibrary/js/ViaServiceLibrary.js"></script>
+<meta></head>
+<body class="ViaWorkloadLookupForm" onfocusout="parent.setEmailRange();" style="overflow-wrap: break-word;" lang="en-US">﻿
+
+    <div id="ViaWorkloadLookupForm">
+        <table class="stdTable">
+            <tbody>
+                <tr>
+                    <td style="width:75px;">
+                        Site
+                    </td>
+                    <td style="width:250px;">
+                        <select id="selSite" style="min-width:99%; max-width:99%; height:25px;" onchange="viawl_selectSite('called','from','dropdown')"></select>
+                    </td>
+                    <td style="width:110px;" align="right">
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                <tr><td></td></tr><tr>
+                <td style="width:75px;">
+                    Location
+                </td>
+                <td style="width:250px;">
+                    <select id="selFreqUsedLocation" style="min-width:99%; max-width:99%; height:25px;" onchange="viawl_selectFreqUsedLocation()"></select>
+                </td>
+                <td style="width:110px;" align="right">
+                    Other Locations
+                </td>
+                <td style="width:auto;">
+                    <input id="viawl_searchLocation" title="Select a location by typing the first few letters in the location name." style="width: 99%;">
+                </td>
+            </tr>
+            <tr><td></td></tr>
+            <tr>
+                <td>
+                    Note Title
+                </td>
+                <td style="width:250px;">
+                    <select id="selFreqUsedNoteTitle" style="min-width:99%; max-width:99%; height:25px;" onchange="viawl_selectFreqUsedNoteTitle()"></select>
+                </td>
+                <td style="width:110px;" align="right">
+                    Other Note Titles
+                </td>
+                <td style="width:auto;">
+                    <input id="viawl_searchNoteTitle" title="Select a note title by typing the first few letters in the title." style="width: 99%;">
+                </td>
+            </tr>
+            <tr><td></td></tr>
+            <tr>
+                <td>
+                    <label id="lblVisit" style="display: none;">Visit</label>
+                </td>
+                <td style="width:250px;">
+                    <select id="selVisit" style="min-width:99%; max-width:99%; height:25px; display: none;" onchange="viawl_selectVisit()"></select>
+                </td>
+            </tr>
+        </tbody></table>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function ($) {		
+            //Actions/Functions to execute as soon as the form is at a ready state.
+            try {
+                //Construct the initial Lookup
+                viawl_formLoad();
+            }
+            catch (err) {
+                //Display Error....
+                alert("ViaWorkloadLookup.html Script Document Ready Error: " + err.message);
+            }
+        });
+    </script>
+
+</body></html>

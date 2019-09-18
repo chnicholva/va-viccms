@@ -1,0 +1,29 @@
+<html><head><meta charset="utf-8"><meta><meta><meta><meta></head><body tabindex="0" class="DefaultForm" onfocusout="parent.setEmailRange();" style="overflow-wrap: break-word;">﻿
+
+
+    <title>FreqUsed Control</title>
+    <!-- Frequently Used Button Control Custom Stylesheet -->
+    <link href="css/FreqUsedStyle.css" rel="stylesheet">
+    <!--Control Library /-->
+    <script src="js/FrequentlyUsedControlScriptLib.js" type="text/javascript"></script>
+
+
+    <div id="FrequentlyUsedButton">
+        <input title="" class="CrmButton" id="btnAction" onclick="freq_buttonClick();" type="button" value="">
+    </div>
+    <script type="text/javascript">
+        window.onload = function () {
+            //Actions/Functions to execute as soon as the form is loaded
+            try {
+                //Initialize the button
+                freq_formLoad();
+            }
+            catch (err) {
+                //Display Error....
+                alert('FreqUsedControl.html Script Document Ready Error: ' + err.message);
+            }
+        };
+    </script>
+
+
+</body></html>

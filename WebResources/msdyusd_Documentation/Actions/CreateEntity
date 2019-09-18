@@ -1,0 +1,31 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri><SPAN style="FONT-SIZE: 11pt; FONT-FAMILY: 'Calibri','sans-serif'; LINE-HEIGHT: 115%; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">Create a new entity record in CRM.</SPAN><o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>LogicalName</STRONG></TD>
+<TD><SPAN style="FONT-SIZE: 11pt; FONT-FAMILY: 'Calibri','sans-serif'; LINE-HEIGHT: 115%; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">The logical name of the entity for which the record is to be created</SPAN>.</TD></TR></TBODY></TABLE>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri><BR>Each subsequent line in the parameter list contains a series of name=value pairs that will define other attributes to be populated in the new entity record.<o:p></o:p></FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri><STRONG><U>EntityReference</U></STRONG></FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Entity references can be specified as:<o:p></o:p></FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Param=EntityReference(“logicalname”, “id”)<o:p></o:p></FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri><U><STRONG>OptionSetValue</STRONG></U></FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Option set values can be specified as:<o:p></o:p></FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Param=OptionSetValue(value)</FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri><U><STRONG>Boolean<o:p></o:p></STRONG></U></FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Boolean values can be specified as:<o:p></o:p></FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Param=Boolean(value)<o:p></o:p></FONT></SPAN></P><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri><U><STRONG>DateTime<BR></STRONG></U></FONT></SPAN><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Date and time values can be specified as:<o:p></o:p></FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Param=DateTime(value)</FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US">The value will be parsed by the .NET Framework <a href="https://msdn.microsoft.com/library/1k1skd40.aspx">DateTime.Parse</a> method.</SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US">Special values are:</SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US">NOW = the current date/time<BR>TODAY = Today's date</SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri><o:p><U><STRONG>PartyList<BR></STRONG></U></o:p></FONT></SPAN>PartyList (used with email) can be specified as:<o:p></o:p></FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Param=PartyList(email[“test@test.com”], er[“contact”, guid])<o:p></o:p></FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>You can use any number of email and er entries to represent email addresses and entity references respectively.</FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri><U><STRONG>Other<o:p></o:p></STRONG></U></FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Other values such as string values can be specified as:<o:p></o:p></FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Param=value<o:p></o:p></FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Once the record is created, the $Return replacement parameter value will be populated with the ID of the newly created record.<o:p></o:p></FONT></SPAN></P></BODY></HTML>

@@ -1,0 +1,31 @@
+<HTML xmlns:o="urn:schemas-microsoft-com:office:office">
+<HEAD>
+    <BASE>
+    <META charset=utf-8>
+</HEAD>
+<BODY>
+    <P style="MARGIN: 0in 0in 10pt" class=MsoNormal>
+        <SPAN style="mso-ansi-language: EN-US">
+            <FONT face=Calibri>
+                Evoked through JavaScript window.open calls, in an onLoad event handler on the Progress Note form. Monitor parameters of this event to determine in which USD panel the Shared Progress Note tab should reside.
+            </FONT>
+        </SPAN>
+    </P>
+    <TABLE border=1>
+        <TBODY>
+            <TR>
+                <TD><STRONG>formType</STRONG></TD>
+                <TD>Corresponds to CRM form type, e.g. 1, 2, 3</TD>
+            </TR>
+            <TR>
+                <TD><STRONG>automaticVIAIntegration</STRONG></TD>
+                <TD>"true" or "false"</TD>
+            </TR>
+            <TR>
+                <TD><STRONG>onLoadIntegrationStatus</STRONG></TD>
+                <TD>"OK" or some indication of failure present in the ftp_integrationstatus field when the form loaded</TD>
+            </TR>
+        </TBODY>
+    </TABLE>
+</BODY>
+</HTML>

@@ -1,0 +1,96 @@
+﻿<html>
+<head>
+	<script language="javascript" src="../ClientGlobalContext.js.aspx" type="text/javascript"></script>
+	<script type="text/javascript" src="/_static/_common/scripts/jquery1.7.2.min.js"></script>
+	<script type="text/javascript" src="/_static/_common/scripts/jsrender.min.js"></script>
+	<meta charset="utf-8">
+    <script type="text/javascript">
+        var RTLlocaleArray = new Array(1025, 1037);
+        var dir = "ltr";
+        var locale = "1033";
+        var clientUrl = "";
+
+        try {
+            var context = GetGlobalContext();
+            if (context != null) {
+                locale = context.getUserLcid();
+                clientUrl = context.getClientUrl();
+            }
+        }
+        catch (e) { }
+
+        if (RTLlocaleArray.indexOf(locale) > -1) {
+            dir = "rtl";
+        }
+        USD = {};
+        USD.Context = {
+            "dir": dir,
+            "lcid": locale,
+            "clientUrl": clientUrl
+        };
+        //load style based upon "RTL" and "LTR" language
+        if (USD.Context.dir == "rtl") {
+            addStyleSheet("styles/UserSettingsStyles_LTR.CSS");
+        }
+        else {
+            addStyleSheet("styles/UserSettingsStyles_RTL.CSS");
+        }
+        function addStyleSheet(filename) {
+            var fileref = document.createElement("link");
+            fileref.setAttribute("rel", "stylesheet");
+            fileref.setAttribute("type", "text/css");
+            fileref.setAttribute("href", filename)
+
+            if (typeof fileref != "undefined")
+                document.getElementsByTagName("head")[0].appendChild(fileref);
+        }
+	</script>
+</head>
+<body style="margin:0px">
+	<div id="loadingContainer" class="ms-usd-LoadingContainer">
+	</div>
+	<div id="divFieldSelect" width="100%">
+    </div>
+    <script type="text/javascript">
+        var loadingDiv = document.getElementById("loadingContainer");
+
+        var loadingText = window.parent.document.getElementById("loading");
+        if (loadingText != null) {
+            loadingText = loadingText.alt;
+        }
+
+        if (loadingDiv != null) {
+            var loadingTable = "<table class='ms-usd-LoadingContainer'>";
+            loadingTable += "<tr class='ms-usd-LoadingContainer'><td align='center'><img id='DialogLoadingDivImg' alt='' src='/_imgs/AdvFind/progress.gif' /> <br/> <span style='font-size:11px;'>" + CrmEncodeDecode.CrmHtmlEncode(loadingText) + "</span></td></tr>";
+            loadingTable += "</table>"
+            loadingDiv.innerHTML = loadingTable;
+        }
+
+        var body = document.getElementsByTagName("body")[0];
+        //For RTL languages this will change the body direction
+        body.setAttribute("dir", USD.Context.dir);
+
+        USD.OnPageLoad = function () { }
+
+        function addScript(path) {
+    	    var script = document.createElement("script");
+    	    script.type = "text/javascript";
+    	    script.src = path;
+    	    body.appendChild(script);
+        }
+
+        //helper function
+        function setDisplayProperty(elementName, elementValue) {
+            var elementName = document.getElementById(elementName);
+            if (elementName != null) {
+                elementName.style.display = elementValue;
+            }
+        }
+
+        addScript("Scripts/SettingsPageStrings" + (locale == 1033 ? "" : "_" + locale) + ".js");
+        addScript("Scripts/RetrieveMetaData.js");
+        addScript("Scripts/selectvalues.js");
+        addScript("Scripts/fieldselect.js");
+</script>
+</body>
+</html>

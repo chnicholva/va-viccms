@@ -1,0 +1,22 @@
+<HTML xmlns:o="urn:schemas-microsoft-com:office:office">
+<HEAD>
+    <BASE>
+    <META charset=utf-8>
+</HEAD>
+<BODY>
+    <P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Fills the VSE search box and clicks the search button.</FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+    <!--<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Optionally selects the first result, which could result in multiple other VSE popup windows.</FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>-->
+    <TABLE border=1>
+        <TBODY>
+            <TR>
+                <TD><STRONG>searchText</STRONG></TD>
+                <TD>Text to pass into the search VSE search box, such as first letter of last name + last 4 digits of SSN, e.g. "v1234"</TD>
+            </TR>
+            <!--<TR>
+                <TD><STRONG>selectFirstResult</STRONG></TD>
+                <TD>Pass a value of <strong>true</strong> to automatically select the first veteran in the search results combo box.</TD>
+            </TR>-->
+        </TBODY>
+    </TABLE>
+</BODY>
+</HTML>

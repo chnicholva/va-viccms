@@ -1,0 +1,20 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Docks the hosted control to an edge in Windows.<o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>ApplicationName</STRONG></TD>
+<TD>Name of the hosted control to dock. If this parameter is specified, the parent window having the hosted control will be docked.</TD></TR>
+<TR>
+<TD><STRONG>Width</STRONG></TD>
+<TD>The width in pixels of the docked window.&nbsp; If this isn't specified, the current width of the window is used.</TD></TR>
+<TR>
+<TD><STRONG>Height</STRONG></TD>
+<TD>The height in pixels of the docked window.&nbsp; If this isn't specified, the current height of the window is used.</TD></TR>
+<TR>
+<TD><STRONG>Edge</STRONG></TD>
+<TD>
+<P>The edge of the desktop to dock the hosted control to.&nbsp; If nothing is specified, "Top" is assumed.&nbsp; Specify one of these values:</P>
+<P>Top<BR>Bottom<BR>Left<BR>Right</P></TD></TR></TBODY></TABLE></BODY></HTML>

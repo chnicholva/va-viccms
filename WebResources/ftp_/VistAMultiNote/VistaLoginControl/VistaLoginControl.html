@@ -1,0 +1,75 @@
+<html><head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>VistA Login Control</title>
+    <!-- NOTE: ClientGlobalContext.js.aspx URL below is set with ../../ because the web resource that needs it is installed in a 3 level folder structure -->
+    <script type="text/javascript" src="../../../ClientGlobalContext.js.aspx"></script>
+    <!-- Telerik KendoUI is required by this application, CRM must contain the Tribridge Adoption Essentials component "TribridgeIPCRMKuiFrameworkNS_Managed_2015_4_0001_target_CRM_7.0"  --> 
+    <script type="text/javascript" src="../../../triipcrm_/TR_KU_V2015_2_902/js/jquery.min.js"></script>
+    <!-- USD Communications Helper Library -->
+    <script type="text/javascript" src="../../../ftp_/JScript/VCCM.USDHelper.js"></script>
+    <!-- VistA Login Control Custom Stylesheet -->
+    <link href="css/VistaLoginControlStyle.css" rel="stylesheet">
+    <!--Control Library /-->
+    <script type="text/javascript" src="js/VistaLoginControlScriptLib.js"></script>
+    <!--SSOi Library /-->
+    <script type="text/javascript" src="js/SSOiServiceScriptLib.js"></script>
+    <script type="text/javascript" src="../../ViaServiceLibrary/js/ViaServiceLibrary.js"></script>
+<meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta></head>
+<body class="VistaLoginForm" onfocusout="if(parent &amp;&amp; typof parent.setEmailRange == 'function') { parent.setEmailRange();}" style="overflow-wrap: break-word;">
+    <div id="VistaLoginForm" style="font-family: undefined;">
+        <table class="stdTable">
+            <tbody><tr>
+                <td><div id="lblTitle" class="headerMainLeft" title="VISTA Login">VISTA Login&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id="ssoicheck" style="cursor:pointer; visibility:hidden;" title="Check to sign in using your PIV card.  (SSOi)" onchange="vlc_ssoiChecked();">
+                    <label for="ssoicheck"><i style="font-size:16px; cursor:pointer; visibility:hidden;" title="Check to sign in using your PIV card.  (SSOi)">Check to sign in using your PIV card&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(SSOi)</i></label>
+                    </div></td>
+            </tr>
+            <tr>
+                <td><div id="lblSubTitle" class="headerSubLeft" title="Enter your Access Code, Verify Code and eSignature Code">
+                    <label for="lblSubTitle" id="lblSubTitleLabel">Enter your Access Code, Verify Code and eSignature Code for any Facility listed</label>
+                    </div></td>
+            </tr>
+            <tr>
+                <td>
+					<table id="tblVistaLogin" cellpadding="1" cellspacing="1" width="100%">
+						<tbody>
+							<tr style="display:none;">
+								<td><b>FACILITY NAME</b></td>
+								<td>&nbsp;</td>
+								<td><b>Access Code</b></td>
+								<td><input id="vlc_accessCode" type="text" value="" title="Enter your Access Code" maxlength="30"></td>
+								<td>&nbsp;</td>
+								<td><b>Verify Code</b></td>
+								<td><input id="vlc_verifyCode" type="password" value="" title="Enter your Verify Code" maxlength="30"></td>
+								<td>&nbsp;</td>
+								<td><b>eSignature Code</b></td>
+								<td><input id="vlc_esignatureCode" type="password" value="" onkeypress="vlc_loginKeyPress(event)" title="Enter your eSignature Code" maxlength="30"></td>
+								<td><input name="vlc_loginbutton" id="vlc_loginbuttonid" type="button" value="Login" onclick="vlc_vistaLogin();" style="cursor:pointer; vertical-align:bottom" title="Login to VISTA"></td>
+								<td><div id="BusySpinner" style="display:inline-block"><img src="img/busy_spinner.gif"></div></td>
+								<td>&nbsp;</td>							
+							</tr>
+
+						</tbody>
+						</table>
+
+                </td>
+            </tr>
+        </tbody></table>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function ($) {
+			//debugger;
+            //Actions/Functions to execute as soon as the form is at a ready state.
+            try {
+                //Construct the initial Login Control
+                vlc_formLoad();
+            }
+            catch (err) {
+                //Display Error....
+                alert("VistaLoginControl.html Script Document Ready Error: " + err.message);
+            }
+        });
+    </script>
+
+
+</body></html>

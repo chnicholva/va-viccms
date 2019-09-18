@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Chart URL Error Page</title>
+</head>
+<body onload="go()">
+    <div id="message"></div>
+    <script>
+        function parseDataParametersFromUrl(pQueryString) {
+            //example query string (unencoded): contactid={32CA1B55-DC81-E611-9445-0050568D743D}&fullname=TIFINKLE, ANDREW&sensitivity=true&IsUSD=true
+            var fullParameterArray = pQueryString.substr(1).split("&");
+
+            //clean up the URL query string and split each member into a key/value pair
+            for (var i in fullParameterArray) {
+                fullParameterArray[i] = fullParameterArray[i].replace(/\+/g, " ").split("=");
+            }
+
+            var customDataString = "";
+            for (var i in fullParameterArray) {
+                if (fullParameterArray[i][0].toLowerCase() == "data") {
+                    customDataString = fullParameterArray[i][1];
+                    break;
+                }
+            }
+
+            var customDataArray = decodeURIComponent(customDataString).split("&");
+            for (var i in customDataArray) {
+                customDataArray[i] = customDataArray[i].replace(/\+/g, " ").split("=");
+            }
+
+            var configObject = {};
+            for (var i in customDataArray) {
+                configObject[customDataArray[i][0]] = customDataArray[i][1];
+            }
+
+            //optionally, put code here to show body once we have the config object, if it's taking too long
+            return configObject;
+        }
+
+        function go() {
+            var configObject = parseDataParametersFromUrl(location.search);
+            document.getElementById("message").innerHTML = "Could not find a URL in the " + configObject.fieldName + " field of the Active Settings record. Have your CRM administrator check Active Settings";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<html><head>
+    <title>North52 BPA - Quick Button</title>
+    <script src="../../ClientGlobalContext.js.aspx"></script>
+
+    <script src="../../north52_/javascript/jquery" type="text/javascript"></script>
+
+    <script src="../../north52_/javascript/north52_dialog_helper" type="text/javascript"></script>
+
+    <script src="../../north52_/javascript/n52.json2" type="text/javascript"></script>
+
+    <script src="../../north52_/javascript/n52.rest" type="text/javascript"></script>
+
+    <script src="../../north52_/javascript/n52.clientside" type="text/javascript"></script>
+
+    <link href="../../north52_purecss.css" rel="stylesheet" type="text/css">
+
+    <style type="text/css">
+        html,
+        body {
+            height: 100%;
+            overflow: auto;
+            border-width: 0px;
+        }
+
+        body {
+            padding-top: 5;
+            margin: 0;
+        }
+    </style>
+
+    <script type="text/javascript">
+        var N52QuickButton = {};
+
+        $(document).ready(function() {
+            N52QuickButton.Initialize(false);
+
+            if (N52QuickButton.GetShortCode2() != 'none') {
+                N52QuickButton.QuickButtonPreLoad();
+            }
+        });
+
+
+        N52QuickButton.Click = function() {
+
+           N52QuickButton.SetDisable();    
+           N52QuickButton.ExecuteQuickButtonClick(); 
+            
+        };
+		
+		N52QuickButton.ExecuteQuickButtonClick = function() {
+			
+			var saveMode = N52QuickButton.GetRefreshMode().toLowerCase();
+
+            if (saveMode == "presaveonly" || saveMode == "presaveandrefresh" ) {
+
+                parent.Xrm.Page.data.save().then(function () {
+						N52QuickButton.ExecuteN52Formula();
+                    },  
+                    function () {               
+       					N52QuickButton.AsyncSaveErrorHandler();
+                    }            
+                )
+			}				
+			else {
+                N52QuickButton.ExecuteN52Formula();
+            }
+		};
+		
+		
+		N52QuickButton.ExecuteN52Formula = function() {
+
+            var executionContext = N52.Clientside.BuildExecutionObject('n52clientside', null);
+			var formulaParams = N52.Clientside.BuildFormulaParameters(executionContext, N52QuickButton.GetShortCode(), null);
+			N52.Clientside.ExecuteFormulasNative(executionContext, formulaParams, N52.Clientside.RetrieveFormulaCallBack, N52QuickButton.CompleteCallBack); 
+        };
+		
+		N52QuickButton.AsyncSaveErrorHandler = function() {
+            parent.Xrm.Page.ui.setFormNotification('Unable to save the record', 'ERROR', 'n52qb1');
+			N52QuickButton.Initialize(false);    
+			N52QuickButton.Reset();
+        };
+
+        N52QuickButton.QuickButtonPreLoad = function() {
+            var executionContext = N52.Clientside.BuildExecutionObject('n52clientside', null);
+            var formulaParams = N52.Clientside.BuildFormulaParameters(executionContext, N52QuickButton.GetShortCode2(), null);
+            N52.Clientside.ExecuteFormulasNative(executionContext, formulaParams, N52QuickButton.RetrieveFormulaCallBack, N52QuickButton.CompleteCallBack);
+        };
+
+        N52QuickButton.RetrieveFormulaCallBack = function(retrievedFormulaResults) {
+
+window.alert('hi');
+            for (var i = 0; i < retrievedFormulaResults.length; i++) {
+
+                var formulaResult = retrievedFormulaResults[i];
+                var formulaResultEx = formulaResult.north52_Result == null ? formulaResult.north52_result : formulaResult.north52_Result;
+
+                if (formulaResultEx != 'NoOp') {
+				
+					if (result.substring(0, 10) == "openreport") {
+						var args = result.substring(11, result.length);
+						var listItems = args.split("|");
+						var recordid = listItems[0];
+						var recordstype = listItems[1];
+						var reportname = listItems[2];
+						var reportid = listItems[3];
+
+						var windowurl = Xrm.Page.context.getClientUrl() + '/crmreports/viewer/viewer.aspx?action=run&context=records&recordstype=' + recordsType + '&helpID=' + reportname + '&id=' + reportid + '&records=' + recordid;
+						window.open(windowurl, '_blank', 'height=500, width=500,toolbar=no, menubar=no,location=no');
+					}
+					else {
+						N52.Clientside.RetrieveFormulaCallBack(retrievedFormulaResults);
+					}
+				}
+            }
+        };
+		
+
+        N52QuickButton.ProcessResult = function(n52Result) {
+            var formulatype = n52Result.FormulaType;
+            var propertyname = n52Result.PropertyName;
+            var propertyvalueaction = n52Result.PropertyValueAction;
+
+        };
+
+
+        N52QuickButton.GetQuerystring = function(e) {
+            var t = e.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var n = new RegExp("[\\?&]" + t + "=([^&#]*)");
+
+            var r = n.exec(window.location.href);
+
+            if (r == null)
+                return null;
+
+            return r[1];
+        };
+
+        N52QuickButton.GetShortCode = function() {
+            return N52QuickButton.GetParameter(0) == null ? 'none' : N52QuickButton.GetParameter(0);
+        };
+
+        N52QuickButton.GetButtonDescription = function() {
+            return N52QuickButton.GetParameter(1) == null ? 'none' : N52QuickButton.GetParameter(1);
+        };
+
+        N52QuickButton.GetButtonStyle = function() {
+            return N52QuickButton.GetParameter(2) == null ? 'none' : N52QuickButton.GetParameter(2);
+        };
+
+        N52QuickButton.GetRefreshMode = function() {
+            return N52QuickButton.GetParameter(3) == null ? 'none' : N52QuickButton.GetParameter(3);
+        };
+
+        N52QuickButton.GetShortCode2 = function() {
+            return N52QuickButton.GetParameter(4) == null ? 'none' : N52QuickButton.GetParameter(4);
+        };
+
+        N52QuickButton.GetParameter = function(pos) {
+            var e = N52QuickButton.GetQuerystring("data");
+            var t = decodeURIComponent(e);
+            var n = t.split("|");
+
+            return n[pos] == null ? 'none' : n[pos];
+        };
+
+        N52QuickButton.CompleteCallBack = function() {
+
+            var refreshMode = N52QuickButton.GetRefreshMode().toLowerCase();
+
+
+            if (refreshMode == 'presaveandrefresh') {
+                parent.Xrm.Page.data.refresh(false);
+            }
+
+            N52QuickButton.Initialize(false);
+            N52QuickButton.Reset();
+
+        };
+
+        N52QuickButton.SetDisable = function() {
+
+            $('#n52button').attr('disabled', true);
+            $('#n52button').text('In-Progress...');
+        };
+
+        N52QuickButton.Reset = function() {
+
+            window['n52ExecutionContext'] = null;
+            window['n52AllowSaveEvent'] = null;
+        };
+
+
+        N52QuickButton.Initialize = function(status) {
+
+            var buttonDescription = N52QuickButton.GetButtonDescription();
+            var buttonStyle = N52QuickButton.GetButtonStyle();
+
+
+            $('#n52button').attr("disabled", status);
+            $('#n52button').text(buttonDescription);
+            $('#n52button').attr("class", buttonStyle);
+        };
+
+        N52QuickButton.QuickButtonEnable = function() {
+
+            $('#n52button').attr('disabled', false);
+
+        };
+
+        N52QuickButton.QuickButtonDisable = function() {
+
+            $('#n52button').attr('disabled', true);
+
+        };
+    </script>
+   
+<meta charset="utf-8"></head>
+
+<body><button id="n52button" onclick="N52QuickButton.Click();" type="button">Click ME</button>
+
+</body></html>

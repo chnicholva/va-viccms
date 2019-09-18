@@ -1,0 +1,136 @@
+<html><head><meta charset="utf-8"><meta></head><body ng-app="RequestAssignment" onfocusout="parent.setEmailRange();" style="overflow-wrap: break-word;">﻿
+		<title></title>
+		<script src="..\..\ClientGlobalContext.js.aspx" type="text/javascript"></script>
+		<script src="..\JScript\jquery.1.11.min.js" type="text/javascript"></script>
+        <script src="..\JScript\select2.min.js" type="text/javascript"></script>
+        <link href="..\styles\select2.min.css" rel="stylesheet">
+		<script src="..\JScript\sdk.metadata.js" type="text/javascript"></script>
+	    <script src="..\JScript\angular.min.js"></script>
+        <script src="..\JScript\sdk.rest.js" type="text/javascript"></script>
+        <script src="..\JScript\sdk.soap.js" type="text/javascript"></script>
+        <script src="..\JScript\rest.sync.js" type="text/javascript"></script>
+        <script src="..\JScript\underscore_min.js" type="text/javascript"></script>
+        <script src="..\JScript\jquery.fireOnDisable.js" type="text/javascript"></script>
+		<script src="JScript\ReasonSelection.js"></script>
+		<script type="text/javascript" src="../JScript/json2.js"></script>
+        <style>
+            *
+            {
+                font-family: "Segoe UI";
+	            font-size:11px;
+	            text-decoration: none;
+            }
+            .cols 
+            {
+                float: left;
+            }
+            .addSelects 
+            {
+                display: none;
+            }
+            li
+            {
+                list-style-type: none;
+            }
+            #Button
+            {
+                margin-top: 15px;
+                position: relative;
+                float: left;
+                width: 100%;
+            }
+            label
+            {
+                display:inline-block;
+            }
+            body {
+                margin: 0px;
+            }
+            .select2-selection__clear {
+                display: none;
+            }
+            .xrmLabel {
+                font-family: Segoe UI,Tahoma,Arial;
+                font-size: 12px;
+                float: left;
+                padding-right: 47px;
+                color: #444444;
+            }
+            .col1 {
+                float:left;
+                width: 50%;
+            }
+            .col2 {
+                float:right;
+                width: 50%;
+            }
+            .footer {
+                /*margin-top: 100px;*/
+                position: relative;
+                float: left;
+                width: 100%
+            }
+            .red
+            {
+                color: red;
+            }
+			#loadingGifDiv
+			{
+				background-color: rgba(255,255,255,.8);
+				margin: -17px 0px 0px 0px;
+				font-size: 15px;
+				z-index: 1010;
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				display: none;
+			}
+        </style>
+	
+	
+		<!--<div class="col1" ng-controller="RfrController">
+            <label class="xrmLabel" for="mySelect">Reason For Request<span class="red"> *</span></label>
+            <select id="mySelect">
+                <option value=""></option>
+            </select>
+        </div>
+		<div class="col2" ng-controller="AssignController as assignCtrl">
+			<form name="assignForm" novalidate="" ng-submit="assignForm.$valid &amp;&amp; assignCtrl.submit()">
+		        <label class="xrmLabel">Assign Request</label>
+                <select ng-model="assignCtrl.selected" ng-options="a.Text for a in assignCtrl.assignees">
+		        </select>
+		        <input type="Submit" value="Assign">
+	        </form>
+        </div>-->
+		<div id="loadingGifDiv" align="middle">
+			<table height="100%" width="100%" style="cursor:wait">
+				<tbody><tr>
+					<td align="middle">
+						<img alt="" src="/_imgs/advfind/progress.gif">
+						<div>
+						<b>Creating combo request...</b>
+					</div></td>
+				</tr>
+			</tbody></table>
+		</div>
+        <div class="footer" ng-controller="AddendumController as addendumCtrl" ng-show="visible">
+            <form name="addendumCtrl.addendumForm" novalidate="" ng-submit="addendumCtrl.submit()">
+                <div class="cols" ng-repeat="c in addendumCtrl.columns" ng-style="{width: {{addendumCtrl.colWidthPercent}} + '%'}">
+                    <li ng-repeat="r in addendumCtrl.reasons | slice:c.start:c.end" ng-form="repeatForm">
+                        <input type="checkbox" ng-change="addendumCtrl.click(r.checked, r.text)" ng-model="r.checked">
+                        <label>{{r.text}}</label>
+                        <!--<select ng-model="r.owner" ng-options="o.Text for o in addendumCtrl.owners" ng-show="r.checked">
+		                </select>-->
+                        <!--<div ng-show="r.checked &amp;&amp; r.id == '136db634-ee0d-e511-8108-00155d14711e'">
+                            <input type="text" ng-model="addendumCtrl.other" ng-required="r.checked &amp;&amp; r.id == '136db634-ee0d-e511-8108-00155d14711e'"><span class="red"> *</span>
+                        </div>-->
+                    </li>
+                </div>
+                <div id="Button">
+                    <input type="submit" value="Submit">
+                    <span class="red" id="validatemsg"></span>
+                </div>
+            </form>
+        </div>
+	
+</body></html>

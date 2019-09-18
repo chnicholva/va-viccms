@@ -1,0 +1,122 @@
+﻿   html, body {
+            font-family: Segoe UI,Tahoma,Arial;/*Segoe UI Light, Segoe UI, Tahoma, Arial;*/
+            font-size: 11px;
+            color: #444444;
+            background-color: #FFFFFF;
+        }
+
+.root * > .k-icon, :root * > .k-sprite, :root * > .k-button-group .k-tool-icon {
+            margin-top: 5px;
+        }
+
+        .k-dropdown-wrap k-state-default {
+            font-size: 13px;
+            font-family: arial;
+        }
+
+        .Footer {
+            float: left;
+            padding-right: 2px;            
+            padding-top: 10px;             
+            background-color:#F8F8F8;
+            width:582px;
+            height:35px;
+            position:absolute;
+            bottom:0px;
+        }
+
+        .headerDiv {
+            padding-bottom: 20px;
+            color: #262626;
+            font-size: 27px;
+            font-weight: lighter;
+            white-space:nowrap;
+            font-family:Segoe UI Light, Segoe UI, Tahoma, Arial;
+        }     
+
+        #tblViewEditor {
+            font-size: 12px;
+            width: 100%;
+            color: #444444;
+        }
+        .button
+        {
+            height: 24px !important;
+            font-family: Segoe UI,Tahoma,Arial;
+            border: 1px solid #C6C6C6;
+            background-image: none;
+            margin-top: 10px;
+            width: auto;
+            min-width: 80px;
+            white-space: nowrap;
+            color: #444444;
+            background-color: #FFFFFF;
+            font-size: 12px;
+            line-height: 16px;
+            width: 84px;
+            text-align: center;
+            cursor: pointer;
+            border-width: 1px;
+            border-style: solid;
+            background-repeat: repeat-x;
+            padding-left: 5px;
+            padding-right: 5px;
+            margin-right: 10px;
+            margin-top : 2px;
+            float:right;
+        }
+        
+        .k-dropdown-wrap.k-state-default {
+            background-color: #FFF !important;
+        }
+        .k-dropdown-wrap {
+        border-radius:0px !important;
+        }
+        .k-list-container {
+        background-color:#FFF !important;
+        }
+        .k-list .k-state-hover, .k-list .k-state-focused, .k-list .k-state-highlight, .k-list .k-state-selected, .k-fieldselector .k-list .k-item, .k-dropzone {
+        border-radius:0px;
+        }
+
+        #loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #fff; /* change if the mask should have another color then white */
+    z-index: 40000000; /* makes sure it stays on top */
+    opacity: 0.6; /* Add opacity*/
+    filter: alpha(opacity=60);
+    -moz-opacity: 0.6;
+    -webkit-opacity: 0.6;
+    -khtml-opacity: 0.6;
+       height: 5px;
+    width: 5px;
+}
+
+        
+#savingLoader {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    left: 50%; /* centers the loading animation horizontally one the screen */
+    top: 50%; /* centers the loading animation vertically one the screen */
+    background-image: url(../loading.gif); /* path to your loading animation */
+    background-repeat: no-repeat;
+    background-position: center;
+    margin: -100px 0 0 -100px; /* is width and height divided by two */
+}
+
+#loadingstatus {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    left: 50%; /* centers the loading animation horizontally one the screen */
+    top: 50%; /* centers the loading animation vertically one the screen */
+    background-image: url(../loading.gif); /* path to your loading animation */
+    background-repeat: no-repeat;
+    background-position: center;
+    margin: -100px 0 0 -100px; /* is width and height divided by two */
+}

@@ -1,0 +1,18 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Sets an arbitrary replacement parameter value to a specified value.<o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>appname</STRONG></TD>
+<TD>The application name or key field for the replacement parameter.</TD></TR>
+<TR>
+<TD><STRONG>param</STRONG></TD>
+<TD>The replacement parameter subkey name.</TD></TR>
+<TR>
+<TD><STRONG>value</STRONG></TD>
+<TD>The value to set.</TD></TR>
+<TR>
+<TD><STRONG>global</STRONG></TD>
+<TD>Specify "true" to set the value in the global session; "false" to set it in the active session.</TD></TR></TBODY></TABLE></BODY></HTML>

@@ -1,0 +1,3 @@
+<HTML><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY><FONT size=2 face="Tahoma, Verdana, Arial">The default action on a hosted control calls the action that's marked as default for the hosted control.&nbsp; However, in Unified Service Desk, none of the predefined actions for the predefined hosted controls are marked as default, so if you call the default action on a hosted control, it just loads the hosted control.&nbsp; For a custom hosted control in Unified Service Desk, you can define an action, set it as default, and that action is called when you call the default action on the hosted control.</FONT></BODY></HTML>

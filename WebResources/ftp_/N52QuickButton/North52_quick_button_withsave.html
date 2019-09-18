@@ -1,0 +1,174 @@
+<html><head><title>North52 BPA - Quick Button</title>
+<script src="../../ClientGlobalContext.js.aspx"></script>
+
+<script src="../../north52_/javascript/jquery" type="text/javascript"></script>
+
+<script src="../../north52_/javascript/north52_dialog_helper" type="text/javascript"></script>
+
+<script src="../../north52_/javascript/n52.json2" type="text/javascript"></script>
+
+<script src="../../north52_/javascript/n52.rest" type="text/javascript"></script>
+
+<link href="../../north52_purecss.css" rel="stylesheet" type="text/css">
+
+<style type="text/css">
+
+html, body{ height: 100%; overflow: auto;  border-width: 0px; }
+
+body {  padding-top: 5;  margin: 0;  }
+
+</style>
+
+<script type="text/javascript">
+//instantiate global variable for a setinterval call later
+var _intervalVar = null;
+
+var N52QuickButton = {}; 
+
+ $(document).ready(function () { N52QuickButton.Initialize();
+     });
+
+
+N52QuickButton.Click = function()
+{
+var e=parent.Xrm.Page.data.entity.getId();
+var t=parent.Xrm.Page.data.entity.getEntityName();
+var n=e==null?"1":"2";
+var r=N52QuickButton.GetShortCode();
+var i="<"+t+"></"+t+">";
+var s="$select=north52_Result&$filter=north52_name eq "+"'"+r+"' and north52_Parameters eq '"+i+"' and north52_TargetEntityID eq '"+e+"' and north52_FormulaType eq '"+n+"'";
+
+$('#n52button').attr("disabled", true);
+$('#n52button').text('In-Progress...'); 
+
+parent.Xrm.Page.data.entity.save();
+//check every 50 ms for the form isdirty value to be set to false
+_intervalVar = setInterval(function(){ if(!parent.Xrm.Page.data.entity.getIsDirty()){
+		clearInterval(_intervalVar);
+		N52.REST.retrieveMultipleRecords("north52_formulacalculation",s,N52QuickButton.RetrieveFormulaCallBack,function(e){alert(e.message);},N52QuickButton.FormulasRetrieveComplete);
+	
+	}}, 50);
+}
+
+N52QuickButton.RetrieveFormulaCallBack= function(e){
+ parent.Xrm.Page.data.refresh(false);
+ var formulaResult = e[0]; 
+ var formulaResultEx = formulaResult.north52_Result == null ? formulaResult.north52_result : formulaResult.north52_Result;
+
+	if (formulaResultEx != 'NoOp'){
+		try{
+			var result = N52JSON.parse(formulaResultEx).PropertyValueAction.toString();
+			if(result !="NoOp"){
+                if (result.substring(0, 6) == "notify") {
+                    debugger;
+                    var args = result.substring(7, result.length);
+                    var listItems = args.split("|");
+
+                    for (var i = 0; i < listItems.length; i++) {
+                        var notification = listItems[i].split(",");
+                        var msg = notification[0];
+                        var level = notification[1];
+                        var id = notification[2];
+
+                        parent.Xrm.Page.ui.clearFormNotification(id);
+                        parent.Xrm.Page.ui.setFormNotification(msg, level, id);
+
+                    }
+                }
+                else if (result.substring(0, 10) == "openreport") {
+                    var args = result.substring(11, result.length);
+                    var listItems = args.split("|");
+                    var recordid = listItems[0];
+                    var reportname = listItems[1];
+                    var reportid = listItems[2];
+
+                    var windowurl = Xrm.Page.context.getClientUrl() + '/crmreports/viewer/viewer.aspx?action=run&context=records&recordstype=10068&helpID=' + reportname + '&id=' + reportid + '&records=' + recordid;
+                    window.open(windowurl, '_blank', 'height=500, width=500,toolbar=no, menubar=no,location=no');
+                }
+                else {
+                    parent.Xrm.Page.ui.clearFormNotification('msgbutton');
+                    parent.Xrm.Page.ui.setFormNotification(result, 'INFO', 'msgbutton');
+                }
+			}
+		}
+		catch(err){
+			parent.Xrm.Utility.alertDialog(formulaResultEx);
+		}
+	}
+
+    $('#n52button').attr("disabled", false);
+    N52QuickButton.Initialize();
+    
+}
+
+N52QuickButton.GetQuerystring= function(e)
+{
+   var t=e.replace(/[\[]/,"\\[").replace(/[\]]/,"\\]");
+   var n=new RegExp("[\\?&]"+t+"=([^&#]*)");
+
+   var r=n.exec(window.location.href);
+
+   if(r==null)
+     return null;
+
+return r[1]
+}
+
+N52QuickButton.GetShortCode= function()
+{
+     var e=N52QuickButton.GetQuerystring("data");
+     var t=decodeURIComponent(e);
+     var n=t.split("|");
+
+return n[0];
+}
+
+N52QuickButton.GetButtonDescription= function()
+{
+     var e=N52QuickButton.GetQuerystring("data");
+     var t=decodeURIComponent(e);
+     var n=t.split("|");
+
+return n[1];
+}
+
+N52QuickButton.GetButtonStyle= function()
+{
+     var e= N52QuickButton.GetQuerystring("data");
+     var t=decodeURIComponent(e);
+     var n=t.split("|");
+
+return n[2];
+}
+
+N52QuickButton.FormulasRetrieveComplete= function()
+{
+   
+}
+
+N52QuickButton.QuickButtonEnable = function()
+{
+
+$('#n52button').attr('disabled', false);
+ 	
+}
+
+N52QuickButton.QuickButtonDisable = function()  
+{
+
+$('#n52button').attr('disabled', true);
+ 	
+}
+
+N52QuickButton.Initialize= function()
+{
+
+var buttonDescription=N52QuickButton.GetButtonDescription();
+var buttonStyle =N52QuickButton.GetButtonStyle();
+
+$('#n52button').text(buttonDescription); 
+$('#n52button').attr("class", buttonStyle );
+}
+
+</script>
+<meta charset="utf-8"><meta><meta><meta><meta><meta><meta><meta><meta><meta></head><body style="-ms-word-wrap: break-word;"><button id="n52button" onclick="N52QuickButton.Click();" type="button">Click ME</button></body></html>

@@ -1,0 +1,14 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri><SPAN style="FONT-SIZE: 11pt; FONT-FAMILY: 'Calibri','sans-serif'; LINE-HEIGHT: 115%; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">Navigates to the quick find list view of the specified entity.</SPAN></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG></STRONG></TD>
+<TD>Specify the entity logical name of the quick find list view to display in the <strong>Data</strong> field. There are some special case values: <br/>You can use either "case" or "incident."
+<br/>You can use either "activities" or "activity."
+<br/>Use "advfind" to display advanced find view.</TD></TR>
+<TR>
+<TD><STRONG>showribbon</STRONG></TD>
+<TD>Set to "true" to display the ribbon with your list view. Othewrwise, set to "false" or don't specify a value for this parameter.</TD></TR></TBODY></TABLE></BODY></HTML>

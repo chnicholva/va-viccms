@@ -1,0 +1,31 @@
+<HTML xmlns:o="urn:schemas-microsoft-com:office:office">
+<HEAD>
+    <BASE>
+    <META charset=utf-8>
+</HEAD>
+<BODY>
+    <P style="MARGIN: 0in 0in 10pt" class=MsoNormal>
+        <SPAN style="mso-ansi-language: EN-US">
+            <FONT face=Calibri>
+                Evoked through JavaScript window.open calls, during Progress Note integration logic. You can technically pass any parameters to this event and do with them what you want, in subsequent Action Calls. Various lines of JavaScript currently pass these parameters, in some manner:
+            </FONT>
+        </SPAN>
+    </P>
+    <TABLE border=1>
+        <TBODY>
+            <TR>
+                <TD><STRONG>name</STRONG></TD>
+                <TD>Descriptive name of integration event that is happening, e.g. "Start"</TD>
+            </TR>
+            <TR>
+                <TD><STRONG>automaticVIAIntegration</STRONG></TD>
+                <TD>"true" or "false"</TD>
+            </TR>
+            <TR>
+                <TD><STRONG>integrationStatus</STRONG></TD>
+                <TD>"OK" or some indication of failure</TD>
+            </TR>
+        </TBODY>
+    </TABLE>
+</BODY>
+</HTML>

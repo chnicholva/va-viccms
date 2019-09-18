@@ -1,0 +1,542 @@
+function retrieveDemographics(vetid) {
+	try {
+		var pEligibility;
+		var eligibility;
+		var veteran;
+		var empStatus;
+		var unemployable;
+		var svcCI;
+		var percentage;
+		var sensitivityFlag;
+		var add1 = null;
+		var addt1 = null;
+		var add2 = null;
+		var addt2 = null;
+		var add3 = null;
+		var addt3 = null;
+		var city = null;
+		var tcity = null;
+		var state = null;
+		var tstate = null;
+		var zip = null;
+		var tzip = null;
+		var country = null;
+		var tcountry = null;
+		var home = null;
+		var mobile = null;
+		var work = null;
+		var nk_givenname = '';
+		var nk_middlename = '';
+		var nk_familyname = '';
+		var nk_relationship = '';
+		var NextOfKinString = '';
+		var cType = '';
+		var givenName = '';
+		var mName = '';
+		var fName = '';
+		var relationship = '';
+		var assoc = '';
+		var nextofkin = null;
+		var xml;
+		var dem;
+		var phones;
+		var t;
+		var num;
+		var disability;
+		var rDisability;
+		var addressText = "";
+		var address1_compositeValue;
+		var address1_line1;
+		var address1_line2;
+		var address1_line3;
+		var address1_city;
+		var address1_stateorprovince;
+		var address1_postalcode;
+		var address1_country;
+		var address2Text;
+		var address2_compositeValue;
+		var address2_line1;
+		var address2_line2;
+		var address2_line3;
+		var address2_city;
+		var address2_stateorprovince;
+		var address2_postalcode;
+		var address2_country;
+		var temp;
+		var perm;
+		var adds;
+		var add;
+		var aType = null;
+		var aLine1 = null;
+		var aLine2 = null;
+		var aLine3 = null;
+		var aZip = null;
+		var aState = null;
+		var aCity = null;
+		var ta;
+		var pa;
+		var hasI;
+		var ins;
+		var ret;
+		var request;
+
+		debugger;
+		var id = vetid;
+		//var id = Xrm.Page.getAttribute("bah_mvipatientidentifier").getValue();
+		var ftype = Xrm.Page.ui.getFormType();
+
+		if (id !== null && ftype !== 1 && ftype !== null) {
+			id = id.slice(0, 17);
+			//Xrm.Page.getAttribute("tri_veteranid").setValue(id);
+			//var key = Xrm.Page.getAttribute("tri_veteranid").getValue();
+			var xrm = window.location.host;
+			var subURL = window.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
+			var ODATA_ENDPOINT = "/XRMServices/2011/OrganizationData.svc";
+			//Construct the JSON Query
+			var EntitySetName = "mcs_settingSet";
+			var selectString = "?$select=*&$filter=mcs_name eq 'Active Settings'";
+			var jsonQuery = "https://" + xrm + "/" + subURL + ODATA_ENDPOINT + "/" + EntitySetName + selectString;
+			//Initialize the return value
+			var EntityData = null;
+			$.ajax({
+				type : "GET",
+				contentType : "application/json; charset=utf-8",
+				datatype : "json",
+				url : jsonQuery,
+				beforeSend : function (XMLHttpRequest) {
+					//Specifying this header ensures that the results will be returned as JSON.
+					XMLHttpRequest.setRequestHeader("Accept", "application/json");
+				},
+				success : function (data, textStatus, XmlHttpRequest) {
+					//Get the data values
+					EntityData = data;
+				},
+				error : function (XMLHttpRequest, textStatus, errorThrown) {
+					alert('Fail: Ajax Error in TRIBRIDGE.RetrieveAllAttributesByEntitySync: ' + errorThrown);
+				},
+				async : false,
+				cache : false
+			});
+
+			var baseUrl = EntityData.d.results[0].ftp_DACURL;
+
+			request = baseUrl + EntityData.d.results[0].ftp_ESRAPIURL + "000000" + id + "000000";
+
+			var query = new XMLHttpRequest();
+			query.open('GET', request, true);
+			query.onreadystatechange = function () {
+				if (query.readyState == 4 && query.status == 200) {
+
+					//If no results found- consider them non-sensitive
+					if (query.responseXML.childNodes[0].childNodes.length === 0) {
+						if (location.href.indexOf("Outlook15White") != -1) {
+							//USD Session
+							window.open('http://event/?eventname=Shared Set Veteran Fields&veteranid=' + id + '&sensitivity=false');
+						}
+						return;
+					}
+
+					//Set XML result variable
+					xml = query.responseXML;
+
+					//Phones Drill down Demographics>Phones>Phone
+					dem = $(xml).find('demographics');
+					if (dem.length > 0) {
+						telephones = $(dem).find('phones');
+						if (telephones.length > 0) {
+							phones = $(telephones).find('phone');
+							if (phones.length > 0) {
+								$.each(phones, function () {
+									t = $(this).find('type')[0].textContent;
+									num = $(this).find('phoneNumber')[0].textContent;
+									if (t == 'Home') {
+										home = num;
+									}
+									if (t == 'Business') {
+										work = num;
+									}
+									if (t == 'Mobile') {
+										mobile = num;
+									}
+								});
+							}
+						}
+					}
+					Xrm.Page.getAttribute("ftp_homephone").setValue(home);
+					Xrm.Page.getAttribute("ftp_workphone").setValue(work);
+					Xrm.Page.getAttribute("ftp_mobilephone").setValue(mobile);
+
+					//If they are a veteran- pull that return
+					if ($(xml).find('veteran').length > 0) {
+						if ($(xml).find('veteran')[0].textContent === "true") {
+							veteran = true;
+						} else {
+							veteran = false;
+						}
+					}
+					disability = $(xml).find('ratedDisability');
+					if (disability.length > 0) {
+						rDisability = $(xml).find('ratedDisability')[0].textContent;
+					}
+
+					pEligibility = $(xml).find('primaryEligibility');
+					if (pEligibility.length > 0) {
+						eligibility = $(pEligibility).find('type')[0].textContent;
+						Xrm.Page.getAttribute("ftp_primaryeligibilitycode").setValue(eligibility);
+					}
+					empStatus = $(xml).find('unemployable');
+					if (empStatus.length > 0) {
+						unemployable = empStatus[0].textContent;
+					}
+
+					if ($(xml).find('serviceConnectedIndicator').length > 0) {
+						svcCI = $(xml).find('serviceConnectedIndicator')[0].textContent;
+						if (svcCI === "true") {
+							if ($(xml).find('serviceConnectedPercentage').length > 0) {
+								percentage = $(xml).find('serviceConnectedPercentage')[0].textContent;
+							}
+						}
+					}
+
+					if ($(xml).find('sensityFlag').length > 0) {
+						sensitivityFlag = $(xml).find('sensityFlag')[0].textContent;
+					}
+
+					if ($(xml).find('insuranceList').length > 0) {
+						hasI = true;
+						Xrm.Page.getAttribute("ftp_isinsurance").setValue(hasI);
+					} else {
+						hasI = false;
+						Xrm.Page.getAttribute("ftp_isinsurance").setValue(hasI);
+					}
+
+					assoc = $(xml).find('association');
+					nextofkin = null;
+					if (assoc.length > 0) {
+						$.each(assoc, function () {
+							if ($(this).find('contactType').length > 0) {
+								cType = $(this).find('contactType')[0].textContent;
+							}
+							if ($(this).find('givenName').length > 0) {
+								givenName = $(this).find('givenName')[0].textContent;
+							}
+							if ($(this).find('middleName').length > 0) {
+								mName = $(this).find('middleName')[0].textContent;
+							}
+							if ($(this).find('familyName').length > 0) {
+								fName = $(this).find('familyName')[0].textContent;
+							}
+							if ($(this).find('relationship').length > 0) {
+								relationship = $(this).find('relationship')[0].textContent;
+							}
+
+							if (cType === "Primary Next of Kin") {
+								nextofkin = cType;
+								nk_givenname = givenName;
+								nk_middlename = mName;
+								nk_familyname = fName;
+								nk_relationship = relationship;
+
+								//Build Next of Kin string
+
+								if (nk_givenname != '') {
+									NextOfKinString = nk_givenname;
+								}
+								if (nk_middlename != '') {
+									NextOfKinString = NextOfKinString + ' ' + nk_middlename;
+								}
+								if (nk_familyname != '') {
+									NextOfKinString = NextOfKinString + ' ' + nk_familyname;
+								}
+								if (nk_relationship != '') {
+									NextOfKinString = NextOfKinString + ', ' + nk_relationship;
+								}
+								if (NextOfKinString != '') {
+									Xrm.Page.getAttribute("ftp_nextofkin").setValue(NextOfKinString);
+								}
+							}
+						});
+					}
+
+					adds = $(xml).find('addresses');
+					if (adds.length > 0) {
+						add = $(adds).find('address');
+						if (add.length > 0) {
+							$.each(add, function () {
+								aType = $(this).find('addressTypeCode')[0].textContent;
+								if ($(this).find('line1').length > 0) {
+									aLine1 = $(this).find('line1')[0].textContent;
+								}
+								if ($(this).find('line2').length > 0) {
+									aLine2 = $(this).find('line2')[0].textContent;
+								}
+								if ($(this).find('line3').length > 0) {
+									aLine3 = $(this).find('line3')[0].textContent;
+								}
+								if ($(this).find('zipCode').length > 0) {
+									aZip = $(this).find('zipCode')[0].textContent;
+								}
+								if ($(this).find('state').length > 0) {
+									aState = $(this).find('state')[0].textContent;
+								}
+								if ($(this).find('city').length > 0) {
+									aCity = $(this).find('city')[0].textContent;
+								}
+								if ($(this).find('country').length > 0) {
+									aCountry = $(this).find('country')[0].textContent;
+								}
+								if (aType === "Permanent") {
+									add1 = aLine1;
+									add2 = aLine2;
+									add3 = aLine3;
+									zip = aZip;
+									state = aState;
+									city = aCity;
+									country = aCountry;
+								}
+								if (aType === "Temporary") {
+									addt1 = aLine1;
+									addt2 = aLine2;
+									addt3 = aLine3;
+									tzip = aZip;
+									tstate = aState;
+									tcity = aCity;
+									tcountry = aCountry;
+								}
+							});
+						}
+					}
+
+					if (veteran === "true") {
+						Xrm.Page.getAttribute("ftp_patienttype").setValue("veteran");
+					} else {
+						Xrm.Page.getAttribute("ftp_patienttype").setValue("Non-Veteran");
+					}
+					Xrm.Page.getAttribute("ftp_unemployable").setValue(unemployable);
+					if (svcCI === "true") {
+						Xrm.Page.getAttribute("ftp_serviceconnected").setValue(true);
+					} else {
+						Xrm.Page.getAttribute("ftp_serviceconnected").setValue(false);
+					}
+					if (percentage != null) {
+						Xrm.Page.getAttribute("ftp_scpercent").setValue(percentage);
+					}
+					if (sensitivityFlag === "true") {
+						Xrm.Page.getAttribute("ftp_sensitiveveteran").setValue(true);
+					} else {
+						Xrm.Page.getAttribute("ftp_sensitiveveteran").setValue(false);
+					}
+					if (add1 !== null) {
+						Xrm.Page.getAttribute("address1_line1").setValue(add1);
+						addressText += add1 + "\n";
+					}
+
+					if (add2 !== null) {
+						Xrm.Page.getAttribute("address1_line2").setValue(add2);
+						addressText += add2 + "\n";
+					}
+
+					if (add3 !== null) {
+						Xrm.Page.getAttribute("address1_line3").setValue(add3);
+						addressText += add3 + "\n";
+					}
+
+					if (city !== null) {
+						Xrm.Page.getAttribute("address1_city").setValue(city);
+						addressText += city + ", ";
+					}
+
+					if (state !== null) {
+						Xrm.Page.getAttribute("address1_stateorprovince").setValue(state);
+						addressText += state + " ";
+					}
+
+					if (zip !== null) {
+						Xrm.Page.getAttribute("address1_postalcode").setValue(zip);
+						addressText += zip + "\n";
+					}
+
+					if (country !== null) {
+						Xrm.Page.getAttribute("address1_country").setValue(country);
+						addressText += country;
+					}
+
+					if (addt1 !== null) {
+						Xrm.Page.getAttribute("address2_line1").setValue(addt1);
+						address2Text += addt1 + "\n";
+					}
+
+					if (addt2 !== null) {
+						Xrm.Page.getAttribute("address2_line2").setValue(addt2);
+						address2Text += addt2 + "\n";
+					}
+
+					if (addt3 !== null) {
+						Xrm.Page.getAttribute("address2_line3").setValue(addt3);
+						address2Text += addt3 + "\n";
+					}
+
+					if (tcity !== null) {
+						Xrm.Page.getAttribute("address2_city").setValue(tcity);
+						address2Text += tcity + ", ";
+					}
+
+					if (tstate !== null) {
+						Xrm.Page.getAttribute("address2_stateorprovince").setValue(tstate);
+						address2Text += tstate + " ";
+					}
+
+					if (tzip !== null) {
+						Xrm.Page.getAttribute("address2_postalcode").setValue(tzip);
+						address2Text += tzip + "\n";
+					}
+
+					if (tcountry !== null) {
+						Xrm.Page.getAttribute("address2_country").setValue(tcountry);
+						address2Text += tcountry;
+					}
+
+					Xrm.Page.getAttribute("address2_composite").setValue(address2Text);
+
+					if (location.href.indexOf("Outlook15White") != -1) {
+						//USD Session
+						window.open("http://event/?eventname=Shared Set Veteran Fields&veteranid=" + id + "&sensitivity=" + sensitivityFlag + "&homephone=" + home + "&mobilephone=" + mobile + "&workphone=" + work + "");
+					}
+				}
+			};
+			query.send(request);
+		}
+		else if (ftype !== 1 && ftype !== null) {
+			if (location.href.indexOf("Outlook15White") != -1) {
+				//USD Session
+				window.open("http://event/?eventname=Shared Set Veteran Fields&veteranid=" + id + "&sensitivity=false");
+			}
+			return;
+
+		}
+		else {
+			if (location.href.indexOf("Outlook15White") != -1) {
+				//USD Session
+				window.open("http://event/?eventname=New Vet&lastname=" + Xrm.Page.getAttribute("lastname").getValue() + "");
+			}
+			return;
+		}
+	}
+	catch (e) {
+		alert(e);
+	}
+}
+
+function unattendedSearchFromVeteran() {
+	debugger;
+	var filter = "";
+	var filterPrefix = "$select=*&$filter=";
+	var edipi = "";
+	//var edipi = Xrm.Page.getAttribute("bah_edipi_text").getValue();
+	if (edipi != null) {
+		if (edipi.length > 11) {
+			edipi = "";
+		}
+	} else {
+		edipi = "";
+	}
+	var firstname = Xrm.Page.getAttribute("firstname").getValue();
+	var lastname = Xrm.Page.getAttribute("lastname").getValue();
+
+	var dobdate = Xrm.Page.getAttribute("ftp_dateofbirth").getValue();
+	var dobstring = "";
+	if (dobdate != null) {
+		dobstring = dobdate;
+	}
+
+	var ssn = Xrm.Page.getAttribute("governmentid").getValue();
+	if (ssn != "" && ssn != null) {
+		ssn = ssn.replace(/-/g, "");
+	}
+
+	//if we have edipi, search using just it
+	if (edipi != "") {
+		filter = buildQueryFilter("crme_EDIPI", edipi, false);
+		filter += buildQueryFilter("crme_ClassCode", 'MIL', true);
+		filter += buildQueryFilter("crme_SearchType", 'SearchByIdentifier', true);
+
+		//set search type as unattended
+		filter += " and crme_IsAttended eq false";
+	} else {
+		//otherwise search using lastname, firstname, ssn, dob
+		filter = buildQueryFilter("crme_LastName", lastname, false); //assuming lastname will never be blank
+
+		if (firstname != "" && firstname != null) {
+			filter += buildQueryFilter("crme_FirstName", firstname, true);
+		}
+
+		if (ssn != "" && ssn != null) {
+			filter += buildQueryFilter("crme_SSN", ssn, true);
+		}
+
+		if (dobstring != "") {
+			filter += " and crme_DOBString eq '" + dobstring + "'";
+		}
+		filter += buildQueryFilter("crme_SearchType", 'SearchByFilter', true);
+
+		//set search type as attended (for now)
+		filter += " and crme_IsAttended eq true";
+	}
+
+	filter = encodeURIComponent(filter);
+	filter = filterPrefix + filter;
+	//debugger;
+	SDK.REST.retrieveMultipleRecords("crme_person", filter, unattendedSearchFromVeteranCallback, function (error) {
+		alert(error.message);
+	}, unattendedSearchFromVeteranComplete);
+}
+
+function unattendedSearchFromVeteranCallback(returnData) {
+	debugger;
+	if (returnData != null && returnData.length == 1) {
+		// check for exceptions 1st
+		if ((returnData[0].crme_ExceptionOccured || !!returnData[0].crme_ExceptionMessage)
+			|| (!!returnData[0].crme_ReturnMessage && returnData[0].crme_ReturnMessage == "An unexpected error occured during the MVI search. Please try again or contact your system administrator if the problem persists.")
+			|| (!!returnData[0].crme_ReturnMessage && returnData[0].crme_ReturnMessage == "Unknown Key Identifier| Unknown Key Identifier")
+		)
+		{
+			var messageToShow = 
+				!!returnData[0].crme_ExceptionMessage ? returnData[0].crme_ExceptionMessage :
+				!!returnData[0].crme_ReturnMessage ? returnData[0].crme_ReturnMessage :
+				"";
+			alert("Error occurred in unattendedSearchFromVeteran(): " + messageToShow);
+		} else {
+			var patientMviIdentifier = returnData[0].crme_PatientMviIdentifier == null ? "" : returnData[0].crme_PatientMviIdentifier;
+			if (patientMviIdentifier != "") {
+				var idparts = patientMviIdentifier.split("^");
+
+				if (idparts.length > 0) {
+					var nationalId = idparts[0];
+					_icn = nationalId;
+
+					//DO WHATEVER YOU ARE GOING TO DO WITH THE ICN HERE
+					retrieveDemographics(_icn);
+				}
+			}
+		}
+	}
+}
+function buildQueryFilter(field, value, and) {
+	if (value == '') {
+		if (and) {
+			return " and " + field + " eq null";
+		} else {
+			return field + " eq null";
+		}
+	} else {
+		if (and) {
+			return " and " + field + " eq '" + value + "'";
+		} else {
+			return field + " eq '" + value + "'";
+		}
+	}
+}
+
+function unattendedSearchFromVeteranComplete() {
+	//do nothing
+}

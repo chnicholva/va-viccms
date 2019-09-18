@@ -1,0 +1,12 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US">Displays a message box to the user</SPAN>.<o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>text</STRONG></TD>
+<TD><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">The text to display in the message box. If this parameter isn't specified, an empty message box is displayed.</SPAN></TD></TR>
+<TR>
+<TD><STRONG>caption</STRONG></TD>
+<TD><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">The caption or title of the message box. If no value is specified for this parameter, “CRM Message” will be displayed as the caption.</SPAN></TD></TR></TBODY></TABLE></BODY></HTML>

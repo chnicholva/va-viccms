@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>MVI Search</title>
+    <link href="..\styles\core.css" rel="stylesheet" type="text/css"/>
+    <link href="..\..\ftp_MVIStyle.css" rel="stylesheet" type="text/css" />
+    <!-- <script src="..\..\ClientGlobalContext.js.aspx" type="text/javascript"></script> -->
+    <script src="..\JScript\json2.js" type="text/javascript"></script>
+    <script src="..\JScript\sdk.rest.js" type="text/javascript"></script>
+    <script src="..\JScript\jquery.1.11.min.js" type="text/javascript"></script>
+    <script src="..\JScript\sdk.metadata.js" type="text/javascript"></script>
+    <script src="..\JScript\sdk.soap.js" type="text/javascript"></script>
+    <script src="..\..\ftp_MviSearchDemo.js" type="text/javascript"></script>
+</head>
+<body>
+    <div id="tmpDialog" style="display:none">
+        <p>
+            Working on it. Please wait ...
+        </p>
+    </div>
+    <div>
+    <fieldset>
+    <legend>Search for Veteran</legend>
+        <table class="formTable">
+            <tr>
+                <td class="formFieldLabelCell">
+                    First Name:</td>
+                <td class="formFieldInputCell">
+                    <input id="txtFirstName" type="text" tabindex="1" /></td>
+                <td class="formFieldLabelCell">
+                    Middle Name:</td>
+                <td class="formFieldInputCell">
+                    <input id="txtMiddleName" type="text" tabindex="2" /></td>
+            </tr>
+            <tr>
+                <td class="formFieldLabelCell">
+                    Last Name:</td>
+                <td class="formFieldInputCell">
+                    <input id="txtLastName" type="text" tabindex="3" /></td>
+                <td class="formFieldLabelCell">
+                    SSN:</td>
+                <td class="formFieldInputCell">
+                    <input id="txtSSN" type="text" tabindex="4" /></td>
+            </tr>
+            <tr>
+                <td class="formFieldButtonCell" colspan="4">
+                    <input id="btnSearchByTraits" type="button" value="Search" tabindex="5"/>
+                    <input id="btnClearTraitFields" type="button" value="Reset" tabindex="6" />
+                </td>
+            </tr>
+        </table>
+        </fieldset>
+    </div>
+    <div><br /></div>
+    <div>
+        <fieldset>
+            <legend>Retrieve Veteran by EDIPI</legend>
+            <table class="formTable">
+                <tr>
+                    <td class="formFieldLabelCell">
+                        EDIPI:</td>
+                    <td class="formFieldInputCell">
+                        <input id="txtEDIPI" type="text" tabindex="7" /></td>
+                </tr>
+                <tr>
+                    <td class="formFieldButtonCell" colspan="2">
+                        <input id="btnRetrieve" type="button" value="Search" tabindex="8" />
+                        <input id="btnClearEDIPIField" type="button" value="Reset" tabindex="9" />
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </div>
+    <div style="clear: both;"></div>
+    <div id="validationFailedDiv" style="color: red; font-family: sans-serif; font-size: 0.9em; display: none;">The search requires some additional information. Please follow the instructions above to execute your search.</div>
+    <div id="searchResultsMessageDiv" style="color: red; font-family: sans-serif; font-size: 0.9em; font-weight: bold; display: none;"></div>
+    <div style="clear: both;"></div>
+    <div id="resultsFieldSetDiv" style="width: 100%; float: left; display: none">
+        <fieldset id="SearchResultFieldSet">
+            <legend>Search Response</legend>
+            <table id="personSearchResultsTable" style="width: 100%;">
+            </table>
+        </fieldset>
+    </div>
+</body>
+</html>

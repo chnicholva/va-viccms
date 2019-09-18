@@ -1,0 +1,25 @@
+<HTML xmlns:o="urn:schemas-microsoft-com:office:office">
+<HEAD>
+    <BASE>
+    <META charset=utf-8>
+</HEAD>
+<BODY>
+    <P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Saves data to USD replacement parameters under the specified group, optionally in made globally available.</FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+    <TABLE border=1>
+        <TBODY>
+            <TR>
+                <TD><STRONG>group</STRONG></TD>
+                <TD>The replacement parameters grouping in which to place the data</TD>
+            </TR>
+            <TR>
+                <TD><STRONG>global</STRONG></TD>
+                <TD>'true' or 'false', indicating if the specified group is global or session-based</TD>
+            </TR>
+            <TR>
+                <TD><STRONG></STRONG></TD>
+                <TD>The rest of the parameters should consist of name=value pairs, which will populate USD data parameters under the specified group.</TD>
+            </TR>
+        </TBODY>
+    </TABLE>
+</BODY>
+</HTML>

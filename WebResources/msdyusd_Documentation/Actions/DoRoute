@@ -1,0 +1,18 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US">Tests your window navigation rules by simulating a pop-up window from a specific hosted control. The action can be used in the production environment to manually trigger the window navigation rules as required</SPAN>.<o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>name</STRONG></TD>
+<TD><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">The name of the hosted control from where the pop-up window will originate</SPAN>.</TD></TR>
+<TR>
+<TD><STRONG>entity</STRONG></TD>
+<TD><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">The logical name of the entity that is displayed in a pop-up window.</SPAN></TD></TR>
+<TR>
+<TD><STRONG>id</STRONG></TD>
+<TD><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">The ID of the entity record that will be displayed in a pop-up window.</SPAN></TD></TR>
+<TR>
+<TD><STRONG>frame</STRONG></TD>
+<TD><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">The frame where the pop-up window will originate from.</SPAN></TD></TR></TBODY></TABLE></BODY></HTML>

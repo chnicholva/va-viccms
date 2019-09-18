@@ -1,0 +1,85 @@
+<html><head><meta charset="utf-8"></head><body>﻿
+
+
+    <title></title>
+    <script src="..\..\ClientGlobalContext.js.aspx" type="text/javascript"></script>
+    <script src="..\JScript\json2.js" type="text/javascript"></script>
+    <script src="..\JScript\jquery.1.11.min.js" type="text/javascript"></script>
+    <script src="..\Veteran\JScript\PatientFlags.js" type="text/javascript"></script>
+    <style type="text/css">
+        h1
+        {
+            position: absolute;
+            font-weight: bold;
+            font-size: 27px;
+            font-family: Segoe UI Light, Segoe UI, Tahoma, Arial;
+            color:white;
+            top: 33px;
+            left: 35px;
+        }
+        h2
+        {
+            font-weight: normal;
+            font-size: 20px;
+            font-family: Segoe UI Light, Segoe UI, Tahoma, Arial;
+            margin-left: 30px;
+            margin-right: 30px;
+            color: #262626;
+            text-decoration: underline;
+        }
+        p, label
+        {
+            font-weight: lighter;
+            font-size: 14px;
+            top: 90px;
+            bottom: 49px;
+            vertical-align: top;
+            width: 95%;
+            font-family: Segoe UI,Tahoma,Arial;
+            color: #444444;
+            background-color: #FFFFFF;
+            border-bottom-color: #A4ABB2;
+            margin-right: 600px;
+            margin-left: 60px;
+            word-wrap: break-word;
+        }
+        #rectangle {
+	        float: left;
+            width: 20px;
+	        height: inherit;
+	        background-color: darkgray;
+        }
+        #triangle-right {	        
+            width: 0;
+	        height: 0;
+	        border-top: 50px solid transparent;
+	        border-left: 300px solid #002050;
+	        border-bottom: 50px solid transparent;
+        }
+        #col1, col2
+        {
+            float: left;
+        }
+	.abutton{
+		font-family: 'Segoe UI';
+	}
+       .acknowledge{
+       		position:fixed;
+		bottom:10px;
+		margin-left: 50px;
+}
+    </style>
+
+
+    <div id="col1">
+        <div id="rectangle"></div>
+    </div>
+    <div id="col2">
+        <div id="triangle-right"><h1>Patient Flags</h1></div>   
+        <div id="flagdetails"></div>
+    </div>      
+    <div class="acknowledge">
+<input class="abutton" id="abtn" type="button" value="Acknowledge">
+         </div>
+
+</body></html>

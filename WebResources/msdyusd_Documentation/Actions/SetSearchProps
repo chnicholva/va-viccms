@@ -1,0 +1,16 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Enables search in the KM Control hosted control with different type of filters.<o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>showFilter</STRONG></TD>
+<TD>Indicates whether to show the article type filter in the KM Control. Set the value to "0" to hide the filter, and "1" to show the filter. For example: showFilter=0. If no value or an incorrect value is provided, the default value (0) will be used.<BR></TD></TR>
+<TR>
+<TD><STRONG>showLang</STRONG></TD>
+<TD>Indicates whether to show the language filter in the KM Control. Set the value to "0" to hide the filter, and "1" to show the filter. For example: showLang=0. If no value or an incorrect value is provided, the default value (0) will be used.<BR></TD></TR>
+<TR>
+<TD><STRONG>showDept</STRONG></TD>
+<TD>Indicates whether to show the department filter in the KM Control. Set the value to "0" to hide the filter, and "1" to show the filter. For example: showDept=0. If no value or an incorrect value is provided, the default value (0) will be used.<BR></TD></TR>
+</TBODY></TABLE></BODY></HTML>

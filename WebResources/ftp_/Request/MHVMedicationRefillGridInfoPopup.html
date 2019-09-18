@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Additional Info</title>
+        <script type="text/javascript" src="JScript/MHVMedicationRefillGridInfoPopup.js"></script>
+        <link href="css/MHVMedicationRefillGrid.css" rel="stylesheet" />
+        <style>
+            .titleColumn {
+                width: 30%;
+            }
+            .valueColumn {
+                width: 70%;
+            }
+
+            td, th {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }
+
+            /*tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }*/
+        </style>
+    </head>
+    <body onload="doPageLoad();">
+        <table id="popupTable"></table>
+    </body>
+</html>

@@ -1,0 +1,54 @@
+<html><head>
+		<meta charset="utf-8">
+	<meta><meta></head>
+	<body onfocusout="parent.setEmailRange();" style="overflow-wrap: break-word;">
+		<button id="createButton" onclick="run()">Create Combo Request</button>
+		<script>
+			function run() {
+				var Xrm = window.parent.Xrm;
+				Xrm.Page.getAttribute("ftp_comborequest").setValue(true);
+				Xrm.Page.data.save().then(
+					function(){
+						saveCallbackFunction();
+					},
+					function (error){
+						alert("Error saving interaction: " + error.message);
+					}
+				);
+			}
+			
+			function saveCallbackFunction() {
+				setTimeout(
+					function () {
+debugger;
+						var Xrm = window.parent.Xrm;
+						var thisEntityId = Xrm.Page.data.entity.getId();
+						if (!!thisEntityId) {
+							Xrm.Page.ui.clearFormNotification("ComboRequestClickError");
+							var vetValue = Xrm.Page.getAttribute("ftp_veteran").getValue();
+							var cachedICNValue = Xrm.Page.getAttribute("ftp_cachedicnid").getValue();
+							if (!!vetValue) {
+								var parameters = {
+									ftp_veteran: vetValue[0].id,
+									ftp_veteranname: vetValue[0].name,
+									ftp_callback: Xrm.Page.getAttribute("ftp_callbacknumber").getValue(),
+									originatingEntityId_0: thisEntityId,
+									originatingEntityType_0: Xrm.Page.data.entity.getEntityName(),
+									originatingEntityName_0: Xrm.Page.data.entity.getPrimaryAttributeValue(),
+									ftp_cachedicnid: cachedICNValue[0].id
+								};
+								
+								var windowOptions = { openInNewWindow: true };
+								Xrm.Utility.openEntityForm("ftp_multiplereasons", null, parameters, windowOptions);
+							}
+						} 
+						else {
+							Xrm.Page.ui.setFormNotification("Fill out all required fields on this interaction before creating and linking a combo request to it.", "WARNING", "ComboRequestClickError");
+						}
+					},
+					1500
+				);
+			}
+		</script>
+	
+</body></html>

@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Secondary Diagnosis Grid</title>
+    <!-- NOTE: ClientGlobalContext.js.aspx URL below is set with ../../ because the web resource that needs it is installed in a 2 level folder structure -->
+    <script type="text/javascript" src="../../ClientGlobalContext.js.aspx"></script>
+    <!-- Telerik KendoUI is required by this application, CRM must contain the Tribridge Adoption Essentials component "TribridgeIPCRMKuiFrameworkNS_Managed_2015_4_0001_target_CRM_7.0"  --> 
+    <script type="text/javascript" src="../../triipcrm_/TR_KU_V2015_2_902/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../../triipcrm_/TR_KU_V2015_2_902/js/kendo.all.min.js"></script>
+    <!-- Telerik KendoUI Office 365 Stylesheet --> 
+    <link href="../../triipcrm_/TR_KU_V2015_2_902/css/kendo.common_office365.min.css" rel="stylesheet" type="text/css" />
+    <link href="../../triipcrm_/TR_KU_V2015_2_902/css/kendo.office365.min.css" rel="stylesheet" type="text/css" />
+    <!-- Via Workload Lookup Application Stylesheet -->
+    <link href="css/ViaWorkloadLookupStyle.css" rel="stylesheet" />
+    <!--Secondary Diagnosis Grid Application Library -->
+    <script type="text/javascript" src="js/SecondaryDiagnosisGridScriptLib.js"></script>
+</head>
+<body class="ViaWorkloadLookupForm">
+    <div id="SecondaryDiagnosisGrid">
+        <table class="stdTable" id="tblSecondaryDiagnosis">
+            <tr>
+                <td style="text-align:left;"><u>Select Secondary Diagnosis Codes</u></td>
+            </tr>
+            <tr>
+                <td>&nbsp;&nbsp;<i>Filter On - </i>&nbsp;&nbsp;&nbsp;&nbsp;Section: <select id="selSection" onchange="sdg_ApplyGridFilters()"></select>&nbsp;&nbsp;&nbsp;&nbsp;Area: <select id="selArea" onchange="sdg_ApplyGridFilters()"></select>&nbsp;&nbsp;&nbsp;&nbsp;Search Text: <input id="searchtext" type="text" value="" onkeypress="sdg_searchKeyPress(event)" style="width:100px; font-size:12px;" title="Enter the text to search for in a diagnosis description, then press 'Enter Key'." />&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id="chkCheckedOnly" style="cursor:pointer;" title="Check to display selected data only."onchange="sdg_ApplyGridFilters()" /><b>Display Checked Only</b></td>
+            </tr>
+            <tr>
+                <td>
+                    <div id="ku_diagnosisgrid" class="kendoGridBorder" onmouseover="sdg_ResizeGrid()"></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function ($) {
+            //Actions/Functions to execute as soon as the form is at a ready state.
+            try {
+                //Construct the initial Grid
+                sdg_formLoad();
+            }
+            catch (err) {
+                //Display Error....
+                alert("SecondaryDiagnosisGrid.html Script Document Ready Error: " + err.message);
+            }
+        });
+    </script>
+</body>
+</html>

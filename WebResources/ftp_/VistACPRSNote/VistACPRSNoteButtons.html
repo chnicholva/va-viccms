@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>VistA/CPRS Note Buttons</title>
+    <!-- NOTE: ClientGlobalContext.js.aspx URL below is set with ../../ because the web resource that needs it is installed in a 2 level folder structure -->
+    <script type="text/javascript" src="../../ClientGlobalContext.js.aspx"></script>
+    <script type="text/javascript" src="../../triipcrm_/TR_KU_V2015_2_902/js/jquery.min.js"></script>
+
+    <!-- VistA/CPRS Note Buttons Custom Stylesheet -->
+    <link href="css/VistACPRSNoteStyle.css" rel="stylesheet" />
+    <!--Control Library /-->
+    <script type="text/javascript" src="js/VistACPRSNoteButtonsScriptLib.js"></script>
+
+</head>
+<body class="DefaultForm" tabindex="0">
+    <div id="VistACPRSNoteButtons" style="text-align:center;">
+        <input id="btnSaveOnly" type="button" class="CrmButton" value="Save Only" title="Select to Save your data and exit this section" onclick="vcnb_buttonSave();" />
+        <input id="btnSaveToVistA" type="button" class="CrmButton" value="Save to VistA" title="Select to Save Note to VistA/CPRS" onclick="vcnb_buttonSaveToVistA();" />
+        <input id="btnCancel" type="button" class="CrmButton" value="Cancel" title="Select to exit this section" onclick="vcnb_buttonCancel();"/>
+    </div>
+
+    <script type="text/javascript">
+        window.onload = function () {
+            //Actions/Functions to execute as soon as the form is loaded
+            try {
+                //Initialize the buttons and parent form
+                vcnb_formLoad();
+            }
+            catch (err) {
+                //Display Error....
+                alert('VistACPRSNoteButtons.html Script Document Ready Error: ' + err.message);
+            }
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,268 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="../../ClientGlobalContext.js.aspx"></script>
+		<script type="text/javascript" src="../JScript/SDK.REST.js"></script>
+		<script type="text/javascript" src="../JScript/json2.js"></script>
+		<style type="text/css">
+			body
+			{
+				direction: LTR;
+				margin: 0px;
+				border: 0px;
+				cursor: default;
+				font-family: Segoe UI,Tahoma,Arial;
+				font-size: 11px;
+			}
+
+			.ms-crm-RefreshDialog-Header
+			{
+				top: 0px;
+				position: absolute;
+				width: 96%;
+				height: 75px;
+				padding-top: 10px;
+				background-color: #FFFFFF;
+				border-bottom-color: #A4ABB2;
+			}
+
+			DIV.ms-crm-RefreshDialog-Header-Title
+			{
+				font-weight: Lighter;
+				font-size: 27px;
+				font-family: Segoe UI Light, Segoe UI, Tahoma, Arial;
+				margin-left: 30px;
+				margin-right: 30px;
+				color: #262626;
+			}
+
+			.ms-crm-TextAutoEllipsis
+			{
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+
+			.ms-crm-RefreshDialog-Header-Desc
+			{
+				padding-top: 4px;
+				font-family: Segoe UI,Tahoma,Arial;
+				margin-left: 30px;
+				margin-right: 30px;
+				color: #666666;
+				font-size: 12px;
+				width: 600px;
+			}
+
+			.ms-crm-RefreshDialog-Main
+			{
+				font-size: 12px;
+				top: 300px;
+				position: absolute;
+				bottom: 49px;
+				vertical-align: top;
+				width: 95%;
+				font-family: Segoe UI,Tahoma,Arial;
+				color: #444444;
+				background-color: #FFFFFF;
+				border-bottom-color: #A4ABB2;
+				right: 30px;
+				left: 30px;
+				word-wrap: break-word;
+			}
+
+			.ms-crm-RefreshDialog-Footer
+			{
+				position: relative;
+				left: 30px;
+				height: 44px;
+				text-align: left;
+				background-color: #F8F8F8;
+				border-top-color: #FFFFFF;
+			}
+
+			.ms-crm-RefreshDialog-Button
+			{
+				color: #444444;
+				background-color: #FFFFFF;
+				height: 24px;
+				font-family: Segoe UI,Tahoma,Arial;
+				border: 1px solid #C6C6C6;
+				background-image: none;
+				margin-top: 10px;
+				width: auto;
+				min-width: 80px;
+				white-space: nowrap;
+				font-size: 12px;
+				line-height: 16px;
+				width: 84px;
+				text-align: center;
+				cursor: pointer;
+				background-repeat: repeat-x;
+				padding-left: 5px;
+				padding-right: 5px;
+			}
+			#loadingGifDiv
+			{
+				background-color: rgba(255,255,255,.8);
+				margin: -17px 0px 0px 0px;
+				font-size: 15px;
+				z-index: 1010;
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				display: block;
+			}
+			#mainContent
+			{
+				display: none;
+			}
+		</style>
+		
+		<script>
+			var configData = null;
+			(function () {
+				//put onLoad logic here
+				configData = parseDataParametersFromUrl(location.search);
+				
+				if(!!configData && configData.sensitivity == "false"){
+					//if we somehow reach this page when sensitivity == "false", fire the Saved event anyways with an answer of "yes", and proceed to open Patient Flags.
+					//this is a safeguard against "stalling on a blank screen" in USD after opening a Vet
+					var url = "http://event/?eventname=Saved&sensitiveVetAnswer=yes&nationalid=" + configData.nationalid;
+					if(configData.IsUSD == "true") window.open(url);
+				}			
+			})();
+			
+			function parseDataParametersFromUrl(pQueryString) {
+				//example query string (unencoded): contactid={32CA1B55-DC81-E611-9445-0050568D743D}&fullname=TIFINKLE, ANDREW&sensitivity=true&IsUSD=true
+				var fullParameterArray = pQueryString.substr(1).split("&");
+
+				//clean up the URL query string and split each member into a key/value pair
+				for (var i in fullParameterArray) {
+					fullParameterArray[i] = fullParameterArray[i].replace(/\+/g, " ").split("=");
+				}
+				
+				var customDataString = "";
+				for(var i in fullParameterArray){
+					if(fullParameterArray[i][0].toLowerCase() == "data"){
+						customDataString = fullParameterArray[i][1];
+						break;
+					}
+				}
+				
+				var customDataArray = decodeURIComponent(customDataString).split("&");
+				for (var i in customDataArray) {
+					customDataArray[i] = customDataArray[i].replace(/\+/g, " ").split("=");
+				}
+				
+				var configObject = {};
+				for (var i in customDataArray) {
+					configObject[customDataArray[i][0]] = customDataArray[i][1];
+				}
+				
+				//optionally, put code here to show body once we have the config object, if it's taking too long
+				return configObject;
+			}
+		
+			function Button1_click(){
+				createRecordAccessLog(true);
+			}
+			function cancel(){
+				createRecordAccessLog(false);
+			}
+
+			function createRecordAccessLog(pUserAnswer){
+				var context  = getContext();
+				if(!!context && !!configData){
+					//create an ftp_recordaccess record and then proceed w/ USD logic
+					var simpleName = configData.fullname + " accessed by " + context.getUserName();
+					simpleName = simpleName.length > 100 ? simpleName.substring(0, 97) + "..." : simpleName;
+					var newRecord = {
+						ftp_issensitive: configData.sensitivity, //boolean
+						ftp_Accessed: pUserAnswer, //boolean
+						ftp_veteran: { //lookup to contact
+							Id: configData.contactid,
+							Name: configData.fullname,
+							LogicalName: "contact"
+						},
+						ftp_accessinguser: { //lookup to systemuser
+							Id: context.getUserId(),
+							Name: context.getUserName(),
+							LogicalName: "systemuser"
+						},
+						ftp_name: simpleName
+					};
+					
+					//create, then call USD event to close this WR or close the session
+					SDK.REST.createRecord(
+						newRecord,
+						"ftp_recordaccess",
+						function(createdRecord){
+							var url = "http://event/?eventname=Saved&sensitiveVetAnswer=" + (pUserAnswer ? "yes" : "no") + "&nationalid=" + configData.nationalid;
+							if(configData.IsUSD == "true") window.open(url);
+						},
+						function(error){
+							alert(error.message);
+							//fire this USD event whether we succeeded in creating the record access log or not.
+							var url = "http://event/?eventname=Saved&sensitiveVetAnswer=" + (pUserAnswer ? "yes" : "no") + "&nationalid=" + configData.nationalid;
+							if(configData.IsUSD == "true") window.open(url);
+						}
+					);
+				}
+			}
+			
+			function RenderButtonsOnReady(){
+				document.getElementById("loadingGifDiv").style.display = "none";
+				document.getElementById("mainContent").style.display = "block";
+			}
+
+			function errorHandler(error) {
+				alert(error.message);
+			}
+
+			function getContext(){
+				if (typeof GetGlobalContext != "undefined"){
+					return GetGlobalContext();
+				}
+				else{
+					return null;
+				}
+			}
+		</script>
+	</head>
+	<body onload="RenderButtonsOnReady()">
+		<title></title>
+		<div id="loadingGifDiv" align="middle" align="center">
+			<table height="100%" width="100%" style="cursor:wait">
+				<tr>
+					<td align="middle" align="center">
+						<img alt="" src="/_imgs/AdvFind/progress.gif"/>
+						<div/>
+						<p>Checking Veteran Sensitivity...</p>
+					</td>
+				</tr>
+			</table>
+		</div>
+			
+
+		<div id="mainContent">
+			<div class="ms-crm-RefreshDialog-Main-Container">
+				<div class="ms-crm-RefreshDialog-Header" id="tdDialogHeader">
+					<div title="Your dialog header" class="ms-crm-RefreshDialog-Header-Title ms-crm-TextAutoEllipsis" id="dialogHeaderTitle" style="width: 75%;">Sensitive Veteran Warning</div>
+					<div title="Your dialog additional description" class="ms-crm-RefreshDialog-Header-Desc" id="dialogHeaderDesc">This record is protected by the Privacy Act of 1974 and the
+						Health Insurance Portability and Accountability Act of 1996.
+						If you elect to proceed, you will be required to prove you
+						have a need to know.  Accessing this patient is tracked, and
+						your station Security Officer will contact you for your 
+						justification.</div>
+					<div title="Your dialog additional description" class="ms-crm-RefreshDialog-Footer" id="buttonContainer">
+						<label>Do you want to continue processing this patient record?</label>
+						<button tabindex="1" class="ms-crm-RefreshDialog-Button" id="Button1" style="margin-left: 8px;" onclick="Button1_click()" type="button">Yes</button>
+						<button tabindex="1" class="ms-crm-RefreshDialog-Button" id="cmdDialogCancel" style="margin-right: 30px; margin-left: 8px;" onclick="cancel()" type="button">No</button>
+					</div>
+					<div class="ms-crm-RefreshDialog-Main"></div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

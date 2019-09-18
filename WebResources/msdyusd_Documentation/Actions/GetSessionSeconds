@@ -1,0 +1,3 @@
+<HTML><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY><FONT size=2 face="Tahoma, Verdana, Arial">Retrieves the session duration in seconds for the current session. The value is displayed under the $Return data parameter.</FONT></BODY></HTML>

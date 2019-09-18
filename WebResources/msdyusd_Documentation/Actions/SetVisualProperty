@@ -1,0 +1,19 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US">Sets the visual (<a href="https://msdn.microsoft.com/library/windows/apps/windows.ui.xaml.uielement.aspx">UIElement</a>) properties such as height, width, and visibility of a hosted control. This action call is specifically useful for user interface (UI) automation, such as automatically displaying or hiding a panel. Familiarity with XAML and Unified Service Desk layout is required for effectively using this action.
+<o:p></o:p></SPAN></P><o:p></o:p></FONT></SPAN><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>Elementname</STRONG></TD>
+<TD><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">The name of the UI element for which you want to set the property such as Expander, StackPanel, and Grid.</SPAN></TD>
+</TR>
+<TR>
+<TD><STRONG>Propertyname</STRONG></TD>
+<TD><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">The name of the property for the specified element that you want to set such as Height, Width, Visibility, and Color.</SPAN></TD>
+</TR>
+<TR>
+<TD><STRONG>Value</STRONG></TD>
+<TD><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">Specify the appropriate value for the specified property. Supported value types for this parameter are string, enumeration, integer, or bool.</SPAN></TD>
+</TR></TBODY></TABLE></BODY></HTML>

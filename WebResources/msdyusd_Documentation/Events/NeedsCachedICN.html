@@ -1,0 +1,38 @@
+<HTML xmlns:o="urn:schemas-microsoft-com:office:office">
+<HEAD>
+    <BASE>
+    <META charset=utf-8>
+</HEAD>
+<BODY>
+    <P style="MARGIN: 0in 0in 10pt" class=MsoNormal>
+        <SPAN style="mso-ansi-language: EN-US">
+            <FONT face=Calibri>
+                Evoked through JavaScript window.open calls when a record that should have a value in its Cached ICN lookup field but does not. Action calls beneath a control's respective events should create a new ftp_cachedicn record and link it to the event's parent record.
+                <br /><br />
+                The following action call records should be added underneath this event, to handle the aforementioned logic:
+                <br />
+                "Record Needs Cached ICN: Create Cached ICN Record"
+                <br />
+                "Record Needs Cached ICN: Link new Cached ICN to Record"
+                <br /><br />Expects the following parameters:
+            </FONT>
+        </SPAN>
+    </P>
+    <TABLE border=1>
+        <TBODY>
+            <TR>
+                <TD><STRONG>ICN</STRONG></TD>
+                <TD>A veteran ICN, used to create a new ftp_cachedicn record</TD>
+            </TR>
+            <TR>
+                <TD><STRONG>logicalName</STRONG></TD>
+                <TD>Entity name of the record calling this event, to which a new Cached ICN record will be linked</TD>
+            </TR>
+            <TR>
+                <TD><STRONG>recordId</STRONG></TD>
+                <TD>GUID of the records calling this event, to which a new Cached ICN record will be linked</TD>
+            </TR>
+        </TBODY>
+    </TABLE>
+</BODY>
+</HTML>

@@ -1,0 +1,65 @@
+﻿TD
+{
+    font-family:Segoe UI,Tahoma,Arial;
+	font-size:11px;
+}
+
+TD.sel,
+TD.currSel
+{	
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+NOBR.sel-nobr
+{
+	width:			90%;
+}
+
+TD.primary
+{
+	color:			#999999;
+	cursor:			default;
+}
+
+TD.currSel
+{
+	border-top: 1px solid WHITE;
+	border-bottom: none;
+	border-left: 1px solid WHITE;
+}
+
+B.label
+{
+	color:			#666666;
+}
+
+DIV.divList
+{
+	background:		#ffffff; 
+	border:			1px solid #a4abb2; 
+	overflow-y:		auto; 
+	overflow-x:		hidden;	
+}
+
+.ms-usd-RefreshDialog-Button
+{
+	height:				24px;
+	font-family:		Segoe UI,Tahoma,Arial;
+	border:				1px solid #C6C6C6;
+	background-image:	none;
+	margin-top:			10px;
+	width:				auto;
+	min-width:			80px;
+	white-space:        nowrap;
+}
+
+.ms-usd-RefreshDialog-Button:Disabled
+{
+	color:		#B1B1B1;
+}
+
+.ms-usd-Settings-Selected
+{
+	background-color:#B1D6F0;
+}

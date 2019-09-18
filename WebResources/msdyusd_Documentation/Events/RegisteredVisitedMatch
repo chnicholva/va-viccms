@@ -1,0 +1,15 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Invoked each time the criteria for an agent script registration is met.&nbsp;&nbsp; For more information, see the RegisterVisitedAnswerList action.<o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>task</STRONG></TD>
+<TD>The name of the task.</TD></TR>
+<TR>
+<TD><STRONG>taskid</STRONG></TD>
+<TD>The ID of the task, where applicable.</TD></TR>
+<TR>
+<TD><STRONG>name</STRONG></TD>
+<TD>The registration name in a previous action call to the RegisterVisitedAnswerList action.</TD></TR></TBODY></TABLE></BODY></HTML>

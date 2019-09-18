@@ -1,0 +1,128 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Invoked by the Avaya TSAPI adapter when a call conference is about to happen.&nbsp;&nbsp; It provides call information about the two calls being merged.</FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>CallingNumber1</STRONG></TD>
+<TD>The calling number of the first call.</TD></TR>
+<TR>
+<TD><STRONG>CalledNumber1</STRONG></TD>
+<TD>The called number of the first call.</TD></TR>
+<TR>
+<TD><STRONG>CallId1</STRONG></TD>
+<TD>The call ID of the first call.</TD></TR>
+<TR>
+<TD><STRONG>CallerInput1</STRONG></TD>
+<TD>The digits collected from the first call as a result of user input.</TD></TR>
+<TR>
+<TD><STRONG>CallOriginatorInfo1</STRONG></TD>
+<TD>The origin information of the first call.</TD></TR>
+<TR>
+<TD><STRONG>CallRecognized1</STRONG></TD>
+<TD>The time when the call was first recognized by the system.</TD></TR>
+<TR>
+<TD><STRONG>CallStarted1</STRONG></TD>
+<TD>The time when the current call started.</TD></TR>
+<TR>
+<TD><STRONG>CollectVDN1</STRONG></TD>
+<TD>The origin of the digits collected, if any.</TD></TR>
+<TR>
+<TD><STRONG>InboundCall1</STRONG></TD>
+<TD>Indicates whether this was an inbound or outbound call.</TD></TR>
+<TR>
+<TD><STRONG>LineState1</STRONG></TD>
+<TD>Indicates the current state of this line: Active or Held.</TD></TR>
+<TR>
+<TD><STRONG>OrigCalledNumber1</STRONG></TD>
+<TD>The original called number information carried over from a transfer.</TD></TR>
+<TR>
+<TD><STRONG>OrigCallingNumber1</STRONG></TD>
+<TD>The original calling number information carried over from a transfer.</TD></TR>
+<TR>
+<TD><STRONG>OrigCallerInput1</STRONG></TD>
+<TD>The original digit information collected and carried over from a transfer.</TD></TR>
+<TR>
+<TD><STRONG>OrigCollectVDN1</STRONG></TD>
+<TD>The original vector directory number (VDN) where digits were collected and carried over from a transfer.</TD></TR>
+<TR>
+<TD><STRONG>OrigUUI1</STRONG></TD>
+<TD>The original user-to-user information (UUI) carried over from a transfer.</TD></TR>
+<TR>
+<TD><STRONG>Selected1</STRONG></TD>
+<TD>Indicates whether the first line is selected.</TD></TR>
+<TR>
+<TD><STRONG>UCID1</STRONG></TD>
+<TD>The The universal call ID (UCID) of the first call.</TD></TR>
+<TR>
+<TD><STRONG>UUI1</STRONG></TD>
+<TD>The user-to-user information (UUI) attached to the first call.</TD></TR>
+<TR>
+<TD><STRONG>TransferredContext1</STRONG></TD>
+<TD>The transferred context attached to the first call, if any.</TD></TR>
+<TR>
+<TD><STRONG>TotalHeldTime1</STRONG></TD>
+<TD>The total time the first call was on hold.</TD></TR>
+<TR>
+<TR>
+<TD><STRONG>CallingNumber2</STRONG></TD>
+<TD>The calling number of the second call.</TD></TR>
+<TR>
+<TD><STRONG>CalledNumber2</STRONG></TD>
+<TD>The called number of the second call.</TD></TR>
+<TR>
+<TD><STRONG>CallId2</STRONG></TD>
+<TD>The call ID of the second call.</TD></TR>
+<TR>
+<TD><STRONG>CallerInput2</STRONG></TD>
+<TD>The digits collected from the second call as a result of user inputs.</TD></TR>
+<TR>
+<TD><STRONG>CallOriginatorInfo2</STRONG></TD>
+<TD>The origination information on the second call.</TD></TR>
+<TR>
+<TD><STRONG>CallRecognized2</STRONG></TD>
+<TD>The time when the second call was recognized.</TD></TR>
+<TR>
+<TD><STRONG>CallStarted2</STRONG></TD>
+<TD>The time when the second call was started.</TD></TR>
+<TR>
+<TD><STRONG>CollectVDN2</STRONG></TD>
+<TD>The vector directory number (VDN) where the digits were collected.</TD></TR>
+<TR>
+<TD><STRONG>InboundCall2</STRONG></TD>
+<TD>Indicates whether this is an inbound or outbound call.</TD></TR>
+<TR>
+<TD><STRONG>LineState2</STRONG></TD>
+<TD>Indicates the current state of the second line: active or held.</TD></TR>
+<TR>
+<TD><STRONG>OrigCalledNumber2</STRONG></TD>
+<TD>The original called number.</TD></TR>
+<TR>
+<TD><STRONG>OrigCallingNumber2</STRONG></TD>
+<TD>The original calling number.</TD></TR>
+<TR>
+<TD><STRONG>OrigCallerInput2</STRONG></TD>
+<TD>The original caller input.</TD></TR>
+<TR>
+<TD><STRONG>OrigCollectVDN2</STRONG></TD>
+<TD>The original vector directory number (VDN) where digits were collected.</TD></TR>
+<TR>
+<TD><STRONG>OrigUUI2</STRONG></TD>
+<TD>The original user-to-user information (UUI) on the second call.</TD></TR>
+<TR>
+<TD><STRONG>Selected2</STRONG></TD>
+<TD>Indicates whether the current line is selected.</TD></TR>
+<TR>
+<TD><STRONG>UCID2</STRONG></TD>
+<TD>The universal call ID (UCID) of the second call.</TD></TR>
+<TR>
+<TD><STRONG>UUI2</STRONG></TD>
+<TD>The user-to-user information (UUI) attached to the second call.</TD></TR>
+<TR>
+<TD><STRONG>TransferredContext2</STRONG></TD>
+<TD>The transferred context attached to the second call.</TD></TR>
+<TR>
+<TD><STRONG>TotalHeldTime2</STRONG></TD>
+<TD>The total hold time of the second call.</TD></TR>
+<TR></TR></TBODY></TABLE></BODY></HTML>

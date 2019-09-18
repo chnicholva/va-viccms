@@ -1,0 +1,16 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">This action is used to call the Microsoft Dynamics CRM web services using admin configured FetchXML</SPAN>.<o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>name</STRONG></TD>
+<TD><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">The name of the EntitySearch record to be used for searching.</SPAN></TD></TR>
+<TR>
+<TD><STRONG>global</STRONG></TD>
+<TD><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">True if you want the search results tied to the global session to be cleared.<SPAN style="mso-spacerun: yes">&nbsp;&nbsp; </SPAN>Care should be taken when storing search results in the global session as these are not automatically freed by the system.<SPAN style="mso-spacerun: yes">&nbsp;&nbsp; </SPAN>Calling ClearEntityList is exceptionally important in this case.</SPAN></TD></TR>
+<TR>
+<TD><STRONG>maxcount</STRONG></TD>
+<TD><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">The maximum number of records to store in the EntityList results from this call.</SPAN></TD></TR></TBODY></TABLE><BR>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>$Return = Number of records found and stored in the EntityList as a result of this search.<o:p></o:p></FONT></SPAN></P></BODY></HTML>

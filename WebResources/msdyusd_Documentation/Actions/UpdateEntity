@@ -1,0 +1,34 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri><SPAN style="FONT-SIZE: 11pt; FONT-FAMILY: 'Calibri','sans-serif'; LINE-HEIGHT: 115%; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">Updates an entity record in Microsoft Dynamics CRM.</SPAN>.<o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>Id</STRONG></TD>
+<TD><SPAN style="FONT-SIZE: 11pt; FONT-FAMILY: 'Calibri','sans-serif'; LINE-HEIGHT: 115%; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">ID of the entity record to update.<SPAN style="mso-spacerun: yes">&nbsp; </SPAN>This must be the GUID of the record</SPAN>.</TD></TR>
+<TR>
+<TD><STRONG>LogicalName</STRONG></TD>
+<TD><SPAN style="FONT-SIZE: 11pt; FONT-FAMILY: 'Calibri','sans-serif'; LINE-HEIGHT: 115%; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA"><SPAN style="FONT-SIZE: 11pt; FONT-FAMILY: 'Calibri','sans-serif'; LINE-HEIGHT: 115%; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">The logical name of the entity to update.</SPAN></SPAN></TD></TR></TBODY></TABLE><BR>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Each subsequent line in the parameter list contains a series of Name=Value pairs that will define other fields to populate on update.<o:p></o:p></FONT></SPAN></P><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri><STRONG><U>EntityReference</U></STRONG></FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Entity references can be described as:<o:p></o:p></FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Param=EntityReference(“logicalname”, “id”)<o:p></o:p></FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri><U><STRONG>OptionSetValue</STRONG></U></FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>OptionSetValues can be specified as:<o:p></o:p></FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Param=OptionSetValue(value)</FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri><U><STRONG>Boolean<o:p></o:p></STRONG></U></FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Boolean values can be described as:<o:p></o:p></FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Param=Boolean(value)<o:p></o:p></FONT></SPAN></P><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri><U><STRONG>DateTime<BR></STRONG></U></FONT></SPAN><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Dates values can be described as:<o:p></o:p></FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Param=DateTime(value)</FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US">The value will be parsed by the .NET DateTime.Parse method.&nbsp; For more information on valid formatting, see the .NET documentation.</SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US">Special values are:</SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US">NOW: the current date/time<BR>TODAY: Today's date</SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri><o:p><U><STRONG>PartyList<BR></STRONG></U></o:p></FONT></SPAN>PartyList (used with email) can be described as:<o:p></o:p></FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Param=PartyList(email[“test@test.com”], er[“contact”, guid])<o:p></o:p></FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>You can use any number of email and er entries to represent email addresses and entity references respectively.</FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri><U><STRONG>Other<o:p></o:p></STRONG></U></FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Other values such as string values can be specified as:<o:p></o:p></FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Param=value<o:p></o:p></FONT></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 10pt"></FONT></SPAN><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri><o:p></o:p></FONT></SPAN>&nbsp;</P></BODY></HTML>

@@ -1,0 +1,12 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Attaches data to the current knowledge base article record in KM Control.<o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>articleapplication</STRONG></TD>
+<TD>The article application name.</TD></TR>
+<TR>
+<TD><STRONG>articledata</STRONG></TD>
+<TD>An article record object value passed from the ResultOpen event.</TD></TR></TBODY></TABLE></BODY></HTML>

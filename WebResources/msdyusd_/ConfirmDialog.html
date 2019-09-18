@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<title></title>
+	<script type="text/javascript" src="../ClientGlobalContext.js.aspx"></script>
+	<script type="text/javascript">
+		var RTLlocaleArray = new Array(1025, 1037);
+		var locale = "1033";
+		var body = document.getElementsByTagName("body")[0];
+		var context = GetGlobalContext();
+		if (context != null) {
+			locale = context.getUserLcid();
+		}
+		if (RTLlocaleArray.indexOf(locale) > -1) {
+			addStyleSheet("styles/ConfirmDialog_RTL.css");
+		}
+		else {
+			addStyleSheet("styles/ConfirmDialog_LTR.css");
+		}
+		function addStyleSheet(filename) {
+			var fileref = document.createElement("link");
+			fileref.setAttribute("rel", "stylesheet");
+			fileref.setAttribute("type", "text/css");
+			fileref.setAttribute("href", filename)
+			if (typeof fileref != "undefined")
+				document.getElementsByTagName("head")[0].appendChild(fileref);
+		}
+	</script>
+</head>
+<body>
+	<div class="ms-usd-RefreshDialog-Main-Container">
+		<div class="ms-usd-RefreshDialog-Header" id="tdDialogHeader">
+			<div id="dialogHeaderTitle" class="ms-usd-RefreshDialog-Header-Title ms-usd-TextAutoEllipsis"
+				 title="Your dialog header" style="width: 75%;"></div>
+			<div id="dialogHeaderDesc" class="ms-usd-RefreshDialog-Header-Desc"
+				 title="Your dialog additional description"></div>
+			<div id="DlgHdBodyContainer" class="ms-usd-RefreshDialog-Main">
+			</div>
+		</div>
+		<div class="ms-usd-RefreshDialog-Footer" id="tdDialogFooter">
+			<button id="btnOK" onclick="closeDialog(true);" type="button"
+					class="ms-usd-RefreshDialog-Button" tabindex="1" style="margin-left: 10px; margin-right: 10px;">
+				OK
+			</button>
+			<button id="cmdDialogCancel" onclick="closeDialog(false);" type="button" class="ms-usd-RefreshDialog-Button"
+					tabindex="1" style="margin-left: 10px; margin-right: 10px">
+				Cancel
+			</button>
+		</div>
+	</div>
+	<script type="text/javascript">
+		document.onreadystatechange = function () {
+			if (document.readyState == "complete") {
+			    //Get the parameters passed
+				var passedparams = ParseQueryString(GetGlobalContext().getQueryStringParameters()["Data"]);
+				setText('dialogHeaderTitle', passedparams.title);
+				setText('dialogHeaderDesc', passedparams.message);
+				setText('btnOK', passedparams.ok);
+				setTitle('InlineDialogCloseLink', passedparams.cancelTitle);
+				if (passedparams.ok != undefined && passedparams.ok != '') {
+					setText('btnOK', passedparams.ok);
+				}
+				else {
+					setDisplay('btnOK', 'none');
+				}
+				if (passedparams.cancel != undefined && passedparams.cancel != '') {
+					setText('cmdDialogCancel', passedparams.cancel);
+				}
+				else {
+					setDisplay('cmdDialogCancel', 'none');
+				}
+			}
+		}
+		//Get the parameters passed
+		var passedparams = ParseQueryString(GetGlobalContext().getQueryStringParameters()["Data"]);
+		function ParseQueryString(query) {
+			var result = {};
+			if (typeof query == "undefined" || query == null) {
+				return result;
+			}
+			var queryparts = query.split("&");
+			for (var i = 0; i < queryparts.length; i++) {
+				var params = queryparts[i].split("=");
+				result[params[0]] = params.length > 1 ? params[1] : null;
+			}
+			return result;
+		}
+		//Added for cross browser support.
+		function setText(elId, text) {
+			var el = document.getElementById(elId);
+			if (typeof el.innerText != "undefined") {
+				el.innerText = text;
+			}
+			else {
+				el.textContent = text;
+			}
+		}
+		function setDisplay(elId, display) {
+			var el = document.getElementById(elId);
+			if (typeof el.style != 'undefined') {
+				el.style.display = display;
+			}
+		}
+		function closeDialog(ok) {
+			Mscrm.Utilities.setReturnValue(ok);
+			try {
+				closeWindow(true);//Close the dialog box
+			}
+			catch (e) { }
+		}
+		//close button tooltip in the alert dialog added using this method
+		function setTitle(elId, text) {
+			var parentDocument = window.parent;
+			if (parentDocument != null) {
+				var element = parentDocument.document.getElementById(elId);
+				if (element != null) {
+				    if (element.title == 'undefined') {
+				        element.title = text;
+				    }
+				}
+			}
+		}
+	</script>
+</body>
+</html>

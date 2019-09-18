@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>SecureWebPartHost</title>
+    <!-- NOTE: ClientGlobalContext.js.aspx URL below is set with ../../ because the web resource that needs it is installed in a 2 level folder structure -->
+    <script type="text/javascript" src="../../ClientGlobalContext.js.aspx"></script>
+    <script type="text/javascript" src="../../triipcrm_/TR_KU_V2015_2_902/js/jquery.min.js"></script>
+    <!--Control Library /-->
+    <script type="text/javascript" src="js/SecureWebPartHostScriptLib.js"></script>
+    <!--Secure Services Library -->
+    <script type="text/javascript" src="js/WebServiceSecurityLibrary.js"></script>
+</head>
+<body>
+    <script>
+        $(document).ready(function () {
+            try {
+                swph_FormLoad();
+            }
+            catch (err) {
+                //hideChartLoadingGif();
+                alert("Secure Web Part Host Web Resource Document Ready Error: " + err.message);
+            }
+        });
+    </script>
+    <form id="webpartform" method="post" enctype="application/json">
+        <input name="token" type="hidden" id="token" />
+    </form>
+</body>
+</html>

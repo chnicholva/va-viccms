@@ -1,0 +1,25 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Associates an article in Parature, from Microsoft with an entity record in Microsoft Dynamics CRM.<SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA"> This action is used to asscoiate a KB record with the parent entity record in the KM control</SPAN>.<o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>entitytypename</STRONG></TD>
+<TD>Logical name of the entity in CRM to associate the article with. Example:"entitytypename=incident"</TD></TR>
+<TR>
+<TD><STRONG>recordid</STRONG></TD>
+<TD>ID of the entity record to associate the article with.</TD></TR>
+<TR>
+<TD><STRONG>articleuniqueid</STRONG></TD>
+<TD>Unique ID of the article in Parature that you want to associate to. Example:"articleuniqueid=7924/8112/Article/41"</TD></TR>
+<TR>
+<TD><STRONG>articletitle</STRONG></TD>
+<TD>String value of the article's title in Parature. Example:"articletitle=Diffused Sunlight and Weather Conditions"</TD></TR>
+<TR>
+<TD><STRONG>articleprivateurl</STRONG></TD>
+<TD>Private URL of the article in Parature. Example:"articleprivateurl=https://demo.parature.com/ics/km/kmRefEdit.asp?questionID=41" </TD></TR>
+<TR>
+<TD><STRONG>articlepublicurl</STRONG></TD>
+<TD>Public URL of the article in Parature. Example:"articlepublicurl=http://demo.parature.com/ics/support/default.asp?deptID=8112&task=knowledge&questionID=41" </TD></TR>
+</TBODY></TABLE></BODY></HTML>

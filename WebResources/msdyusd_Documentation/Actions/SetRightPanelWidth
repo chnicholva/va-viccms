@@ -1,0 +1,15 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Sets the width of the right panel in a VerticalSplit panel.<o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>width</STRONG></TD>
+<TD>
+<P>The width of the right panel. The interpretation of this parameter depends on the "type" parameter.</P></TD></TR>
+<TR>
+<TD><STRONG>type</STRONG></TD>
+<TD>
+<P>The type of the value specified in the "width" parameter"</P>
+<P>Auto: Is just wide enough to fit the controls inside the panel.<BR>Pixel: The width parameter is a pixel value.<BR>Star: Takes all of the available width after the rest of the form is calculated.&nbsp; The width parameter is used as a fractional amount of the available space.&nbsp; For example width=2 and type=star means 2* in Windows Presentation Foundation (WPF).</P></TD></TR></TBODY></TABLE></BODY></HTML>

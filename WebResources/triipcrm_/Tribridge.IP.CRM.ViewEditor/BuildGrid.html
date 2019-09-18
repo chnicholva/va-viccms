@@ -1,0 +1,345 @@
+﻿<!DOCTYPE html>
+<html http-equiv="X-UA-Compatible" content="IE=10">
+<head>
+    <title>Editable Grid</title>
+    <!--below meta tag forces to load in compatibale mode with hightest document mode-->
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10" />
+    <script src="../../ClientGlobalContext.js.aspx" type="text/javascript"></script>
+
+    <link rel="stylesheet" href="./css/kendo.silver.min.css" type="text/css" />
+    <link rel="stylesheet" href="./css/kendo.dataviz.min.css" type="text/css" />
+    <link rel="stylesheet" href="./css/main.css" type="text/css" />
+
+    <script src="./js/XrmServiceToolkit.js" type="text/javascript"></script>
+    <script src="./js/jquery.js" type="text/javascript"></script>
+    <script src="./js/kendo.js" type="text/javascript"></script>
+    <script src="./js/tribridge.crmsdk.js" type="text/javascript"></script>
+    <script src="./js/tribridge.crmsdk.metadata.js" type="text/javascript"></script>
+    <script src="./js/tribridge.helper.js" type="text/javascript"></script>
+    <script src="./js/tribridge.functions.js" type="text/javascript"></script>
+    <script src="./js/tribridge.CRUD.js" type="text/javascript"></script>
+    <script src="./js/kendo.vieweditor.js" type="text/javascript"></script>
+
+    <meta charset="utf-8">
+
+    <style type="text/css">
+        .k-grid-content {
+            white-space: normal;
+            /*height: 84% !important;*/
+        }
+
+        .k-grid {
+            width: 98%;
+            /*height: 85%;*/
+            margin: 5px auto;
+            padding: 2px 2px 0 2px;
+            font-size: 11px;
+        }
+
+        .pageLabel {
+            margin-left: -63px;
+            display: inline-block;
+        }
+
+        .InActiveRow {
+            background-color: #D6D6D6 !important;
+        }
+
+        .ActiveRow {
+            background-color: white !important;
+        }
+
+        .k-context-menu.k-menu-vertical > .k-item > .k-link, .k-menu .k-menu-group .k-item > .k-link {
+            border: 1px solid !important;
+            background-color: white !important;
+            width: 200px !important;
+        }
+
+        /*.k-dropdown-wrap k-state-default k-state-active k-state-border-down {
+            background-color: white !important;
+        }*/
+
+        .k-dropdown-wrap.k-state-default {
+            background-color: #FFF !important;
+        }
+
+        .k-dropdown-wrap {
+            border-radius: 0px !important;
+        }
+
+        .k-list-container {
+            background-color: #FFF !important;
+        }
+
+        .k-list .k-state-hover, .k-list .k-state-focused, .k-list .k-state-highlight, .k-list .k-state-selected, .k-fieldselector .k-list .k-item, .k-dropzone {
+            border-radius: 0px;
+        }
+    </style>
+
+</head>
+<body>
+    <div id="preloader">
+        <div id="status">
+            &nbsp;
+        </div>
+        <div id="updateStatus">
+            &nbsp;
+        </div>
+    </div>
+    <div id="loader">
+        <div id="savingLoader">
+            &nbsp;
+        </div>
+    </div>
+    <!--<div id="notification" style="color: green; font-weight: bold;"></div>-->
+    <div id="divViewSelector">
+        Select View : &nbsp;
+        <input id="ddlViews" style="width: 25%;" />
+    </div>
+    <br />
+    <div id="lookupWindow">
+        <div class="form">
+            <label>Entity: </label>
+            <input required id="entityList" /><br />
+            <br />
+            <label>Lookup: </label>
+            <input required id="lookupList" data-text-field="Label" data-value-field="Value" data-bind="" /><br />
+            <br />
+        </div>
+        <div class="tooolbar-bottom">
+            <button id="addLookup">Add</button>
+            <button id="resetLookup">Clear</button>
+            <button id="cancelLookup">Cancel</button>
+        </div>
+    </div>
+    <div id="gridContent" style="height: 90% !important; overflow: auto !important;">
+        <div id="grid" class="k-grid k-widget">
+        </div>
+        <div class="k-pager-wrap k-grid-pager k-widget k-floatwrap" id="dvPaging">
+            <table id="tblPaging" style="height: 5%; width: 100%; margin-top: 5px; display: none">
+                <tr>
+                    <td style="width: 40%; float: left;">
+                        <label id="lblTotalPage" style="padding-left: 5px;"></label>
+                    </td>
+                    <td style="width: 50%;" valign="bottom">
+                        <div style="float: right;">
+                            <a id="btnFirst"></a>
+                            <a id="btnPrevious"></a>
+                            <label id="lblPageNumber" class="pageLabel"></label>
+                            <a id="btnNext"></a>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <ul id="rightClickOptions" style="display: none">
+        <li value="1">Open in a New Window</li>
+    </ul>
+
+    <script id="toolButtons" type="text/x-kendo-template">                
+        <div class="toolbar">      
+        <div style="float:left;border-bottom: 0px;">        
+         <a id="addButton" class="addButton k-button k-button-icontext"><span class="k-icon k-add"></span>&nbsp;Add</a>
+         <a id="saveChangesButton" class="k-button k-button-icontext"><span class="k-icon saveGrid"></span>&nbsp;Save changes</a> <!--k-grid-save-changes-->
+         <a id="cancelButton" class="k-button k-button-icontext k-grid-cancel-changes"><span class="k-icon k-cancel"></span>&nbsp;Cancel Changes</a>
+         <!--<a id="closeButton" class="k-button k-button-icontext k-grid-exitgrid"><span class="k-icon k-delete"></span>&nbsp;Exit Grid</a>-->       
+        </div>               
+        </div>
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            var functionName = "Document.Ready>>";
+            try {
+                HideLoading();
+
+                //bind event on unload of page
+                window.onbeforeunload = confirmExit;
+
+                // In case of subgrid we will get querystring having viewconfig name
+                // get the querystring
+                var queryString = parseQueryString(window.location.search.substring(1));
+                if (queryString != null && queryString != undefined && queryString != "undefined" && queryString["data"] != null && queryString["data"] != undefined && queryString["data"] != "undefined") {
+                    // Check if input data parameters are provided 
+                    if (queryString["typename"] != null && queryString["typename"] != undefined && queryString["typename"] != "undefined" && queryString["id"] != null && queryString["id"] != undefined) {
+                        var Id = queryString["id"];
+                        // get the entity from querystring
+                        var primaryentity = queryString["typename"];
+                        // get the data parameter from query string
+                        var configName = queryString["data"];
+                        // Call subgrid
+                        Tribridge.ViewEditor.SubGrid(primaryentity, configName, Id);
+                    }
+                    else {
+                        // get the data parameter from query string
+                        var configName = queryString["data"];
+                        Tribridge.ViewEditor.Webresource(configName);
+                    }
+                    //else {
+                    //    // Show alert message for missing required input parameters
+                    //    showAlertMessage("Please provide the Custom parameter(data) which is missing in the webresource.");
+                    //}
+                }
+                else { // this is a main grid
+                    if (Xrm != undefined && Xrm.Page != undefined) {
+                        var entity = Xrm.Page.context.getQueryStringParameters().Type;
+
+                        //Tribridge.ViewEditor.Build('grid', entity, view, parent.Tribridge.ViewEditor.Command.ReadonlyCols, parent.Tribridge.ViewEditor.Command.RequiredCols, false);
+                        Tribridge.ViewEditor.MainGrid(entity);
+                    }
+                }
+                HideBusyIndicator();
+            }
+            catch (e) {
+                HideBusyIndicator();
+                throwError(e, functionName);
+            }
+        });
+
+        //resize od document
+        $(window).resize(function () {
+            resizeGrid();
+        });
+
+        //Show Loader
+        function ShowBusyIndicator() {
+            try {
+                $("#status").fadeIn();
+                $("#status").show();
+                $("#updateStatus").hide();
+                $("#preloader").delay(350).fadeIn("fast");
+
+            } catch (e) {
+
+            }
+        }
+
+        //Hide Loader
+        function HideBusyIndicator() {
+            try {
+                $("#status").fadeOut(); // will first fade out the loading animation
+                $("#preloader").delay(350).fadeOut("fast"); // will fade out the white DIV that covers the website.
+            } catch (e) {
+                //hideLoading();
+            }
+        }
+
+        ////Show Loader
+        //function ShowLoading() {
+        //    try {
+        //        //$("#savingLoader").fadeIn();
+        //        //$("#loader").delay(350).fadeIn("fast");
+
+        //        if ($('#loadingstatus').length == 0) {
+        //            $(document.body).append("<div id='loadingstatus'></div>").find('#loadingstatus').addClass('#loadingstatus');
+        //        }
+        //        else {
+        //            $(document.body).find('#loadingstatus').remove();
+        //            $(document.body).append("<div id='loadingstatus'></div>").find('#loadingstatus').addClass('#loadingstatus');
+        //        }
+        //        $("#loadingstatus").show();
+        //        $("#updateStatus").hide();
+        //        $('body').attr('disabled', 'disabled');
+        //        $('body').find('input,textarea,select,button').attr('disabled', 'disabled');
+
+        //    } catch (e) {
+
+        //    }
+        //}
+
+        //Hide Loader
+        function HideLoading() {
+            try {
+                $("#savingLoader").fadeOut(); // will first fade out the loading animation
+                $("#loader").delay(350).fadeOut("fast"); // will fade out the white DIV that covers the website.
+            } catch (e) {
+                //hideLoading();
+            }
+        }
+
+        /*
+function to check for exit
+*/
+        function confirmExit() {
+            //var displayMessage = "";
+            //var recordsToSave = new Array();
+            try {
+
+                if (_enablePrompt.toString().toLowerCase() == "true") {
+                    //show the prompt
+                    if ($("#grid").data("kendoGrid") != undefined && $("#grid").data("kendoGrid") != null && $("#grid").data("kendoGrid").dataSource != undefined) {
+                        //check record is dirty
+                        var records = $("#grid").data("kendoGrid").dataSource.data();
+                        //Check the records
+                        if (isValid(records)) {
+                            //Loop through records
+                            recordsToSave = jQuery.grep(records, function (n, i) {
+                                return (n.dirty == true);
+                            });
+                        }
+
+
+                        //validate loader
+                        if (recordsToSave != null && recordsToSave != undefined && recordsToSave[0] != undefined && recordsToSave.length > 0) {
+                            displayMessage = "There is some data still unsaved,Closing the window will cause loss of data!";
+
+                            return displayMessage;
+                        }
+                    }
+                }
+                else {
+                    //Removed confirmation prompth on Exit and by default saving the details.
+                    Tribridge.ViewEditor.Private.SaveData(index);
+                }
+
+                //    if ($("#grid").data("kendoGrid") != undefined && $("#grid").data("kendoGrid") != null && $("#grid").data("kendoGrid").dataSource != undefined) {
+                //        //check record is dirty
+                //        var records = $("#grid").data("kendoGrid").dataSource.data();
+                //        //Check the records
+                //        if (isValid(records)) {
+                //            //Loop through records
+                //            recordsToSave = jQuery.grep(records, function (n, i) {
+                //                return (n.dirty == true);
+                //            });
+                //        }
+
+
+                //        //validate loader
+                //        if (recordsToSave != null && recordsToSave != undefined && recordsToSave[0] != undefined && recordsToSave.length > 0) {
+                //            displayMessage = "There is some data still unsaved,Closing the window will cause loss of data!";
+
+                //            return displayMessage;
+                //        }
+                //}
+            } catch (e) {
+                throwError(e, "confirmExit");
+            }
+        }
+
+        function resizeGrid() {
+            try {
+                var gridElement = $("#grid"),
+                    gridFrame = gridElement.find(".k-grid"),
+     dataArea = gridElement.find(".k-grid-content"),
+     gridHeight = gridElement.innerHeight(),
+     otherElements = gridElement.children().not(".k-grid-content"),
+     otherElementsHeight = 0;
+                otherElements.each(function () {
+                    otherElementsHeight += $(this).outerHeight();
+                });
+                // dataArea.height($(document).height() - otherElementsHeight);
+                //dataArea.innerHeight($(document).height() - otherElementsHeight - 30);
+                dataArea.innerHeight(window.innerHeight - otherElementsHeight - 100);
+                // gridFrame.innerHeight($(document).height() - otherElementsHeight - 95);
+            } catch (e) {
+
+            }
+        }
+    </script>
+    <!-- <div>
+        <button type="button" id="btnPrevious">Previous</button>&nbsp;&nbsp;
+        <button type="button" id="btnNext">Next</button>
+    </div>-->
+</body>
+</html>

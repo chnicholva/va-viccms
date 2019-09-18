@@ -1,0 +1,44 @@
+﻿body {
+}
+.VistaLoginForm {
+    margin: 3px;
+    border: 0px;
+    background-color: White;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size:75%;
+}
+table
+{
+cursor: default;
+}
+table.stdTable
+{
+width: 100%;
+height: 100%;
+border: 0px;
+border-top: 0px;
+border-left: 0px;
+border-bottom: 0px;
+border-right: 0px;
+table-layout: fixed;
+background-color: White;
+}
+.headerMainLeft
+{
+    font-size: 26px;
+    color: Gray;
+    text-align:left;
+	font-family: Arial, Helvetica, sans-serif;
+}
+.headerSubLeft
+{
+    font-size: 12px;
+    color: Gray;
+    text-align:left;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+td{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+}

@@ -1,0 +1,128 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>This event is fired by the Avaya TSAPI adapter when a call is about to be transferred.&nbsp;&nbsp; The information provided consists of the call information for the two calls being merged.</FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>CallingNumber1</STRONG></TD>
+<TD>The calling number of the first call.</TD></TR>
+<TR>
+<TD><STRONG>CalledNumber1</STRONG></TD>
+<TD>The called number of the first call.</TD></TR>
+<TR>
+<TD><STRONG>CallId1</STRONG></TD>
+<TD>The call id of the first call.</TD></TR>
+<TR>
+<TD><STRONG>CallerInput1</STRONG></TD>
+<TD>Any collected digits of the first call.</TD></TR>
+<TR>
+<TD><STRONG>CallOriginatorInfo1</STRONG></TD>
+<TD>Origination information on the first call.</TD></TR>
+<TR>
+<TD><STRONG>CallRecognized1</STRONG></TD>
+<TD>When the call was first recognized by the system.</TD></TR>
+<TR>
+<TD><STRONG>CallStarted1</STRONG></TD>
+<TD>When the current call started.</TD></TR>
+<TR>
+<TD><STRONG>CollectVDN1</STRONG></TD>
+<TD>Where the digits, if any, were collected.</TD></TR>
+<TR>
+<TD><STRONG>InboundCall1</STRONG></TD>
+<TD>Whether this was an inbound or outbound call.</TD></TR>
+<TR>
+<TD><STRONG>LineState1</STRONG></TD>
+<TD>The current state of this line (active or held).</TD></TR>
+<TR>
+<TD><STRONG>OrigCalledNumber1</STRONG></TD>
+<TD>Original called number&nbsp;information carried over from a transfer.</TD></TR>
+<TR>
+<TD><STRONG>OrigCallingNumber1</STRONG></TD>
+<TD>Original calling number information carried over from a transfer.</TD></TR>
+<TR>
+<TD><STRONG>OrigCallerInput1</STRONG></TD>
+<TD>Original collect digit information carried over from a transfer.</TD></TR>
+<TR>
+<TD><STRONG>OrigCollectVDN1</STRONG></TD>
+<TD>Original collect digit vdn number information carried over from a transfer.</TD></TR>
+<TR>
+<TD><STRONG>OrigUUI1</STRONG></TD>
+<TD>Original user-to-user information (UUI) carried over from a transfer.</TD></TR>
+<TR>
+<TD><STRONG>Selected1</STRONG></TD>
+<TD>Indicates if this is the selected line.</TD></TR>
+<TR>
+<TD><STRONG>UCID1</STRONG></TD>
+<TD>The universal call ID (UCID) of this call.</TD></TR>
+<TR>
+<TD><STRONG>UUI1</STRONG></TD>
+<TD>The user-to-user information (UUI) attached to this call.</TD></TR>
+<TR>
+<TD><STRONG>TransferredContext1</STRONG></TD>
+<TD>Transferred context attached to this call, if any.</TD></TR>
+<TR>
+<TD><STRONG>TotalHeldTime1</STRONG></TD>
+<TD>Total time this call was on hold.</TD></TR>
+<TR>
+<TR>
+<TD><STRONG>CallingNumber2</STRONG></TD>
+<TD>Calling number of the second call.</TD></TR>
+<TR>
+<TD><STRONG>CalledNumber2</STRONG></TD>
+<TD>Called number of the second call.</TD></TR>
+<TR>
+<TD><STRONG>CallId2</STRONG></TD>
+<TD>Call ID of the second call.</TD></TR>
+<TR>
+<TD><STRONG>CallerInput2</STRONG></TD>
+<TD>Any collected digits on the second call.</TD></TR>
+<TR>
+<TD><STRONG>CallOriginatorInfo2</STRONG></TD>
+<TD>Any origination information on the second call.</TD></TR>
+<TR>
+<TD><STRONG>CallRecognized2</STRONG></TD>
+<TD>When the call was recognized.</TD></TR>
+<TR>
+<TD><STRONG>CallStarted2</STRONG></TD>
+<TD>When this call was started.</TD></TR>
+<TR>
+<TD><STRONG>CollectVDN2</STRONG></TD>
+<TD>The VDN where the collected digits were collected.</TD></TR>
+<TR>
+<TD><STRONG>InboundCall2</STRONG></TD>
+<TD>Inbound or Outbound call.</TD></TR>
+<TR>
+<TD><STRONG>LineState2</STRONG></TD>
+<TD>The current state of this line, active or held.</TD></TR>
+<TR>
+<TD><STRONG>OrigCalledNumber2</STRONG></TD>
+<TD>Original called number.</TD></TR>
+<TR>
+<TD><STRONG>OrigCallingNumber2</STRONG></TD>
+<TD>Original calling number.</TD></TR>
+<TR>
+<TD><STRONG>OrigCallerInput2</STRONG></TD>
+<TD>Original Caller Input .</TD></TR>
+<TR>
+<TD><STRONG>OrigCollectVDN2</STRONG></TD>
+<TD>Original VDN where digits were collected.</TD></TR>
+<TR>
+<TD><STRONG>OrigUUI2</STRONG></TD>
+<TD>Original user-to-user information (UUI) information on this call.</TD></TR>
+<TR>
+<TD><STRONG>Selected2</STRONG></TD>
+<TD>Indicates if this is the selected line.</TD></TR>
+<TR>
+<TD><STRONG>UCID2</STRONG></TD>
+<TD>The universal call ID (UCID) of this call.</TD></TR>
+<TR>
+<TD><STRONG>UUI2</STRONG></TD>
+<TD>The user-to-user information (UUI) data attached to this call.</TD></TR>
+<TR>
+<TD><STRONG>TransferredContext2</STRONG></TD>
+<TD>Any transferred context attached to this call.</TD></TR>
+<TR>
+<TD><STRONG>TotalHeldTime2</STRONG></TD>
+<TD>Total hold time of this call.</TD></TR>
+<TR></TR></TBODY></TABLE></BODY></HTML>

@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <title>MHV Prescription Tracker</title>
+        <script type="text/javascript" src="../JScript/VCCM.USDHelper.js"></script>
+        <script type="text/javascript" src="JScript/MHVPrescriptionTracker.js"></script>
+
+        <style>
+            table {
+                font-family: arial, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+                font-size: 12px;
+            }
+
+            td, th {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }
+
+            tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+        </style>
+    </head>
+    <body>
+        <table id="presTrackGrid">
+            <tr>
+                <td><b>Service</b></td>
+                <td><b>Date Shipped</b></td>
+                <td><b>Tracking Number</b></td>
+                <td style="display:none;">Tracking ID</td>
+            </tr>
+        </table>
+        <script>
+            window.onload = function () {
+                track_PageLoad();
+            }
+        </script>
+    </body>
+</html>

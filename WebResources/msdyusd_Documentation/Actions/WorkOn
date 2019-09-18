@@ -1,0 +1,14 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">Marks a queue item as being worked on by a specific user. This action is equivalent to selecting a queue item and clicking WorkOn on the ribbon.<SPAN style="mso-spacerun: yes">&nbsp; </SPAN>It </SPAN>.<o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>Id</STRONG></TD>
+<TD><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">ID of the queue item.<SPAN style="mso-spacerun: yes">&nbsp; </SPAN>For information on how to obtain the ID of a targeted entity, see the LookupQueueItem action.</SPAN></TD></TR>
+<TR>
+<TD><STRONG>Action</STRONG></TD>
+<TD>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Enables the admin to remove the WorkOn attribute to return it to the queue. Optional.<o:p></o:p></FONT></SPAN></P>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Valid Values:<o:p></o:p></FONT></SPAN></P><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Calibri','sans-serif'; FONT-SIZE: 11pt; mso-ansi-language: EN-US; mso-fareast-font-family: Arial; mso-bidi-font-family: Arial; mso-fareast-language: JA; mso-bidi-language: AR-SA">Remove: Removes the WorkOn attribute and returns the item to the queue for others to work on.</SPAN></TD></TR></TBODY></TABLE></BODY></HTML>

@@ -1,0 +1,112 @@
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>Dashboard Router</title>
+		<!--This page's path is "ftp_/DashboardRouter/DashboardRouter.html"-->
+		<script type="text/javascript" src="../../ClientGlobalContext.js.aspx"></script>
+		<script type="text/javascript" src="../JScript/SDK.REST.js"></script>
+		<script type="text/javascript" src="../JScript/json2.js"></script>
+		<script type="text/javascript" src="JScript/DashboardRouter.js"></script>
+        <script type="text/javascript" src="../JScript/VCCM.USDHelper.js"></script>
+		<script>
+			(function () {
+				doLoad();
+			})();
+		</script>
+	</head>
+	<body>
+        <h1>Overview</h1>
+		<p>This web resource is intended to be hidden.  It can be used as follows:</p>
+        <ol>
+            <li>
+                This page can receive URL data parameters (listed below) to open a record of the target entity instead of opening the record that was originally clicked from some source page like a dashboard or queue.
+                <ul>
+                    <li>For VCCM, specific scenarios use a combination of USD Window Navigation Rules, Events, and Action Calls, along with code on this page, to open the VeteranAlerts page for the veteran whose request or interaction record was clicked on a dashboard or similar page.</li>
+                </ul>
+            </li>
+            <li>
+                This page can receive URL data parameters containing CTI search parameters, and fire a Navigate event to trigger a CTI listener screen pop.
+            </li>
+        </ol>
+
+        <h2>Use case #1</h2>
+        <p>This page can accept a single encoded "Data" parameter in its URL, which it will decode and try to find and use the following data parameters:</p>
+        <ul>
+            <li>
+                routingType
+                <ul><li>for use case 1, value should be 'dashboard'</li></ul>
+            </li>
+            <li>sourceEntityLogicalName
+                <ul>
+                    <li>the OData name (e.g. 'ftp_interaction' or 'Incident') indicating what kind of record was selected (i.e. double-clicked) on the source dashboard page</li>
+                    <li>this is case-sensitive</li>
+                </ul>
+            </li>
+            <li>
+                sourceEntityId
+                <ul><li>the GUID of the record selected on the source dashboard page</li></ul>
+            </li>
+            <li>
+                sourceEntityLookupFieldName
+                <ul>
+                    <li>the OData name of the lookup field on the selected record that links the selected record to a target record</li>
+                    <li>this is case-sensitive</li>
+                    <li>example: <strong>CustomerId</strong> is the OData name of the field on an Incident record can identify the contact record for whom that incident was created.</li>
+                </ul>
+            </li>
+            <li>
+                targetEntityName
+                <ul>
+                    <li>the OData name of the entity whose record (identified by the value of the sourceEntityLookupFieldName on the source record) we actually want to open</li>
+                    <li>for VCCM, we currently only pass a value of 'Contact' for this parameter</li>
+                </ul>
+            </li>
+            <li>
+                ODataSelect
+                <ul>
+                    <li>the URI-encoded oData $select string for the query that fires on the page</li>
+                    <li>example: 'ODataSelect%3Dftp_Veteran,ftp_VeteranICN,ftp_contact_ftp_interaction_Veteran/FullName,ftp_contact_ftp_interaction_Veteran/FirstName,ftp_contact_ftp_interaction_Veteran/LastName,ftp_contact_ftp_interaction_Veteran/ftp_ManuallyCreatedFromMVIcode,ftp_contact_ftp_interaction_Veteran/ftp_SensitiveVeteran,ftp_contact_ftp_interaction_Veteran/ftp_DeceasedDate'</li>
+                </ul>
+            </li>
+            <li>
+                ODataExpand
+                <ul>
+                    <li>the URI-encoded oData $expand string for the query that fires on the page</li>
+                    <li>if you have any fields from linked entities in the ODataSelect parameter, that relationship must be included in the ODataExpand parameter</li>
+                    <li>example (corresponding with ODataSelect example above): ODataExpand%3Dftp_contact_ftp_interaction_Veteran</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h2>Use case #2</h2>
+        <p>This page can accept a single encoded "Data" parameter in its URL, which it will decode and parse for relevant data in screen pops from the Cisco Finesse web application.<br />
+            If the Cisco Finesse screenpop is truly a newly-answered phone call, this page will call 'Navigate' action on the 'CTI Helper' hosted control, which will be intercepted by a CTI-specific Window Navigation Rule.<br />
+            The window navigation rule will also trigger the same action call, which starts a new USD session and navigates to the MVI Search web resource, passing SSN & DOB search parameters in that URL.
+        </p>
+        <p>The URL parameters for <em>this</em> page for this use case are as follows:</p>
+        <ul>
+            <li>
+                routingType
+                <ul><li>for use case 2, should be 'cti'</li></ul>
+            </li>
+            <li>
+                routedurl
+                <ul>
+                    <li>contains a twice-encoded URL string, which will in turn be used in the CTI Helper.Navigate action call.</li>
+                    <li>this twice-encoded URL should be in the format of a typical CTI url pop for USD, starting with 'http://localhost:5000/?' and continuing with a series of key value pairs such as 'SSN' and 'DOB'</li>
+                    <li>the value of this parameter is supplied using the <strong>[[url]]</strong> replacement parameter provided from the Cisco hosted control's 'PopupRouted' event</li>
+                </ul>
+            </li>
+            <li>
+                previousurl
+                <ul>
+                    <li>contains a twice-encoded URL string, representing the <strong><em>last</em></strong> CTI URL to be popped, before the current URL (value of 'routedurl')</li>
+                    <li>this twice-encoded URL should be in the format of a typical CTI url pop for USD, starting with 'http://localhost:5000/?' and continuing with a series of key value pairs such as 'SSN' and 'DOB'</li>
+                    <li>the value of this parameter is supplied using <strong>[[$Context.lastCiscoPopup]+]</strong>, and it may be empty</li>
+                </ul>
+            </li>
+        </ul>
+
+        <div id="log"></div>
+	</body>
+</html>

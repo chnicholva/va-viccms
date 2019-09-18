@@ -1,0 +1,16 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Determines the language identifier of the text specified in the "value" parameter.<o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>value</STRONG></TD>
+<TD>
+<P>This is the text to translate. This value may be escaped for multi-line support. <BR>Example (all of these are valid): <BR>value=$Escaped("my string&lt;br&gt;new line\\\"my text\\\"")<BR>value=[[myapp.myparam]^]<BR>value=$Escaped([[myapp.myparam]$])</P></TD></TR>
+<TR>
+<TD><STRONG>clientId</STRONG></TD>
+<TD>A client ID obtained from Microsoft Azure for translation services. For more information, see <FONT color=#008000 size=2 face=Consolas><FONT color=#008000 size=2 face=Consolas><FONT color=#008000 size=2 face=Consolas><A href="https://datamarket.azure.com/developer/applications/">https://datamarket.azure.com/developer/applications/</A></FONT></FONT></FONT></TD></TR>
+<TR>
+<TD><STRONG>clientSecret</STRONG></TD>
+<TD>A client secret obtained from Microsoft Azure for translation services. For more information, see <FONT color=#008000 size=2 face=Consolas><FONT color=#008000 size=2 face=Consolas><FONT color=#008000 size=2 face=Consolas><A href="https://datamarket.azure.com/developer/applications/">https://datamarket.azure.com/developer/applications/</A></FONT></FONT></FONT></TD></TR></TBODY></TABLE><BR>The determined language is stored in the $Return replacement parameter.</BODY></HTML>

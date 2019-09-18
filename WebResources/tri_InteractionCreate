@@ -1,0 +1,128 @@
+function InteractionCreate(){
+
+try{
+var fType = Xrm.Page.ui.getFormType();
+var user = Xrm.Page.context.getUserId();
+var SetName = "TeamMembershipSet";
+var filter = "SystemUserId";
+var cca = null;
+var pact = null;
+var tArray = [];
+var data ={};
+var d = {};
+
+if (fType === 1){
+data = RetrieveMultipleEntitySync(SetName,filter,user);
+debugger;
+for(i = 0; i< data.d.results.length; i++){
+tArray.push(data.d.results[i].TeamId);
+}
+for(i=0; i<tArray.length; i++){
+d = RetrieveAllAttributesByEntitySync("TeamSet",tArray[i]);
+if (d.d.Name === "CCA Team"|| d.d.Name === "TAN"){
+Xrm.Page.getAttribute("ftp_direction").setValue(0);
+}
+else if(d.d.Name=== "PACT User" || d.d.Name === "Pharmacy" ){
+Xrm.Page.getAttribute("ftp_direction").setValue(1);
+}
+}
+}
+
+
+else{return;}
+}
+catch(e){alert("An error occurred in the InteractionCreate script. Error:"+ e);
+}
+
+}
+
+
+
+
+RetrieveMultipleEntitySync = function (EntitySetName, filter ,Guid){
+	
+    //This function will return a json object with every attribute from an entity for a single record synchronously 
+    try {
+        //Perform REST call
+        var context = Xrm.Page.context;
+        var serverUrl = context.getClientUrl();
+        var ODATA_ENDPOINT = "/XRMServices/2011/OrganizationData.svc";
+        //Format Entity Guid
+        var EntityIdnobracket = Guid.replace(/({|})/g, '');
+        //Construct the JSON Query
+        var selectString = "?$filter=" + filter +" eq guid'" + EntityIdnobracket + "'";
+        var jsonQuery = serverUrl + ODATA_ENDPOINT + "/"+ EntitySetName + selectString;
+
+        //Initialize the return value
+        var EntityData = null;
+        $.ajax({
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            datatype: "json",
+            url: jsonQuery,
+            beforeSend: function (XMLHttpRequest) {
+                //Specifying this header ensures that the results will be returned as JSON.
+                XMLHttpRequest.setRequestHeader("Accept", "application/json");
+            },
+            success: function (data, textStatus, XmlHttpRequest) {
+                //Get the data values
+                EntityData = data;
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert('Fail: Ajax Error in TRIBRIDGE.RetrieveMultipleEntitySync: ' + errorThrown);
+            },
+            async: false,
+            cache: false
+        });
+        //Return the data result
+        return EntityData;
+    }
+    catch (err) {
+        //Display Error
+        alert("An error occured in the TRIBRIDGE.RetrieveMultipleEntitySyncEntitySync function.  Error Detail Message: " + err);
+    }
+};
+
+RetrieveAllAttributesByEntitySync = function (EntitySetName, Guid) {
+    //This function will return a json object with every attribute from an entity for a single record synchronously 
+    try {
+        //Perform REST call
+        var context = Xrm.Page.context;
+        var serverUrl = context.getClientUrl();
+        var ODATA_ENDPOINT = "/XRMServices/2011/OrganizationData.svc";
+        //Format Entity Guid
+        var EntityIdnobracket = Guid.replace(/({|})/g, '');
+        //Construct the JSON Query
+        var selectString = "(guid'" + EntityIdnobracket + "')?$select=*";
+        var jsonQuery = serverUrl + ODATA_ENDPOINT + "/" + EntitySetName + selectString;
+
+        //Initialize the return value
+        var EntityData = null;
+        $.ajax({
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            datatype: "json",
+            url: jsonQuery,
+            beforeSend: function (XMLHttpRequest) {
+                //Specifying this header ensures that the results will be returned as JSON.
+                XMLHttpRequest.setRequestHeader("Accept", "application/json");
+            },
+            success: function (data, textStatus, XmlHttpRequest) {
+                //Get the data values
+                EntityData = data;
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert('Fail: Ajax Error in TRIBRIDGE.RetrieveAllAttributesByEntitySync: ' + errorThrown);
+            },
+            async: false,
+            cache: false
+        });
+        //Return the data result
+        return EntityData;
+    }
+    catch (err) {
+        //Display Error
+        alert("An error occured in the TRIBRIDGE.RetrieveAllAttributesByEntitySync function.  Error Detail Message: " + err);
+    }
+};
+

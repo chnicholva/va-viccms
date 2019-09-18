@@ -1,0 +1,167 @@
+<html><head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<style>
+			.body{
+				width:100%;
+				height:100%;
+				position:absolute:
+				top:0;
+				left:0;
+			}
+			.leftdiv{
+				width:50%;
+				position:absolute;
+				left:0;
+				
+				height:100%;
+			}
+			
+			.rightdiv{
+				width:50%;
+				position:absolute;
+				right:0%;
+				
+				height:100%;
+			}
+			
+			.framediv{
+				width:95%;
+				height: 27%;
+				margin:auto;
+				margin-top:5%;
+				margin-bottom:5%;
+			}
+			
+			.frame{
+				width:100%;
+				height:100%;
+			}
+			
+			.ndiv{
+				width:95%;
+				height: 58.75%;
+				margin:auto;
+				margin-top:5%;
+				margin-bottom:4.5%;
+			}
+			
+			.pdiv{
+				width:98.5%;
+				height: 50%;
+				margin:auto;
+				margin-top:5%;
+				margin-bottom:5%;
+			        position: absolute;
+                                top:97%;
+			}
+		</style>
+		
+		
+		
+		<script src="jquery.js" type="text/javascript"></script>
+		
+		<script>
+		//debugger;
+		
+		
+		var noteUrl= "https://qacrmdac.np.crm.vrm.vba.va.gov/WebParts/Notes/1.0/FtPCRM/";
+		var ordUrl= "https://qacrmdac.np.crm.vrm.vba.va.gov/WebParts/Orders/1.0/FtPCRM/";
+		var appUrl= "https://qacrmdac.np.crm.vrm.vba.va.gov/WebParts/Appointments/1.0/FtPCRM/";
+		var postUrl= "https://qacrmdac.np.crm.vrm.vba.va.gov/WebParts/Postings/1.0/FtPCRM/";
+		var medUrl= "https://qacrmdac.np.crm.vrm.vba.va.gov/WebParts/Medications/1.0/FtPCRM/";
+		var probUrl= "https://qacrmdac.np.crm.vrm.vba.va.gov/WebParts/Problems/1.0/FtPCRM/";
+		
+		$(document).ready(function(){
+		
+		$.urlParam = function(name){
+			var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+			if (results==null){
+				return null;
+			}
+			else{
+				return results[1] || 0;
+			}
+		}
+		//debugger;
+		var id = $.urlParam('Data');
+		noteUrl += ""+ id +"?noFilter=true";
+		ordUrl += ""+ id +"?noFilter=true";
+		appUrl += ""+ id +"?noFilter=true";
+		postUrl += ""+ id +"?noFilter=true";
+		medUrl += ""+ id +"?noFilter=true";
+		probUrl += ""+ id +"?noFilter=true";
+		
+		
+		
+		$('#noteframe').attr('src', noteUrl);
+		$('#ordframe').attr('src', ordUrl);
+		$('#apptframe').attr('src', appUrl);
+		$('#postframe').attr('src', postUrl);
+		$('#medframe').attr('src', medUrl);
+		$('#probframe').attr('src', probUrl);
+		
+		});
+		
+		</script>
+		
+	<meta charset="utf-8"></head>
+
+	<body>
+	
+		<div class="body" id="body">	
+	
+		<div class="leftdiv" id="leftdiv">
+			<!--Notes Appointments Meds-->
+			<div class="framediv" id="meddiv">
+				<!--Medications-->
+				<iframe title="iFrame for Veteran Medications" class="frame" id="medframe" src="URL"></iframe>
+			</div>
+			
+			<div class="framediv" id="apptdiv">
+				<!--Appointments-->
+				<iframe title="iFrame for Veteran Appointments" class="frame" id="apptframe" src="URL"></iframe>
+			</div>
+			<div class="framediv" id="orderdiv">
+				
+				<!--Orders-->
+				<iframe title="iFrame for Orders" class="frame" id="ordframe" src="URL"></iframe>
+			</div>
+			
+			
+		</div>
+		
+		<div class="rightdiv" id="rightdiv">
+			<!--Orders Postings Problems-->
+			
+			<div class="ndiv" id="notediv">
+				<!--Notes-->
+				<iframe title="iFrame for Veteran Notes" class="frame" id="noteframe" src="URL"></iframe>
+			</div>
+			
+			
+			
+			<div class="framediv" id="probdiv">
+				<!--Problems-->
+				<iframe title="iFrame for Veteran Problems" class="frame" id="probframe" src="URL"></iframe>
+			</div>
+			
+		</div>
+		
+		</div>
+		
+		<div class="pdiv" id="postdiv">
+				<!--Postings-->
+				<iframe title="iFrame for Veteran Postings" class="frame" id="postframe" src="URL"></iframe>
+		</div>
+
+		
+
+		
+
+		
+		
+		
+	
+
+
+</body></html>

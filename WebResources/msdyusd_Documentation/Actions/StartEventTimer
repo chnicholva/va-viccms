@@ -1,0 +1,15 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Starts a timer to invoke an event at a specified interval.&nbsp; When the event is invoked, all the actions attached to it are executed in sequence, and the timer is reset after all the actions have executed.&nbsp;&nbsp; As a result, the exact interval between event triggers may vary and will be longer than the timer period supplied.</FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>eventname</STRONG></TD>
+<TD>The name of the event that should be invoked when the timer ticks.</TD></TR>
+<TR>
+<TD><STRONG>milliseconds</STRONG></TD>
+<TD>The time, in milliseconds, to wait between event invocations.</TD></TR>
+<TR>
+<TD><STRONG>name</STRONG></TD>
+<TD>The name of the timer.&nbsp; This is used to cancel the timer.</TD></TR></TBODY></TABLE></BODY></HTML>

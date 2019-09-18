@@ -1,0 +1,40 @@
+﻿body
+{
+}
+.formFieldLabelCell
+{
+    border: none;
+    text-align: right;
+    padding: 4pt;
+    width: 125px;
+}
+.formFieldInputCell
+{
+    border: none;
+    padding: 4pt;
+    width: 250px;
+}
+.formFieldButtonCell
+{
+    border: none;
+    padding: 4pt;
+    text-align: center;
+}
+.formTable
+{
+    border: none;
+}
+
+.StationRow {
+    display: none;
+}
+
+.StationRow.nav-expanded {
+    display:block;
+}
+
+.required-field:after {
+content:"*";
+font-weight:bold;
+color:red;
+}

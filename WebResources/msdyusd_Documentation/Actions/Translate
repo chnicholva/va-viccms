@@ -1,0 +1,24 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Translates text using <a href="https://datamarket.azure.com/dataset/bing/microsofttranslator">Microsoft Translator</a>.<SPAN style="mso-spacerun: yes">&nbsp;&nbsp; </SPAN><SPAN style="mso-spacerun: yes">&nbsp;&nbsp; </SPAN><o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>value</STRONG></TD>
+<TD>
+<P>The text to translate.&nbsp; This value may be escaped for multiline support. <BR>Example (all these are valid): <BR>value=$Escaped("my string&lt;br&gt;new line\\\"my text\\\"")<BR>value=[[myapp.myparam]^]<BR>value=$Escaped([[myapp.myparam]$])</P></TD></TR>
+<TR>
+<TD><STRONG>fromlanguage</STRONG></TD>
+<TD>
+<P>The language to translate from.&nbsp; If this is blank, the system will attempt to detect the language before translating. Valid values can be found at <A href="http://go.microsoft.com/fwlink/?LinkId=530140">Translator Language Codes</A>.</P></TD></TR>
+<TR>
+<TD><STRONG>tolanguage</STRONG></TD>
+<TD>
+<P>The language to translate to. Valid values can be found at <A href="http://go.microsoft.com/fwlink/?LinkId=530140">Translator Language Codes</A>.</P></TD></TR>
+<TR>
+<TD><STRONG>clientId</STRONG></TD>
+<TD>A client ID obtained from Microsoft Azure for translation services.&nbsp; For more information, see <FONT color=#008000 size=2 face=Consolas><FONT color=#008000 size=2 face=Consolas><FONT color=#008000 size=2 face=Consolas><A href="https://datamarket.azure.com/developer/applications/">https://datamarket.azure.com/developer/applications/</A></FONT></FONT></FONT></TD></TR>
+<TR>
+<TD><STRONG>clientSecret</STRONG></TD>
+<TD>A client secret obtained from Microsoft Azure for translation services. For more information, see <FONT color=#008000 size=2 face=Consolas><FONT color=#008000 size=2 face=Consolas><FONT color=#008000 size=2 face=Consolas><A href="https://datamarket.azure.com/developer/applications/">https://datamarket.azure.com/developer/applications/</A></FONT></FONT></FONT></TD></TR></TBODY></TABLE><BR>The translated language is placed into the $Return replacement parameter.</BODY></HTML>

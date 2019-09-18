@@ -1,0 +1,123 @@
+﻿<html>
+<head>
+	<script type="text/javascript" language="javascript" src="../ClientGlobalContext.js.aspx"></script>
+	<script type="text/javascript" src="/_static/_common/scripts/jquery1.7.2.min.js"></script>
+	<script type="text/javascript" src="/_static/_common/scripts/jsrender.min.js"></script>
+	<link href="styles/USDGlobalStyles.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+	<div class="headertitle"></div>
+	<div class="divencapsulated">
+		<div class="divcontent">
+			<div class="title"></div>
+			<table id="itemstable" class="itemstable" cellspacing="0" cellpadding="0"></table>
+		</div>
+	</div>
+	<script id="template" type="text/x-jsrender">
+		{{if #index % 2 == 0}}
+		<tr>
+			{{/if}}
+			<td>
+				<table style="cursor: hand;" width="100%" cellspacing="0" cellpadding="12">
+					<tbody>
+						<tr>
+							<td width="48">
+								<a onclick="USD.OnClickHandler('{{:logicalname}}')" href="#">
+									<img class="{{:cssclass}}" src="Images/transparent.gif" width="48px" height="48px" alt="{{:title}}">
+								</a>
+							</td>
+							<td style="padding-left: 2px;" onclick="USD.OnClickHandler('{{:logicalname}}')">
+								<a class="itemtitle" href="#">
+									{{:title}}
+								</a>
+								<div class="itemdescr">
+									{{:descr}}
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+			{{if #index % 2 == 1}}
+		</tr>
+		{{/if}}
+	</script>
+	<script type="text/javascript">
+		var RTL = new Array(1025, 1037);
+		var dir = "ltr";
+		var locale = "1033";
+		var clientUrl = "";
+		var body = document.getElementsByTagName("body")[0];
+
+		function addScript(path)
+		{
+			var script = document.createElement("script");
+			script.type = "text/javascript";
+			script.onerror = handleLocError;
+			script.src = path;
+			body.appendChild(script);
+		}
+
+		function handleLocError()
+		{
+			var script = document.createElement("script");
+			script.type = "text/javascript";
+			script.src = "scripts/SettingsPageStrings.js";
+			body.appendChild(script);
+		}
+
+		try
+		{
+			var context = GetGlobalContext();
+			if (context != null)
+			{
+				locale = context.getUserLcid();
+				clientUrl = context.getClientUrl();
+			}
+		}
+		catch (e) { }
+
+		if ($.inArray(locale, RTL) > -1)
+		{
+			dir = "rtl";
+		}
+
+		USD = {};
+		USD.Context = {
+			"dir": dir,
+			"lcid": locale,
+			"clientUrl": clientUrl
+		};
+
+		USD.OnClickHandler = function (etn)
+		{
+			var url = "_root/homepage.aspx?etn=" + etn + '&pagemode=iframe';
+			try
+			{
+				window.top.openUrl(url, false);
+			}
+			catch (e)
+			{
+				url = USD.Context.clientUrl + "/" + url;
+				// fallback just in case above method of opening url fails.
+				window.location.href = url;
+			}
+		}
+
+		USD.OnPageLoad = function ()
+		{
+			try
+			{
+				var htmlString = $("#template").render(USD.Resources.SettingsPage.data);
+				$("#itemstable").html(htmlString);
+				$(".headertitle").text(USD.Resources.SettingsPage.headertitle);
+				$(".title").text(USD.Resources.SettingsPage.headerdesc);
+				$("body").attr("dir", USD.Context.dir);
+			}
+			catch (e) { }
+		}
+
+		addScript("scripts/SettingsPageStrings" + (locale == 1033 ? "" : "_" + locale) + ".js");
+	</script>
+</body>
+</html>

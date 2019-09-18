@@ -1,0 +1,102 @@
+function retrievePCMM(){
+
+        var site = '987';
+        var icn = '1012871346V430806';
+	debugger;
+	settings = retrieveSettings();
+	var pcmmUrl= settings.d.results[0].ftp_DACURL + settings.d.results[0].ftp_PatientSummaryAPIURL + site + '/' + icn + '?idType=ICN';
+	var EntityData;
+	$.ajax({
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			datatype: "json",
+			url: pcmmUrl,
+			beforeSend: function (XMLHttpRequest) {
+				//Specifying this header ensures that the results will be returned as JSON.
+				XMLHttpRequest.setRequestHeader("Accept", "application/json");
+			},
+			success: function (data, textStatus, XmlHttpRequest) {
+				//Get the data values
+				EntityData = data;
+				
+			},
+			error: function (XMLHttpRequest, textStatus, errorThrown) {
+				alert('Fail: Ajax Error in retrieving PCMM information from PCMM intgration. Error detail: ' + errorThrown);
+			},
+			async: false,
+			cache: false
+		});
+	
+	var json = jQuery.parseJSON(EntityData);
+	if(json.length > 0){
+		var model = json.model;
+		var stationAssignments = {};
+		for(i = 0; i < model.length; i++){
+			
+		}
+		
+	}
+	
+}
+
+function createPact(){
+	
+	
+}
+
+function createPactMember(){
+	
+	
+}
+
+function associatePactMember(){
+	
+	
+}
+
+function disassociatePactMember(){
+	
+	
+}
+
+function warnPactMember(){
+	
+	
+}
+
+function retrieveSettings(){
+	try{
+		var context = Xrm.Page.context.getClientUrl();
+		var ODATA_ENDPOINT = "/XRMServices/2011/OrganizationData.svc";
+			//Construct the JSON Query
+		var EntitySetName = "mcs_settingSet";
+		var selectString = "?$select=*&$filter=mcs_name eq 'Active Settings'";
+		var jsonQuery = context + ODATA_ENDPOINT + "/" + EntitySetName + selectString;
+		//Initialize the return value
+		var EntityData = null;
+		$.ajax({
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			datatype: "json",
+			url: jsonQuery,
+			beforeSend: function (XMLHttpRequest) {
+				//Specifying this header ensures that the results will be returned as JSON.
+				XMLHttpRequest.setRequestHeader("Accept", "application/json");
+			},
+			success: function (data, textStatus, XmlHttpRequest) {
+				//Get the data values
+				EntityData = data;
+				
+			},
+			error: function (XMLHttpRequest, textStatus, errorThrown) {
+				alert('Fail: Ajax Error in TRIBRIDGE.RetrieveAllAttributesByEntitySync: ' + errorThrown);
+			},
+			async: false,
+			cache: false
+		});
+		return EntityData;
+	}
+	catch(e){
+		alert("Error occurred while retrieving settings in PCMM integration. Error data:" + e);
+	}
+}

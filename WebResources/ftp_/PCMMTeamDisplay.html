@@ -1,0 +1,453 @@
+﻿<html>
+<head>
+    <title></title>
+    <style type="text/css">
+        table {
+            font-family: "Helvetica", "Lucida Sans", "Lucida Sans Unicode", "Luxi Sans", Tahoma, sans-serif;
+            box-shadow: 1px 1px 10px rgba(0,0,0,0.5);
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        table {
+            margin: auto;
+        }
+
+        table, td, th {
+            padding: 7px;
+            text-align: center;
+            border: 1px solid rgb(8,48,107);
+        }
+
+        th {
+            background-color: rgb(8,81,156);
+            color: white;
+            font-size: 11px;
+        }
+
+        tr {
+            font-size: 11px;
+        }
+
+        .panel-heading {
+            font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlphaSans","S60 Sans",Arial,sans-serif;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        #noResultsBlurb {
+            color: red;
+            font-size: 10px;
+        }
+    </style>
+    <meta charset="utf-8">
+</head>
+<body>
+    <div class="panel panel-primary" id="DataGridContainer">
+        <div class="panel-heading">PACT TEAM (FROM PCMM)</div>
+        <div class="panel-body">
+            <div id="GridTableWrapper">
+                <br>
+            </div>
+            <br>
+        </div>
+    </div>
+
+    <script src="../ClientGlobalContext.js.aspx" type="text/javascript"></script>
+    <script src="../ftp_jquery.1.11.min" type="text/javascript"></script>
+    <script>
+        var _ICN = this.parent._ICN;
+        var _notProd = this.parent._notProd;
+
+        var _serviceObj = null;
+        var Xrm = this.parent.Xrm;
+
+        if (!Array.prototype.indexOf) {
+            Array.prototype.indexOf = function (obj, fromIndex) {
+                if (fromIndex == null) {
+                    fromIndex = 0;
+                } else if (fromIndex < 0) {
+                    fromIndex = Math.max(0, this.length + fromIndex);
+                }
+                for (var i = fromIndex, j = this.length; i < j; i++) {
+                    if (this[i] === obj) {
+                        return i;
+                    }
+                }
+                return -1;
+            };
+        }
+
+        //page on load funtion.
+        $(document).ready(function ($) {
+            convertMemberArrayToTable();
+        });
+
+        function convertMemberArrayToTable(pMemberArray) {
+            //check every half second until the script on the form is done making the PCMM call and retrieiving all providers from it for this vet
+            //as incidicated by 'finishedGettingPrimaryCareProviders' and 'finishedGettingMHTC'
+            if (!this.parent || !this.parent.Xrm || !this.parent.PCMMGridMembers || !this.parent.finishedGettingPrimaryCareProviders || !this.parent.finishedGettingMHTC) {
+                setTimeout("convertMemberArrayToTable(this.parent.PCMMGridMembers);", 500);
+                return;
+            }
+            if (!!pMemberArray) {
+                if (pMemberArray.length == 0) {
+                    var headerDiv = document.getElementsByClassName("panel-heading")[0];
+                    headerDiv.innerHTML = "PACT Team (test data from PCMM)";
+                    doPageLoad();
+                } else if (pMemberArray.length > 0) {
+                    if (pMemberArray[0].Name == "No PACT assigned at any VA location.") {
+                        var headerDiv = document.getElementsByClassName("panel-heading")[0];
+                        headerDiv.innerHTML = "PACT Team (from CRM)";
+                        doPageLoad();
+                    } else {
+                        //if we get to this point, then the PCMM query from the veteran form script has passed an array to this web resourc, so that's what we'll display
+                        var gridObj = [];
+                        for (i = 0; i < pMemberArray.length; i++) {
+                            gridObj.push({
+                                Name: pMemberArray[i].Name,
+                                Role: pMemberArray[i].TeamRoleName
+                            });
+                        }
+                        var mainTable = gridObj.length ? createJsonTable_NumKey(gridObj) : createJsonTable_StringKey(gridObj);
+                        // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
+                        var divContainer = document.getElementById("GridTableWrapper");
+                        divContainer.innerHTML = "";
+                        divContainer.appendChild(mainTable);
+                    }
+                }
+            }
+        }
+
+        function doPageLoad() {
+            var ftype = Xrm.Page.ui.getFormType();
+            if (ftype == 1) {
+                return;
+            }
+            jQuery.support.cors = true;
+            var context = Xrm.Page.context;
+            var crmContext = context.getClientUrl();
+            var odata = "/XRMServices/2011/OrganizationData.svc";
+            var EntitySetName = "SystemUserSet";
+            var pact = Xrm.Page.getAttribute("ftp_pactid");
+            var pactId = pact.getValue()[0].id;
+            //var pactId = "{45BD0646-573A-E611-9439-0050568D743D}";
+            var selectString = "?$select=FullName,ftp_PACTTeamRole&$filter=ftp_PACTId/Id eq (guid'" + pactId + "')";
+            var jsonQuery = crmContext + odata + "/" + EntitySetName + selectString;
+
+
+            if (pactId != null) {
+                $.ajax({
+                    type: "GET",
+                    contentType: "application/json; charset=utf-8",
+                    datatype: "json",
+                    url: jsonQuery,
+                    beforeSend: function (XMLHttpRequest) {
+                        //Specifying this header ensures that the results will be returned as JSON.
+                        XMLHttpRequest.setRequestHeader("Accept", "application/json");
+                    },
+                    error: function (msg) {
+                        _serviceObj = [{ "Alert": "ERROR", "Status": msg.status, "Message": msg.statusText }];
+                    },
+                    success: function (result) {
+                        _serviceObj = result.d.results;
+                        addMHMember(_serviceObj);
+                    }
+                });
+            }
+        }
+        function addMHMember(_serviceObj) {
+            var settings = retrieveSettings();
+            var testFacilityCode = '987'; //use this for a non-prod environment, otherwise have to retrieved the facilitycode from vet's facility
+            var icn = (this.parent._notProd) ? "1012871350V170022" : this.parent._ICN;
+            var pcmmUrl = settings.d.results[0].ftp_DACURL + settings.d.results[0].ftp_PatientSummaryAPIURL + testFacilityCode + '/' + icn + '?idType=ICN';
+            var mhmember = {};
+            //$.get(pcmmUrl, function (data, status) {
+
+            // if (data != null && typeof data != undefined) {
+            // var vpta_objmodel = data['Data'];
+            // if (vpta_objmodel != null && typeof vpta_objmodel != undefined) {
+
+            // if (vpta_objmodel.patientAssignments[0] != null && typeof vpta_objmodel.patientAssignments[0] != undefined && typeof (vpta_objmodel.patientAssignments[0].length) !== 0) {
+            // var patientAssignments = vpta_objmodel.patientAssignments[0];
+            // var MHAssign = patientAssignments.mentalHealthAssignments;
+            // for(i = 0; i< MHAssign.length; i++){
+            // if(MHAssign[i].mentalHealthTreatmentCoord!=null &&typeof MHAssign[i].mentalHealthTreatmentCoord != undefined){
+            // mhmember.ftp_PACTTeamRole = MHAssign[i].mentalHealthTreatmentCoord.TeamRoleName;
+            // mhmember.FullName = MHAssign[i].mentalHealthTreatmentCoord.Name;
+            // _serviceObj.push(mhmember);
+            // }
+            // }
+
+            // }
+            // }
+            // }
+
+            // setObjectFields(_serviceObj);
+            // });
+            setObjectFields(_serviceObj);
+        }
+        function setObjectFields(_serviceObj) {
+            //set display fields
+            if (_serviceObj == null) {
+                _serviceObj = [{ "Alert": "ERROR", "Status": "No Data", "Message": "No response was received" }];
+            }
+
+            var gridObj = [];
+
+            var name;
+            var role;
+            for (i = 0; i < _serviceObj.length; i++) {
+                name = _serviceObj[i].FullName;
+                role = _serviceObj[i].ftp_PACTTeamRole;
+                var provider = { Name: name, Role: role };
+                gridObj.push(provider);
+            }
+
+
+
+            var mainTable = gridObj.length ? createJsonTable_NumKey(gridObj) : createJsonTable_StringKey(gridObj);
+            // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
+            var divContainer = document.getElementById("GridTableWrapper");
+            divContainer.innerHTML = "";
+            divContainer.appendChild(mainTable);
+        }
+
+        function CreateTableFromJSON(jsonObject) {
+
+            //Handle String keys
+            var jsonObjectLength = getObjectLength(jsonObject);
+
+            // EXTRACT VALUE FOR HTML HEADER.
+            var col = getColumns(jsonObject, jsonObjectLength);
+
+            // CREATE DYNAMIC TABLE.
+            var table = document.createElement("table");
+
+            // CREATE HTML TABLE HEADER ROW USING THE EXTRACTED HEADERS ABOVE.
+            var tr = table.insertRow(-1);                   // TABLE ROW.
+
+            for (var i = 0; i < col.length; i++) {
+                var th = document.createElement("th");      // TABLE HEADER.
+                var header = col[i].replace(/([a-z])([A-Z])/g, '$1 $2');
+                header = header.charAt(0).toUpperCase() + header.slice(1);
+
+                th.innerHTML = header;
+                tr.appendChild(th);
+            }
+
+            // ADD JSON DATA TO THE TABLE AS ROWS.
+            for (var i = 0; i < jsonObjectLength; i++) {
+
+                tr = table.insertRow(-1);
+
+                for (var j = 0; j < col.length; j++) {
+                    var tabCell = tr.insertCell(-1);
+                    //if(typeof jsonObject[i][col[j] == string){
+                    var value;
+                    if (typeof jsonObject[i][col[j]] == "object") {
+                        if (jsonObject[i][col[j]] == null) {
+                            tabCell.innerHTML = null;
+                        } else {
+                            tabCell.appendChild(CreateTableFromJSON(jsonObject[i][col[j]]));
+                        }
+                    } else {
+                        tabCell.innerHTML = jsonObject[i][col[j]];
+                    }
+                    //tabCell.innerHTML = value; //jsonObject[i][col[j]];
+                    //}
+                }
+            }
+
+            return table;
+        }
+
+        function createJsonTable_NumKey(objectArray) {
+
+            //Handle String keys
+            var jsonObjectLength = objectArray.length;
+
+            //get list of objects' properties for table headers
+            var columnList = [];
+            for (var i = 0; i < objectArray.length; i++) {
+                for (var key in objectArray[i]) {
+                    if (columnList.indexOf(key) === -1) {
+                        columnList.push(key);
+                    }
+                }
+            }
+
+            var table = document.createElement("table");
+            var headerRow = table.insertRow(-1);
+
+            for (var i = 0; i < columnList.length; i++) {
+                var th = document.createElement("th");      // TABLE HEADER.
+                var header = columnList[i].replace(/([a-z])([A-Z])/g, '$1 $2');
+                header = header.charAt(0).toUpperCase() + header.slice(1);
+
+                th.innerHTML = header;
+                headerRow.appendChild(th);
+            }
+
+            // ADD JSON DATA TO THE TABLE AS ROWS.
+            for (var i = 0; i < objectArray.length; i++) {
+                var newRow = table.insertRow(-1);
+                for (var j = 0; j < columnList.length; j++) {
+                    var thisCell = newRow.insertCell(-1);
+                    if (typeof objectArray[i][columnList[j]] == "object") {
+                        if (objectArray[i][columnList[j]] == null) {
+                            thisCell.innerHTML = null;
+                        }
+                        else {
+                            if (objectArray[i][columnList[j]].length) {
+                                thisCell.appendChild(createJsonTable_NumKey(objectArray[i][columnList[j]]));
+                            }
+                            else {
+                                thisCell.appendChild(createJsonTable_StringKey(objectArray[i][columnList[j]]));
+                            }
+                        }
+                    }
+                    else {
+                        thisCell.innerHTML = objectArray[i][columnList[j]];
+                    }
+                }
+            }
+
+            return table;
+        }
+
+        function createJsonTable_StringKey(jsonObject) {
+            var columnList2 = [];
+            for (var key in jsonObject) {
+                if (columnList2.indexOf(key) === -1) {
+                    columnList2.push(key);
+                }
+            }
+
+            var table = document.createElement("table");
+
+            // CREATE HTML TABLE HEADER ROW USING THE EXTRACTED HEADERS ABOVE.
+            var headerRow = table.insertRow(-1);                   // TABLE ROW.
+
+            for (var i = 0; i < columnList2.length; i++) {
+                var th = document.createElement("th");      // TABLE HEADER.
+                var header = columnList2[i].replace(/([a-z])([A-Z])/g, '$1 $2');
+                header = header.charAt(0).toUpperCase() + header.slice(1);
+                th.innerHTML = header;
+                headerRow.appendChild(th);
+            }
+
+            // ADD JSON DATA TO THE TABLE AS ROWS.
+            tr = table.insertRow(-1);
+
+            for (var j = 0; j < columnList2.length; j++) {
+                var tabCell = tr.insertCell(-1);
+                var value;
+                if (typeof jsonObject[columnList2[j]] == "object") {
+                    if (jsonObject[columnList2[j]] == null) {
+                        tabCell.innerHTML = null;
+                    } else {
+                        if (jsonObject[columnList2[j]].length) {
+                            tabCell.appendChild(createJsonTable_NumKey(jsonObject[columnList2[j]]));
+                        } else {
+                            tabCell.appendChild(createJsonTable_StringKey(jsonObject[columnList2[j]]));
+                        }
+                    }
+                } else {
+                    tabCell.innerHTML = jsonObject[columnList2[j]];
+                }
+            }
+
+            return table;
+        }
+
+        function getObjectLength(currObject) {
+            var length = 0;
+            if (currObject.length) {
+                length = currObject.length;
+            } else {
+                var cnt = 0;
+                for (var item in currObject) {
+                    cnt++;
+                }
+                length = cnt;
+            }
+
+            return length;
+        }
+
+        function getColumns(currObject, currObjectLength) {
+            var columns = [];
+
+            if (currObject.length) {
+                for (var i = 0; i < currObjectLength; i++) {
+                    key = currObject[i].name;
+                    if (columns.indexOf(key) === -1) {
+                        columns.push(key);
+                    }
+                }
+            } else {
+                for (var key in currObject) {
+                    if (columns.indexOf(key) === -1) {
+                        columns.push(key);
+                    }
+                }
+
+            }
+
+            return columns;
+        }
+
+        function _getContext() {
+            var errorMessage = "Context is not available.";
+            if (typeof GetGlobalContext != "undefined")
+            { return GetGlobalContext(); }
+            else {
+                if (typeof Xrm != "undefined") {
+                    return Xrm.Page.context;
+                }
+                else { throw new Error(errorMessage); }
+            }
+        }
+
+        function retrieveSettings() {
+            try {
+                var context = Xrm.Page.context.getClientUrl();
+                var ODATA_ENDPOINT = "/XRMServices/2011/OrganizationData.svc";
+                //Construct the JSON Query
+                var EntitySetName = "mcs_settingSet";
+                var selectString = "?$select=*&$filter=mcs_name eq 'Active Settings'";
+                var jsonQuery = context + ODATA_ENDPOINT + "/" + EntitySetName + selectString;
+                //Initialize the return value
+                var EntityData = null;
+                $.ajax({
+                    type: "GET",
+                    contentType: "application/json; charset=utf-8",
+                    datatype: "json",
+                    url: jsonQuery,
+                    beforeSend: function (XMLHttpRequest) {
+                        //Specifying this header ensures that the results will be returned as JSON.
+                        XMLHttpRequest.setRequestHeader("Accept", "application/json");
+                    },
+                    success: function (data, textStatus, XmlHttpRequest) {
+                        //Get the data values
+                        EntityData = data;
+
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert('Fail: Ajax Error in TRIBRIDGE.RetrieveAllAttributesByEntitySync: ' + errorThrown);
+                    },
+                    async: false,
+                    cache: false
+                });
+                return EntityData;
+            }
+            catch (e) {
+                alert("Error occurred while retrieving settings in PCMM integration. Error data:" + e);
+            }
+        }
+
+
+    </script>
+</body>
+</html>

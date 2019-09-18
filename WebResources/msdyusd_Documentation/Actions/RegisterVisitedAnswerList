@@ -1,0 +1,20 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Registers an event to be invoked when a specific task is reached.<o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>name</STRONG></TD>
+<TD>The name of the registration.</TD></TR>
+<TR>
+<TD><STRONG>step</STRONG></TD>
+<TD>The agent script task name that you want to register an event for.</TD></TR>
+<TR>
+<TD><STRONG></STRONG></TD>
+<TD>
+<P>The remaining parameters should consist of </P>
+<P>&lt;answername&gt;=&lt;bool value&gt; pairs.</P>
+<P>If &lt;answername&gt;=true, it will fire the event if the answer has been visited. If &lt;answername&gt;=false, it will fire only if the answer hasn't been visited.&nbsp;&nbsp; If an answername isn't included here but is included in the list of answers on the task, the event is fired regardless of whether it has been visited or not.</P></TD></TR></TBODY></TABLE>
+<P>When the conditions are met, the RegisteredVisitedMatch event will be fired, with the following parameters:</FONT></FONT></FONT></FONT></P>
+<P><FONT color=#a31515 size=2 face=Consolas><FONT color=#a31515 size=2 face=Consolas><FONT color=#a31515 size=2 face=Consolas><FONT color=#000000 size=3 face="Times New Roman">task=&lt;task name&gt;<BR>taskid=&lt;task guid&gt;<BR>name=&lt;registration name from above&gt;<BR></FONT></FONT></FONT></FONT><FONT color=#a31515 size=2 face=Consolas><FONT color=#a31515 size=2 face=Consolas><FONT color=#a31515 size=2 face=Consolas></P></FONT></FONT></FONT></BODY></HTML>

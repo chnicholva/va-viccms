@@ -1,0 +1,19 @@
+if (typeof (TRIBRIDGE) == "undefined")
+{ TRIBRIDGE = { __namespace: true }; }
+
+function CheckAssignRole() {
+    var nsrApprovedPrivilage = new Array("FTP Supervisor", "FTP Manager");
+    var resultAllRoles = TRIBRIDGE.GetAllSystemRoles();
+    var resultUser = TRIBRIDGE.UserHasRoles(resultAllRoles, nsrApprovedPrivilage);
+
+    if (!resultUser) {
+        // disable the Assign button
+        // var buttonID = "email|NoRelationship|Form|Mscrm.Form.email.ApplyTemplate-Large"; // id of ribbon button
+        var buttonID = "Mscrm.Form.incident.Assign"; // id of ribbon button
+        //var buttonID = "incident|Form|Mscrm.Form.incident.Assign"; // id of ribbon button
+        var btn = window.top.document.getElementById(buttonID);
+        if (btn) {
+            btn.disabled = true;
+        }
+    }
+}

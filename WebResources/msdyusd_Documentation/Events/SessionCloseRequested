@@ -1,0 +1,3 @@
+<HTML><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY><FONT size=2 face="Tahoma, Verdana, Arial">Invoked when the user clicks "X" on the Session Tabs hosted control to close the session.&nbsp;&nbsp;&nbsp;If the event is handled, the system won't automatically close the session.&nbsp;&nbsp; To close the session in this case, you must create an action call that calls the CloseSession action on the Session Tabs hosted control.&nbsp; If this event isn't handled, the system will automatically close the session.</FONT></BODY></HTML>

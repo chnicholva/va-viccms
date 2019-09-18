@@ -1,0 +1,128 @@
+if (typeof (TRIBRIDGE) == "undefined")
+{ TRIBRIDGE = { __namespace: true }; }
+
+
+TRIBRIDGE = {
+    DisableField: function (field) {
+        var fld = Xrm.Page.getAttribute(field);
+        if (fld != null) {
+            Xrm.Page.getControl(field).setDisabled(true);
+            Xrm.Page.data.entity.attributes.get(field).stSubmitMode("always");
+        }
+    },
+    EnableField: function (field) {
+        var fld = Xrm.Page.getAttribute(field);
+        if (fld != null) {
+            Xrm.Page.getControl(field).setDisabled(false);
+        }
+    },
+    GuidsAreEqual: function (guid1, guid2) {  // matches http://community.dynamics.com/crm/b/crmmitchmilam/archive/2010/11/16/retreiving-user-roles-in-crm-2011.aspx#.UgkkNLHD-AI
+        var isEqual = false;
+        if (guid1 == null || guid2 == null) {
+            isEqual = false;
+        }
+        else {
+            isEqual = guid1.replace(/[{}]/g, "").toLowerCase() == guid2.replace(/[{}]/g, "").toLowerCase();
+        }
+        return isEqual;
+    },
+    GetAllSystemRoles: function () {
+        var serverUrl = TRIBRIDGE.GetServerUrl();
+        var userId = Xrm.Page.context.getUserId();
+        var bu = TRIBRIDGE.GetBusinessUnit(userId);
+        var oDataEndpointUrl = serverUrl + "/XRMServices/2011/OrganizationData.svc/";
+        oDataEndpointUrl += "RoleSet?$filter=BusinessUnitId/Id eq (guid'" + bu + "')";
+        var service = TRIBRIDGE.GetRequestObject();
+        if (service != null) {
+            service.open("GET", oDataEndpointUrl, false);
+            service.setRequestHeader("X-Requested-Width", "XMLHttpRequest");
+            service.setRequestHeader("Accept", "application/json, text/javascript, */*");
+            service.send(null);
+
+            //var requestResults = eval('(' + service.responseText + ')').d;
+            var requestResults = service.responseText;
+            return requestResults;
+        }
+    },
+    GetRoleIdByName: function (allsecurityRoles, rolename) {
+        if (allsecurityRoles != null && allsecurityRoles.results.length > 0) {
+            for (var i = 0; i < allsecurityRoles.results.length; i++) {
+                var role = allsecurityRoles.results[i];
+                if (role.Name == rolename) {
+                    id = role.RoleId;
+                    return id;
+                }
+            }
+        }
+        return null;
+    },
+    UserHasRoles: function (allsecurityRoles, nsrApprovedPrivilage) {
+        // var nsrApprovedPrivilage = new Array("Role 1", "Role 2", "Role 3");
+        for (var j = 0; j < nsrApprovedPrivilage.length; j++) {
+            var id = TRIBRIDGE.GetRoleIdByName(allsecurityRoles, nsrApprovedPrivilage[j]);
+            var currentUserRoles = Xrm.Page.context.getUserRoles();
+            for (var i = 0; i < currentUserRoles.length; i++) {
+                var userRole = currentUserRoles[i];
+                if (TRIBRIDGE.GuidsAreEqual(userRole, id)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    },
+    GetBusinessUnit: function (userId) {
+        var serverUrl = TRIBRIDGE.GetServerUrl();
+        var oDataEndpointUrl = serverUrl + "/XRMServices/2011/OrganizationData.svc/";
+        oDataEndpointUrl += "SystemUserSet?$filter=SystemUserId eq (guid'" + userId + "')&$select=BusinessUnitId";
+
+        var service = TRIBRIDGE.GetRequestObject();
+        var bu = '';
+        if (service != null) {
+   debugger;
+            service.open("GET", oDataEndpointUrl + "/SystemUserSet?$select=businessunitid" ", true);            
+            service.setRequestHeader("X-Requested-Width", "XMLHttpRequest");
+            service.setRequestHeader("Accept", "application/json");
+            service.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+            service.send(null);
+            var requestResults = eval('(' + service.responseText + ')').d;
+            bu = requestResults.results[0].BusinessUnitId;
+            bu = bu.Id;
+            return bu;
+        }
+    },
+    GetServerUrl: function () {
+        /// <summary>Returns the URL for the SOAP endpoint using the context information available in the form or HTML Web resource.</summary>
+        var OrgServicePath = "/XRMServices/2011/Organization.svc/web";
+        var serverUrl = "";
+        if (typeof GetGlobalContext == "function") {
+            var context = GetGlobalContext();
+            serverUrl = context.getClientUrl();
+        }
+        else {
+            if (typeof Xrm.Page.context == "object") {
+                serverUrl = Xrm.Page.context.getClientUrl();
+            }
+            else {
+                throw new Error("Unable to access the server URL");
+            }
+        }
+        if (serverUrl.match(/\/$/)) {
+            serverUrl = serverUrl.substring(0, serverUrl.length - 1);
+        }
+
+        return serverUrl + OrgServicePath;
+    },
+GetRequestObject: function () {
+        if (window.XMLHttpRequest) {
+            return new window.XMLHttpRequest;
+        }
+        else {
+            try {
+                return new ActiveXObject("MSXML2.XMLHTTP.3.0");
+            }
+            catch (ex) {
+                return null;
+            }
+        }
+    }
+};

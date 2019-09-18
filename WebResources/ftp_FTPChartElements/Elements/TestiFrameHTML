@@ -1,0 +1,170 @@
+<html><head>
+<script src="https://internalcrm.ftp.dev.crm.vrm.vba.va.gov/FTP/WebResources/ftp_/JScript/jquery1.7.2.js"></script>
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+<style>
+        .sidebar {
+            background-color: #002050;
+            width: 15%;
+            height: 100%;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        .frame {
+            display: none;
+            width: 100%;
+            height: 650px;
+        }
+
+        .all-frames {
+            position: absolute;
+            right: 0;
+            width: 85%;
+        }
+
+        .button {
+            margin-left: 20%;
+            margin-right: 20%;
+            margin-top: 6%;
+            width: 60%;
+            height: 6%;
+            font-family: 'Segoe UI';
+        }
+
+        .iframe {
+            width: 90%;
+            height: 90%;
+            margin-left: 5%;
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    </style>
+    <script>
+      $.support.cors = true;
+      //  var spinner;
+     //   var target;
+
+        (function ($, document, undefined) {
+            $.fn["iready"] = function (callback) {
+                var ifr = this.filter("iframe"),
+                    arg = arguments,
+                    src = this,
+                    clc = null, // collection
+                    lng = 50,   // length of time to wait between intervals
+                    ivl = -1,   // interval id
+                    chk = function (ifr) {
+                        try {
+                            var cnt = ifr.contents(),
+                                doc = cnt[0],
+                                src = ifr.attr("src"),
+                                url = doc.URL;
+                            switch (doc.readyState) {
+                                case "complete":
+                                    if (!src || src === "about:blank") {
+                                        // we don't care about empty iframes
+                                        ifr.data("ready", "true");
+                                    } else if (!url || url === "about:blank") {
+                                        // empty document still needs loaded
+                                        ifr.data("ready", undefined);
+                                    } else {
+                                        // not an empty iframe and not an empty src
+                                        // should be loaded
+                                        ifr.data("ready", true);
+                                    }
+
+                                    break;
+                                case "interactive":
+                                    ifr.data("ready", "true");
+                                    break;
+                                case "loading":
+                                default:
+                                    // still loading
+                                    break;
+                            }
+                        } catch (ignore) {
+                            // as far as we're concerned the iframe is ready
+                            // since we won't be able to access it cross domain
+                            ifr.data("ready", "true");
+                        }
+
+                        return ifr.data("ready") === "true";
+                    };
+
+                if (ifr.length) {
+                    ifr.each(function () {
+                        if (!$(this).data("ready")) {
+                            // add to collection
+                            clc = (clc) ? clc.add($(this)) : $(this);
+                        }
+                    });
+                    if (clc) {
+                        ivl = setInterval(function () {
+                            var rd = true;
+                            clc.each(function () {
+                                if (!$(this).data("ready")) {
+                                    if (!chk($(this))) {
+                                        rd = false;
+                                    }
+                                }
+                            });
+
+                            if (rd) {
+                                clearInterval(ivl);
+                                clc = null;
+                                callback.apply(src, arg);
+                            }
+                        }, lng);
+                    } else {
+                        clc = null;
+                        callback.apply(src, arg);
+                    }
+                } else {
+                    clc = null;
+                    callback.apply(this, arguments);
+                }
+                return this;
+            };
+        }(jQuery, document));
+    </script>
+
+    <script>
+        $(window).load(function () {
+           // spinner = new Spinner().spin()
+           // target = document.getElementById('spinMe');
+          //  target.appendChild(spinner.el)
+            //basicSpinner();
+            $("<iframe>").attr({
+                "src": "https://www.bing.com/",
+                "id": "iframe"
+            }).appendTo("body");
+            //debugger;
+            $("iframe").iready(function () {
+                var ifr = $("#test");
+                alert("iready - Should now be ready.");
+                try {
+                 //   spinner.stop();
+                    alert($("#iframe").contents()[0].readyState);
+                } catch (ignore) {
+                    alert("cross domain");
+                }
+            });         
+
+            try {
+                alert("Should not be ready: " + $("#iframe").contents()[0].readyState);
+            } catch (ignore) { }
+        });
+    </script>
+    <title></title>
+    
+</head>
+<body>
+
+    <div id="spinMe"></div>
+
+
+
+</body></html>

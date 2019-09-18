@@ -1,0 +1,9 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Runs JavaScript as if it were a scriptlet in Unified Service Desk.&nbsp;&nbsp; Upon successful execution, the result of the scriptlet will be displayed in a message box.</FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG></STRONG></TD>
+<TD>Specify the JavaScript in the <strong>Data</strong> field to run as a scriptlet.</TD></TR></TBODY></TABLE></BODY></HTML>

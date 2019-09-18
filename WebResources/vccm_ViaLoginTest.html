@@ -1,0 +1,193 @@
+<html>
+	<head>
+    		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    		<meta charset="utf-8">
+			<script type="text/javascript" src="ClientGlobalContext.js.aspx"></script>
+    		<!--<script src="jquery.2.1.4.min.js" type="text/javascript"></script>-->
+			<script src="bah_jquery1.4.1.min.js" type="text/javascript"></script>
+			<script src="ftp_/ViaServiceLibrary/js/ViaServiceLibrary.js" type="text/javascript"></script>
+    		<script>
+				function vlc_callAction(action, data, callback, errHandler) {
+					var serverURL = Xrm.Page.context.getClientUrl();
+					var req = new XMLHttpRequest();
+					// specify name of the entity, record id and name of the action in the Wen API Url
+					req.open("POST", serverURL + "/api/data/v9.0/" + action, true);
+					req.setRequestHeader("Accept", "application/json");
+					req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+					req.setRequestHeader("OData-MaxVersion", "4.0");
+					req.setRequestHeader("OData-Version", "4.0");
+					req.onreadystatechange = function () {
+						if (this.readyState == 4 /* complete */) {
+							req.onreadystatechange = null;
+							if (this.status == 200 && this.response != null) {
+								var data = JSON.parse(this.response);
+								callback(data);
+							}
+							else {
+								if (this.response != null && this.response != "") {
+									var error = JSON.parse(this.response).error;
+									errHandler(error.message);
+								}
+							}
+						}
+					};
+					// send the request with the data for the input parameter
+					req.send(window.JSON.stringify(data));
+				}
+				
+			function testPost() {
+				//Process VistA Login using VIA web service
+				var vlc_viaLogin = new Object();
+				vlc_viaLogin.AccessCode = '4543BGL';
+				vlc_viaLogin.VerifyCode = 'TEST0987!';
+				vlc_viaLogin.SiteId = '991';
+				vlc_viaLogin.Target = "";
+
+				var vlc_loginResponse = "";
+				
+				vlc_callAction('vccm_VistALogin',
+				//vlc_callAction('vccm_EmrServiceCall',
+					{
+						"Request": window.JSON.stringify(vlc_viaLogin)
+					},
+					function(data) {
+						var response = JSON.parse(data.Response);
+						console.log(response);
+					},
+					function(err) {
+						//System Error
+						console.log(err);
+					}
+				);
+			}
+
+			function testPostDirect() {
+				//Process VistA Login using VIA web service
+				var vlc_viaLogin = new Object();
+				vlc_viaLogin.AccessCode = '4543BGL';
+				vlc_viaLogin.VerifyCode = 'TEST0987!';
+				vlc_viaLogin.SiteId = '991';
+				vlc_viaLogin.Target = "";
+
+				var vlc_loginResponse = "";
+				
+				$.ajax({
+					 type: "post",
+					 url: 'https://nonprod.integration.d365.va.gov/veis/api/VIA/LoginVIA/1.0/json',
+					 data: JSON.stringify(vlc_viaLogin),
+					 contentType: "application/json; charset=utf-8",
+					 dataType: "json",
+					 beforeSend: function (xhr) {
+						var subKeys = 'Ocp-Apim-Subscription-Key|4a61ad0eaea2445fbbad9d81dbbe1d98';
+                        var keys = subKeys.split("|");
+                        for(var i =0; i<keys.length;i = i+2) {
+                            xhr.setRequestHeader(keys[i], keys[i+1]);
+                        }
+                    },
+					 success: function (data) {
+						 console.log(data);
+					 },
+					 error: function (jqxhr, textstatus, errorthrown) {
+						 //system error
+						 console.log(errorthrown);
+					 },
+					 async: true,
+					 cache: false
+				 });
+			}
+			
+			function testViaPost() {
+				var vialib_soapHeaderStartText = "<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' " +
+							  "xmlns:ser='http://service.via.med.va.gov/'><soapenv:Header/><soapenv:Body>";
+				var vialib_soapHeaderEndText = "</soapenv:Body></soapenv:Envelope>";
+				var vialib_requestingApp = vialib_decryptServiceConnector("91,90,74,103,84,73,72,90",4);
+				var vialib_consumingAppToken = vialib_decryptServiceConnector("72,71,71,65,108,80,84,105,86,75,74,92",6);
+				var vialib_consumingAppPassword = vialib_decryptServiceConnector("75,125,70,130,48,91,66,113,78,61,80,112",8);
+				var vialib_accessCode = "4543BGL";
+				var vialib_verifyCode = "TEST0987!";
+				var vialib_siteCode = 991;
+				
+				//Construct Login Soap message
+				var vialib_soapMessage = vialib_soapHeaderStartText + "<ser:loginVIA>" + "<queryBean>" +
+					"<requestingApp>" + vialib_encodeString(vialib_requestingApp) + "</requestingApp>" +
+					"<consumingAppToken>" + vialib_encodeString(vialib_consumingAppToken) + "</consumingAppToken>" +
+					"<consumingAppPassword>" + vialib_encodeString(vialib_consumingAppPassword) + "</consumingAppPassword>" + "</queryBean>" +
+					"<accessCode>" + vialib_encodeString(vialib_accessCode) + "</accessCode>" +
+					"<verifyCode>" + vialib_encodeString(vialib_verifyCode) + "</verifyCode>" +
+					"<siteCode>" + vialib_siteCode + "</siteCode>" +
+					"</ser:loginVIA>" + vialib_soapHeaderEndText;
+
+				//Call VIA Services
+				//var url = "https://vaww.viapreprod.va.gov/via-webservices/services/EmrService";
+				//var url = "https://nonprod.integration.d365.va.gov/veis/api/EmrService";
+				var url = "https://nonprod.integration.d365.va.gov/veis/EC/VIAEMRService";
+				$.ajax({
+					url: url,
+					type: "POST",
+					datatype: "xml",
+					beforeSend: function (xhr) { 
+						var subKeys = 'Ocp-Apim-Subscription-Key|4a61ad0eaea2445fbbad9d81dbbe1d98';
+						var keys = subKeys.split("|");
+						for(var i =0; i<keys.length;i = i+2) {
+							xhr.setRequestHeader(keys[i], keys[i+1]); 
+						}
+					},
+					data: vialib_soapMessage,
+					contentType: "text/xml; charset=\'utf-8'",
+					dataType: "xml",
+					success: function (data) {
+						console.log(data);
+					},
+					error: function (jqXHR, textStatus, errorThrown) {
+						//System Error
+						console.log(errorThrown);
+					},
+					async: false,
+					cache: false
+				});
+			
+			}
+			
+			function vialib_encodeString(vialib_unencodedString) {
+				if (vialib_unencodedString == undefined || vialib_unencodedString == null || vialib_unencodedString == '') { return ''; }
+				//This function takes a string and encodes for use in XML
+				try {
+					return vialib_unencodedString.replace(/&/g, '&amp;')
+						   .replace(/</g, '&lt;')
+						   .replace(/>/g, '&gt;')
+						   .replace(/"/g, '&quot;')
+						   .replace(/'/g, '&apos;');
+				}
+				catch (err) {
+					//Display Error
+					alert("ViaServiceLibrary.js Function Error(vialib_encodeString): " + err.message);
+					return null;
+				}
+			}
+			function vialib_decryptServiceConnector(vialib_connectorArray, vialib_connectorValue) {
+				var vialib_decryptedString = "";
+				if (vialib_connectorArray != null && vialib_connectorArray != "") {
+					var vialib_newArray = vialib_connectorArray.toString().split(',');
+					vialib_newArray.reverse();
+					for (i = 0; i < vialib_newArray.length; i++) {
+						var vialib_curChar = "";
+						if (i == 0) {
+							vialib_curChar = vialib_newArray[i] - vialib_connectorValue;
+						}
+						else {
+							vialib_curChar = vialib_newArray[i] - (i + vialib_connectorValue);
+						}
+						vialib_decryptedString = vialib_decryptedString + String.fromCharCode(vialib_curChar);
+					}
+				}
+				return vialib_decryptedString;
+			}
+
+	    	</script>
+	</head>
+	<body style="overflow-wrap: break-word;">
+	<button click="testPost()">POST</button>
+	<div id="response">
+	</div>
+	</body>
+</html>

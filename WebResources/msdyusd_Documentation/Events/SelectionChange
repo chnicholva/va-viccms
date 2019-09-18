@@ -1,0 +1,12 @@
+<HTML><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY><FONT size=2 face="Tahoma, Verdana, Arial">Invoked when a result is selected in the hosted control.&nbsp;</FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>title</STRONG></TD>
+<TD>The title of the article that is selected on the mouse click event.</TD></TR>
+<TR>
+<TD><STRONG>articleid</STRONG></TD>
+<TD>The ID of the article that is selected on the mouse click event.</TD></TR></TBODY></TABLE>
+</BODY></HTML>

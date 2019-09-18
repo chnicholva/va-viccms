@@ -1,0 +1,12 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Sets the height and width of the hosted control.&nbsp;&nbsp; This is particularly useful when using "auto" in your panel layouts.<o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>width</STRONG></TD>
+<TD>The width of the hosted control.</TD></TR>
+<TR>
+<TD><STRONG>height</STRONG></TD>
+<TD>The height of the hosted control.</TD></TR></TBODY></TABLE></BODY></HTML>

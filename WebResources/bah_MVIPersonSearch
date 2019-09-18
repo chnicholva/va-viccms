@@ -1,0 +1,2049 @@
+<html><head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" charset="utf-8">
+    <title>Person Search</title>                
+                <style>
+                fieldset {
+    color: rgb(0,0,0);
+    direction: ltr;
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlphaSans","S60 Sans",Arial,sans-serif;
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: 100;
+    margin-bottom: 14px;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    background-color: rgb(255,255,255);
+    padding: 2px;
+    border: solid 0 #ffffff;
+    width: 100%;
+}
+.showHide {
+    cursor: pointer;
+}
+.noBorder {                        
+    border: none ;
+}
+table {
+    border-collapse: collapse;
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlphaSans","S60 Sans",Arial,sans-serif;
+    width: 705px;
+}
+
+.StationTable {
+    border-collapse: collapse;
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlphaSans","S60 Sans",Arial,sans-serif;
+    width: 200px;
+}
+
+th {
+    background-color: #ffffff;
+    color: black;
+    font-family: "Segoe UI Light","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlphaSans","S60 Sans",Arial,sans-serif;
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: 600;
+    white-space: nowrap;
+    text-align: left;
+}
+
+td {
+    padding: 5px;
+    white-space: nowrap;
+}
+
+.odd {
+    background-color: white;
+    cursor: pointer;
+}
+
+.even {
+    background-color: whitesmoke;
+    cursor: pointer;
+}
+
+.odd:hover {
+    background-color: #99ccff;
+    color: #800000;
+}
+
+.even:hover {
+    background-color: #99ccff;
+    color: #800000;
+}
+
+div#tmpDialog {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 250px;
+    height: 50px;
+    margin: -101px 0 0 -251px;
+    background: rgb(255, 255, 255);
+    border: 1px solid black;
+}
+
+    div#tmpDialog p {
+        padding: 5px;
+        margin: 5px;
+        text-align: center;
+    }
+
+input {
+    background-color: rgba(255,255,255,0);
+    border-color: rgb(186,186,186);
+    border-width: 1px;
+    border-style: solid;
+    color: rgb(0,0,0);
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlphaSans","S60 Sans",Arial,sans-serif;
+    font-size: 14.06px;
+    height: 30px;
+    line-height: normal;
+}
+
+div {
+    color: rgb(0,0,0);
+    direction: ltr;
+    float: left;
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlphaSans","S60 Sans",Arial,sans-serif;
+    font-size: 12.06px;
+    line-height: 17px;
+    padding-bottom: 4px;
+    padding-top: 0;
+    text-align: left;
+}
+
+button {
+    background-color: rgb(0,32,80);
+    border-color: rgb(255,255,255);
+    border-style: none;
+    border-width: 0px;
+    color: rgb(255,255,255);
+    direction: ltr;
+    font-family: "Segoe UI Semibold","Segoe UI Web Semibold","Segoe UI Web Regular","Segoe UI","SegoeUI Symbol","HelveticaNeue-Medium","Helvetica Neue",Arial,sans-serif;
+    font-size: 14.06px;
+    height: 30px;
+    line-height: 20px;
+    min-width: 84.4px;
+    padding-bottom: 10px;
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-top: 5px;
+    margin-right: 6px;
+}
+
+h1 {
+    font-family: 'Segoe UI',Tahoma,Arial;
+    font-weight: 100;
+    color: #262626;
+    font-size: 36px;
+    line-height: 20px;
+    margin-bottom: 12px;
+}
+
+h2 {
+    color: rgb(0,0,0);
+    direction: ltr;
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlphaSans","S60 Sans",Arial,sans-serif;
+    font-size: 14.06px;
+    line-height: 20px;
+    font-weight: 100;
+    margin-bottom: 14px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 0px;
+}
+
+h3 {
+    font-family: 'Segoe UI',Tahoma,Arial;
+    font-weight: 100;
+    color: #262626;
+    font-size: 22px;
+    line-height: 10px;
+    margin-bottom: 12px;
+    margin-top: 8px;
+}
+
+fieldset {
+    border: 0;
+}
+
+span {
+    color: red;
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlphaSans","S60 Sans",Arial,sans-serif;
+    font-size: 14.06px;
+    font-weight: 100;
+    display: none;
+}
+</style>
+<meta></head>
+<body style="-ms-word-wrap: break-word;">
+    
+    <script src="ClientGlobalContext.js.aspx" type="text/javascript"></script>
+
+    <script src="bah_jquery1.4.1.min.js" type="text/javascript"></script>
+
+    <script src="bah_SDK.REST.js" type="text/javascript"></script>
+
+    <script src="bah_json2.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#SearchByNameButton").bind("click", function () {
+                searchByName();
+                //$("#searchResultsMessageDiv").val("");
+
+                //if (validateSearchByTraits() == true) {
+
+                //    formatExecutingSearch();
+
+                //    var dobday = $("#BirthDayTextBox").val() == "dd" ? "" : $("#BirthDayTextBox").val();
+                //    var dobyear = $("#BirthYearTextBox").val() == "yyyy" ? "" : $("#BirthYearTextBox").val();
+                //    var dobmonth = $("#BirthMonthTextBox").val() == "mm" ? "" : $("#BirthMonthTextBox").val();
+                //    var dob = "";
+                //    if (dobmonth != "" && dobday != "" && dobyear != "") {
+                //        dob = dobmonth + "/" + dobday + "/" + dobyear;
+                //    }
+
+                //    var ssn = "";
+                //    if ($("#SocialSecurityTextBox").val() != "") {
+                //        ssn = $("#SocialSecurityTextBox").val();
+                //        ssn = ssn.replace(/-/g, "");
+                //    }
+
+                //    var filterPrefix = "$select=*&$filter=";
+                //    var filter = buildQueryFilter("crme_LastName", $("#LastNameTextBox").val(), false);
+                //    filter += " and crme_IsAttended eq true";
+
+                //    if ($("#FirstNameTextBox").val() != "") {
+                //        filter += buildQueryFilter("crme_FirstName", $("#FirstNameTextBox").val(), true);
+                //    }
+
+                //    if ($("#SocialSecurityTextBox").val() != "") {
+                //        filter += buildQueryFilter("crme_SSN", ssn, true);
+                //    }
+
+                //    // adding additional search fields
+                //    if ($("#AddMiddleNameTextBox").val() != "") {
+                //        filter += buildQueryFilter("crme_MiddleName", $("#AddMiddleNameTextBox").val(), true);
+                //    }
+
+                //    if ($("#AddGenderTextBox").val() != "") {
+                //        filter += buildQueryFilter("crme_Gender", $("#AddGenderTextBox").val(), true);
+                //    }
+
+                //    if ($("#AddMMNTextBox").val() != "") {
+                //        filter += buildQueryFilter("crme_MMN", $("#AddMMNTextBox").val(), true);
+                //    }
+
+                //    // Home Address...
+                //    if ($("#AddHomeStreetTextBox").val() != "") {
+                //        // add the full address to send
+                //        var address = $("#AddHomeStreetTextBox").val() + " " + $("#AddHomeCityTextBox").val() + " " + $("#AddHomeStateTextBox").val() + " " + $("#AddHomeZipTextBox").val();
+                //        filter += buildQueryFilter("crme_FullAddress", address, true);
+                //    }
+
+                //    if ($("#AddPhoneNoTextBox").val() != "") {
+                //        filter += buildQueryFilter("crme_PrimaryPhone", $("#AddPhoneNoTextBox").val(), true);
+                //    }
+
+                //    if ($("#BirthCityTextBox").val() != "") {
+                //        filter += buildQueryFilter("crme_POBC", $("#AddBirthCityTextBox").val(), true);
+                //    }
+
+                //    if ($("#BirthStateTextBox").val() != "") {
+                //        filter += buildQueryFilter("crme_POBS", $("#AddBirthStateTextBox").val(), true);
+                //    }
+
+                //    filter += buildQueryFilter("crme_SearchType", 'SearchByFilter', true);
+                //    if (dob != "") {
+                //        filter += " and crme_DOBString eq '" + dob + "'";
+                //    }
+
+                //    filter = encodeURIComponent(filter);
+                //    filter = filterPrefix + filter;
+                //    SDK.REST.retrieveMultipleRecords("crme_person", filter, personSearchCallBack, function (error) { alert(error.message); }, personSearchComplete);
+
+                //} else {
+                //    formatValidationFailed();
+                //}
+
+            });
+
+            $("#SearchByIdentifierButton").bind("click", function () {
+                searchByIdentitier();
+                //if (validateSearchByIdentifier() == true) {
+
+                //    formatExecutingSearch();
+
+                //    var filterPrefix = "$select=*&$filter=";
+                //    var filter = "";
+                //    if ($("#EdipiTextBox").val() != "") {
+                //        filter += buildQueryFilter("crme_EDIPI", $("#EdipiTextBox").val(), false);
+                //        filter += buildQueryFilter("crme_ClassCode", 'MIL', true);
+                //    }
+
+                //    filter += buildQueryFilter("crme_SearchType", 'SearchByIdentifier', true);
+                //    filter += " and crme_IsAttended eq false";
+
+                //    filter = encodeURIComponent(filter);
+                //    filter = filterPrefix + filter;
+                //    SDK.REST.retrieveMultipleRecords("crme_person", filter, edipiSearchCallBack, function (error) { alert(error.message); }, personSearchComplete);
+
+                //} else {
+                //    formatValidationFailed();
+                //}
+            });
+
+            $('#clearIdentifierFieldsButton').bind("click", function () {
+
+                $("#EdipiTextBox").val("");
+                $("#validationFailedDiv").hide();
+                $("#notFoundDiv").hide();
+                $("#resultsFieldSetDiv").hide();
+                personSearchComplete();
+            });
+
+            $('#clearNameFieldsButton').bind("click", function () {
+                // clear Trait fields
+                $("#LastNameTextBox").val("");
+                $("#BirthMonthTextBox").val("");
+                $("#BirthDayTextBox").val("");
+                $("#BirthYearTextBox").val("");
+                $("#SocialSecurityTextBox").val("");
+                // additional search fields
+                $("#FirstNameTextBox").val("");
+                $("#AddMiddleNameTextBox").val("");
+                $("#AddGenderTextBox").val("");
+                $("#AddMaidenNameTextBox").val("");
+                $("#AddHomeStreetTextBox").val("");
+                $("#AddHomeCityTextBox").val("");
+                $("#AddHomeStateTextBox").val("");
+                $("#AddHomeZipTextBox").val("");
+                $("#AddPhoneNoTextBox").val("");
+                $("#AddBirthCityTextBox").val("");
+                $("#AddBirthStateTextBox").val("");
+                $("#AddMMNTextBox").val("");
+                $("#validationFailedDiv").hide();
+                $("#notFoundDiv").hide();
+                $("#resultsFieldSetDiv").hide();
+
+                personSearchComplete();
+            });
+
+            $('#createNewVeteranButton').bind("click", createNewVeteran);
+			
+			// Added to get parameters from CTI call
+			updateFieldsFromQueryString();
+
+        });
+        //end jQuery Document.ready
+
+        function personSearchComplete() {
+            $('div#tmpDialog').hide();
+            $("#SearchByNameButton").attr('disabled', false);
+            $("#SearchByAddButton").attr('disabled', false);
+            $("#SearchByIdentifierButton").attr('disabled', false);
+            //$("#personSearchResultsTable").find("tr:gt(0)").focus();               
+            $("#personSearchResultsTable").focus();
+        }
+
+        function buildQueryFilter(field, value, and) {
+            // remove unwanted characters                           
+            var arr1 = ["'", "\""];
+            for (a = 0; a < arr1.length ; a++) {
+                if (value.indexOf(arr1[a]))
+                    value = value.replace(arr1[a], " ");
+            }
+
+            if (and) {
+                return " and " + field + " eq '" + value + "'";
+            } else {
+                return field + " eq '" + value + "'";
+            }
+        }
+
+        // **Comment out for correct method calls below:
+        //      searchCallBack    -   used w/out addition of checking for the veteran facility/locations
+        //      searchCallBackWithStations -   used to create the additional table/grid of veteran facility/locations
+        //
+        function edipiSearchCallBack(data) {
+            //searchCallBack(data);     
+            searchCallBackWithStations(data, true);
+        }
+
+        function personSearchCallBack(data) {
+            //searchCallBack(data);     
+            searchCallBackWithStations(data, false);
+        }
+
+        function searchCallBack(returnData) {
+
+            $('div#tmpDialog').show();
+            // get the table
+            var table = $("#personSearchResultsTable");
+
+            // reset the table by removing all data rows
+            $("#personSearchResultsTable").find("thead, tr, th").remove();
+            $("#personSearchResultsTable").find("tr:gt(0)").remove();
+            $("#resultsFieldSetDiv").hide();
+
+            if (returnData != null && returnData.length > 0) {
+
+                // check for exceptions 1st
+                if (returnData[0].crme_ExceptionOccured || (returnData[0].crme_ReturnMessage != null && returnData[0].crme_ReturnMessage == "An unexpected error occured during the MVI search. Please try again or contact your system administrator if the problem persists.")) {
+                    $("#searchResultsMessageDiv").show();
+                    $("#searchResultsMessageDiv").text(returnData[0].crme_ExceptionMessage != null ? returnData[0].crme_ExceptionMessage : returnData[0].crme_ReturnMessage);
+                    $("#resultsFieldSetDiv").show();
+                    return;
+                }
+
+                var thead = document.createElement('thead');
+                var theadRow = document.createElement('tr');
+
+                for (var i = 0; i < returnData.length; i++) {
+
+                    var fullName = formatName(returnData[i]);
+
+                    //CRMe can return result, even if just ReturnMessage that there were no results...
+                    //If blank\no name, we should break
+                    if (fullName.trim() == "") {
+                        $("#searchResultsMessageDiv").show();
+                        $("#searchResultsMessageDiv").text((returnData != null && returnData.length > 0 && returnData[0].crme_ReturnMessage != null) ? returnData[0].crme_ReturnMessage : "Your search in MVI did not find any records matching the search criteria.");
+                        $("#notFoundDiv").show();
+                        break;
+                    }
+                    var dateOfBirth = returnData[i].crme_DOBString == null ? "" : returnData[i].crme_DOBString;
+                    var address = formatAddress(returnData[i]);
+                    var phoneNumber = returnData[i].crme_PrimaryPhone == null ? "" : returnData[i].crme_PrimaryPhone;
+                    var icn = returnData[i].crme_ICN == null ? "" : returnData[i].crme_ICN;
+                    var patientMviIdentifier = returnData[i].crme_PatientMviIdentifier == null ? "" : returnData[i].crme_PatientMviIdentifier;
+                    var recordSource = returnData[i].crme_RecordSource == null ? "" : returnData[i].crme_RecordSource;
+                    var edipi = returnData[i].crme_EDIPI == null ? "" : returnData[i].crme_EDIPI;
+                    var ssn = returnData[i].crme_SSN == null ? "" : returnData[i].crme_SSN;
+                    var firstName = returnData[i].crme_FirstName == null ? "" : returnData[i].crme_FirstName;
+                    var lastName = returnData[i].crme_LastName == null ? "" : returnData[i].crme_LastName;
+                    var alias = returnData[i].crme_Alias == null ? "" : returnData[i].crme_Alias;
+                    var gender = returnData[i].crme_Gender == null ? "" : returnData[i].crme_Gender;
+                    var deceasedDate = returnData[i].crme_DeceasedDate == null ? "" : returnData[i].crme_DeceasedDate;
+                    var identityTheft = returnData[i].crme_IdentityTheft == null ? "" : returnData[i].crme_IdentityTheft;
+                    var vetSensLevel = returnData[i].crme_VeteranSensitivityLevel == null ? "" : returnData[i].crme_VeteranSensitivityLevel;
+                    var branchOfService = returnData[i].crme_BranchOfService == null ? "" : returnData[i].crme_BranchOfService;
+
+                    // *ToDo: Remove. Demo purpose only
+                    var participantId = returnData[i].crme_PatientMviIdentifier == null ? "" : returnData[i].crme_PatientMviIdentifier;
+
+                    // *Add any new/different variables you want to display in the Results grid here.
+                    //            You will also need to add those additional crme_ values to the table, and all
+                    //  relevant place below.
+
+                    if (i == 0) {
+                        var th1 = document.createElement('th');
+                        //     var thAlias = document.createElement('th');
+                        var th2 = document.createElement('th');
+                        //     var th3 = document.createElement('th');
+                        var th4 = document.createElement('th');
+                        var th5 = document.createElement('th');
+                        var th6 = document.createElement('th');
+                        var th7 = document.createElement('th');
+                        var th8 = document.createElement('th');
+                        //    var th10 = document.createElement('th');
+                        var th11 = document.createElement('th');
+                        var th12 = document.createElement('th');
+                        var th13 = document.createElement('th');
+                        //    var th14 = document.createElement('th');                            
+
+                        th1.appendChild(document.createTextNode('Name'));
+                        //     thAlias.appendChild(document.createTextNode('Alias'));
+                        th2.appendChild(document.createTextNode('Date of Birth'));
+                        //     th3.appendChild(document.createTextNode('Deceased Date'));
+                        th4.appendChild(document.createTextNode('Sex'));
+                        th5.appendChild(document.createTextNode('Address'));
+                        th6.appendChild(document.createTextNode('Phone No'));
+                        th7.appendChild(document.createTextNode('SSN'));
+                        th8.appendChild(document.createTextNode('EDIPI'));
+                        //      th10.appendChild(document.createTextNode('Identity Theft'));
+                        th11.appendChild(document.createTextNode('Sens. Level'));
+                        th12.appendChild(document.createTextNode('Source'));
+                        th13.appendChild(document.createTextNode('Br. of Svc'));
+                        //       th14.appendChild(document.createTextNode('Part. ID'));                                
+
+                        theadRow.appendChild(th1);
+                        //if (alias != "") {
+                        //    theadRow.appendChild(thAlias);
+                        //}
+                        theadRow.appendChild(th2);
+                        //if (deceasedDate != "") {
+                        //    theadRow.appendChild(th3);
+                        //}
+                        theadRow.appendChild(th4);
+                        theadRow.appendChild(th5);
+                        theadRow.appendChild(th6);
+                        theadRow.appendChild(th7);
+                        theadRow.appendChild(th8);
+                        //if (identityTheft != "") {
+                        //    theadRow.appendChild(th10);
+                        //}
+                        theadRow.appendChild(th11);
+                        theadRow.appendChild(th12);
+                        theadRow.appendChild(th13);
+                        //    theadRow.appendChild(th14);                  
+                        thead.appendChild(theadRow);
+                    }
+
+                    // Table rows
+                    var row = document.createElement('tr');
+                    var col1 = document.createElement('td');
+                    //      var colAlias = document.createElement('td');
+                    var col2 = document.createElement('td');
+                    //      var col3 = document.createElement('td');
+                    var col4 = document.createElement('td');
+                    var col5 = document.createElement('td');
+                    var col6 = document.createElement('td');
+                    var col7 = document.createElement('td');
+                    var col8 = document.createElement('td');
+                    //      var col10 = document.createElement('td');
+                    var col11 = document.createElement('td');
+                    var col12 = document.createElement('td');
+                    var col13 = document.createElement('td');
+                    //      var col14 = document.createElement('td');                                                          
+                    col1.appendChild(document.createTextNode(fullName));
+                    //      colAlias.appendChild(document.createTextNode(alias));
+                    col2.appendChild(document.createTextNode(dateOfBirth));
+                    //      col3.appendChild(document.createTextNode(deceasedDate));
+                    col4.appendChild(document.createTextNode(gender));
+                    col5.appendChild(document.createTextNode(address));
+                    col6.appendChild(document.createTextNode(phoneNumber));
+                    col7.appendChild(document.createTextNode(ssn));
+                    col8.appendChild(document.createTextNode(edipi));
+                    //       col10.appendChild(document.createTextNode(identityTheft));
+                    col11.appendChild(document.createTextNode(vetSensLevel));
+                    col12.appendChild(document.createTextNode(recordSource));
+                    col13.appendChild(document.createTextNode(branchOfService));
+                    //       col14.appendChild(document.createTextNode(participantId));                 // *ToDo: Remove. Demo purpose only
+                    row.appendChild(col1);
+
+                    //if (alias != "") {
+                    //    row.appendChild(colAlias);
+                    //}
+                    row.appendChild(col2);
+                    //if (deceasedDate != "") {
+                    //    row.appendChild(col3);
+                    //}
+                    row.appendChild(col4);
+                    row.appendChild(col5);
+                    row.appendChild(col6);
+                    row.appendChild(col7);
+                    row.appendChild(col8);
+                    //if (identityTheft != "") {
+                    //    row.appendChild(col10);
+                    //}
+                    row.appendChild(col11);
+                    row.appendChild(col12);
+                    row.appendChild(col13);
+                    //      row.appendChild(col14);                                                                                              
+                    row.setAttribute('fullName', fullName);
+                    row.setAttribute('dateofbirth', dateOfBirth);
+                    row.setAttribute('fulladdress', address);
+                    row.setAttribute('ssn', ssn);
+                    row.setAttribute('edipi', edipi);
+                    row.setAttribute('recordSource', recordSource);
+                    row.setAttribute('firstName', firstName);
+                    row.setAttribute('lastName', lastName);
+                    row.setAttribute('patientMviIdentifier', patientMviIdentifier);
+                    row.setAttribute('icn', icn);
+                    row.setAttribute('vetSensLevel', vetSensLevel);
+                    row.setAttribute('participantId', participantId);
+                    row.setAttribute('gender', gender);
+
+                    row.className = (i % 2 == 0) ? "even" : "odd";
+
+                    row.ondblclick = function () { openSelectedPerson(this); };
+                    row.onkeydown = function (e) {
+                        if (e.keyCode === 13 || e.keyCode === 32) {
+                            openSelectedPerson(this);
+                        }
+                    };
+                    row.tabIndex = 100 + i;
+                    table.append(thead);
+                    table.append(row);
+
+                    $("#resultsFieldSetDiv").show();
+                    if (i == 1)
+                        row.focus = true;
+                }
+            }
+            else {
+                $("#notFoundDiv").show();
+            }
+
+            $("#searchResultsMessageDiv").show();
+            $("#searchResultsMessageDiv").text((returnData != null && returnData.length > 0 && returnData[0].crme_ReturnMessage != null) ? returnData[0].crme_ReturnMessage : "Your search in MVI did not find any records matching the search criteria.");
+            //document.getElementById("searchResultsMessageDiv").scrollIntoView();
+        }
+
+        // use this when you need the ability to show the additional Station/Location grid
+        function searchCallBackWithStations(returnData, isEdipi) {
+
+            $('div#tmpDialog').show();
+            // get the table
+            var table = $("#personSearchResultsTable");
+
+            // reset the table by removing all data rows
+            $("#personSearchResultsTable").find("thead, tr, th").remove();
+            $("#personSearchResultsTable").find("tr:gt(0)").remove();
+            $("#resultsFieldSetDiv").hide();
+
+            //     clearResults();
+            var veteranData = [];
+            var stationData = [];
+            if (returnData != null && returnData.length == 1 && returnData[0] != null && returnData[0].crme_ReturnMessage != null && returnData[0].crme_LastName == null && returnData[0].crme_PatientMviIdentifier == null) {
+                veteranData = returnData;
+            }
+            //    else {
+            if (isEdipi) {
+                for (var i = 0; i < returnData.length; i++) {
+                    if (returnData[i].crme_LastName && returnData[i].crme_PatientMviIdentifier) {
+                        veteranData.push(returnData[i]);
+                    } else {
+                        stationData.push(returnData[i]);
+                    }
+                }
+            } else {
+                veteranData = returnData;
+            }
+
+            //var displayMsg = "Your search in MVI did not find any records matching the search criteria.";
+            //if (returnData != null && returnData[0].crme_ReturnMessage != "Your search in MVI did not find any records matching the search criteria.") {
+
+            //}
+
+
+
+            if (veteranData != null && veteranData.length > 0 && returnData != null && returnData[0].crme_ReturnMessage != "Your search in MVI did not find any records matching the search criteria.") {
+
+                // check for exceptions 1st  
+                if (returnData[0].crme_ExceptionOccured || (returnData[0].crme_ReturnMessage != null && returnData[0].crme_ReturnMessage == "An unexpected error occured during the MVI search. Please try again or contact your system administrator if the problem persists.")) {
+                    $("#searchResultsMessageDiv").show();
+                    $("#searchResultsMessageDiv").text(returnData[0].crme_ExceptionMessage != null ? returnData[0].crme_ExceptionMessage : returnData[0].crme_ReturnMessage);
+                    $("#resultsFieldSetDiv").show();
+                    return;
+                }
+
+                var thead = document.createElement('thead');
+                var theadRow = document.createElement('tr');
+
+                for (var i = 0; i < veteranData.length; i++) {
+
+                    var fullName = formatName(veteranData[i]);
+
+                    if (fullName === "") {
+                        $("#searchResultsMessageDiv").show();
+
+                        //  var displayMsg = "Your search in MVI did not find any records matching the search criteria.";
+                        //     if (returnData[0].crme_ReturnMessage != null && returnData[0].crme_ReturnMessage != "Unknown Key Identifier| Unknown Key Identifier") {
+                        //        displayMsg = returnData[0].crme_ReturnMessage;
+                        //      } 
+                        //     else
+                        //       displayMsg = "Your search in MVI did not find any records matching the search criteria.";
+
+                        $("#searchResultsMessageDiv").text(returnData[0].crme_ExceptionMessage);
+                        $("#notFoundDiv").show();
+                        break;
+                    }
+
+                    var contactId = veteranData[i].crme_personId == null ? "" : veteranData[i].crme_personId;
+                    var dateOfBirth = veteranData[i].crme_DOBString == null ? "" : veteranData[i].crme_DOBString;
+                    var address = formatAddress(veteranData[i]);
+                    var patientMviIdentifier = veteranData[i].crme_PatientMviIdentifier == null ? "" : veteranData[i].crme_PatientMviIdentifier;
+                    var recordSource = veteranData[i].crme_RecordSource == null ? "" : veteranData[i].crme_RecordSource;
+                    var edipi = veteranData[i].crme_EDIPI == null ? "" : veteranData[i].crme_EDIPI;
+                    var ssn = veteranData[i].crme_SSN == null ? "" : veteranData[i].crme_SSN;
+                    var firstName = veteranData[i].crme_FirstName == null ? "" : veteranData[i].crme_FirstName;
+                    var middleName = veteranData[i].crme_MiddleName == null ? "" : veteranData[i].crme_MiddleName;
+                    var lastName = veteranData[i].crme_LastName == null ? "" : veteranData[i].crme_LastName;
+                    var alias = veteranData[i].crme_Alias == null ? "" : veteranData[i].crme_Alias;
+                    var gender = veteranData[i].crme_Gender == null ? "" : veteranData[i].crme_Gender;
+                    var deceasedDate = veteranData[i].crme_DeceasedDate == null ? "" : veteranData[i].crme_DeceasedDate;
+                    var identityTheft = veteranData[i].crme_IdentityTheft == null ? "" : veteranData[i].crme_IdentityTheft;
+                    var participantId = veteranData[i].crme_ParticipantID == null ? "" : veteranData[i].crme_ParticipantID;
+                    var phoneNumber = veteranData[i].crme_PrimaryPhone == null ? "" : veteranData[i].crme_PrimaryPhone;
+                    var retrieveFilter = veteranData[i].crme_url == null ? "" : veteranData[i].crme_url;
+                    var vetSensLevel = returnData[i].crme_VeteranSensitivityLevel == null ? "" : returnData[i].crme_VeteranSensitivityLevel;
+                    var branchOfService = returnData[i].crme_BranchOfService == null ? "" : returnData[i].crme_BranchOfService;
+                    var icn = returnData[i].crme_ICN == null ? "" : returnData[i].crme_ICN;
+
+
+                    if (i === 0) {
+                        var th0 = document.createElement('th'); //commenting out location details for now - lpa - 2016-01-13
+                        var th1 = document.createElement('th');
+                        //     var thAlias = document.createElement('th');
+                        var th2 = document.createElement('th');
+                        var th3 = document.createElement('th');
+                        var th4 = document.createElement('th');
+                        var th5 = document.createElement('th');
+                        var th6 = document.createElement('th');
+                        var th7 = document.createElement('th');
+                        var th8 = document.createElement('th');
+                        //    var th10 = document.createElement('th');
+                        var th11 = document.createElement('th');
+                        var th12 = document.createElement('th');
+                        var th13 = document.createElement('th');
+                        //    var th14 = document.createElement('th');                            // *ToDo: Remove. Demo purpose only
+
+                        th1.appendChild(document.createTextNode('Name'));
+                        //     thAlias.appendChild(document.createTextNode('Alias'));
+                        th2.appendChild(document.createTextNode('Date of Birth'));
+                        th3.appendChild(document.createTextNode('Deceased Date'));
+                        th4.appendChild(document.createTextNode('Sex'));
+                        th5.appendChild(document.createTextNode('Address'));
+                        th6.appendChild(document.createTextNode('Phone No'));
+                        th7.appendChild(document.createTextNode('SSN'));
+                        th8.appendChild(document.createTextNode('EDIPI'));
+                        //      th10.appendChild(document.createTextNode('Identity Theft'));
+                        th11.appendChild(document.createTextNode('Sens. Level'));
+                        th12.appendChild(document.createTextNode('Source'));
+                        th13.appendChild(document.createTextNode('Br. of Svc'));
+
+                        theadRow.appendChild(th0); //commenting out location details for now - lpa - 2016-01-13
+                        theadRow.appendChild(th1);
+                        theadRow.appendChild(th2);
+                        //if (deceasedDate != "") {
+                            theadRow.appendChild(th3);
+                        //}
+                        theadRow.appendChild(th4);
+                        theadRow.appendChild(th5);
+                        theadRow.appendChild(th6);
+                        theadRow.appendChild(th7);
+                        theadRow.appendChild(th8);
+                        //if (identityTheft != "") {
+                        //    theadRow.appendChild(th10);
+                        //}
+                        theadRow.appendChild(th11);
+                        theadRow.appendChild(th12);
+                        theadRow.appendChild(th13);
+                        thead.appendChild(theadRow);
+                    }
+
+                    // Table rows
+                    var row = document.createElement('tr');
+                    var col0 = document.createElement('td'); //commenting out location details for now - lpa - 2016-01-13
+                    var col1 = document.createElement('td');
+                    var col2 = document.createElement('td');
+                    var col3 = document.createElement('td');
+                    var col4 = document.createElement('td');
+                    var col5 = document.createElement('td');
+                    var col6 = document.createElement('td');
+                    var col7 = document.createElement('td');
+                    var col8 = document.createElement('td');
+                    //      var col10 = document.createElement('td');
+                    var col11 = document.createElement('td');
+                    var col12 = document.createElement('td');
+                    var col13 = document.createElement('td');
+
+                    // comment out start - to disable Station subgrid functionality (also comment out comments from lpa)
+                    var aElem = document.createElement('a');
+                    aElem.className = "GetStationDataButton";
+                    aElem.href = "#";
+                    var aElemNode = document.createTextNode("+");
+                    aElem.appendChild(aElemNode);
+                    aElem.setAttribute('data-retrieveFilter', retrieveFilter);
+                    aElem.setAttribute('data-patientId', patientMviIdentifier);
+                    // need to set the attributes here so we 
+                    aElem.setAttribute('fullName', fullName);
+                    aElem.setAttribute('dateofbirth', dateOfBirth);
+                    aElem.setAttribute('fulladdress', address);
+                    aElem.setAttribute('ssn', ssn);
+                    aElem.setAttribute('edipi', edipi);
+                    aElem.setAttribute('recordSource', recordSource);
+                    aElem.setAttribute('firstName', firstName);
+                    aElem.setAttribute('middleName', middleName);
+                    aElem.setAttribute('lastName', lastName);
+                    aElem.setAttribute('patientMviIdentifier', patientMviIdentifier);
+                    aElem.setAttribute('icn', icn);
+                    aElem.setAttribute('vetSensLevel', vetSensLevel);
+                    aElem.setAttribute('participantId', participantId);
+                    aElem.setAttribute('gender', gender);
+
+                    $(aElem).bind("click", function () {
+                        //if (!isEdipi) {
+                        this.setAttribute("id", "ClickedButton");
+                        executeRetrieve(this);
+                        //} else {
+                        //    //Edipi search, table will already exist, just needs to be shown
+                        //    expandCollapse(this);
+                        //}
+                    });
+
+                    col0.appendChild(aElem); //commenting out location details for now - lpa -2016-01-13
+                    col1.appendChild(document.createTextNode(fullName));
+                    //      colAlias.appendChild(document.createTextNode(alias));
+                    col2.appendChild(document.createTextNode(dateOfBirth));
+                    col3.appendChild(document.createTextNode(deceasedDate));
+                    col4.appendChild(document.createTextNode(gender));
+                    col5.appendChild(document.createTextNode(address));
+                    col6.appendChild(document.createTextNode(phoneNumber));
+                    col7.appendChild(document.createTextNode(ssn));
+                    col8.appendChild(document.createTextNode(edipi));
+                    //       col10.appendChild(document.createTextNode(identityTheft));
+                    col11.appendChild(document.createTextNode(vetSensLevel));
+                    col12.appendChild(document.createTextNode(recordSource));
+                    col13.appendChild(document.createTextNode(branchOfService));
+
+                    row.appendChild(col0); //commenting out location details for now - lpa - 2016-01-13
+                    row.appendChild(col1);
+                    row.appendChild(col2);
+                    row.appendChild(col3);
+                    row.appendChild(col4);
+                    row.appendChild(col5);
+                    row.appendChild(col6);
+                    row.appendChild(col7);
+                    row.appendChild(col8);
+                    //if (identityTheft != "") {
+                    //    row.appendChild(col10);
+                    //}
+                    row.appendChild(col11);
+                    row.appendChild(col12);
+                    row.appendChild(col13);
+
+                    row.setAttribute('fullName', fullName);
+                    row.setAttribute('dateofbirth', dateOfBirth);
+                    row.setAttribute('fulladdress', address);
+                    row.setAttribute('ssn', ssn);
+                    row.setAttribute('edipi', edipi);
+                    row.setAttribute('recordSource', recordSource);
+                    row.setAttribute('firstName', firstName);
+                    row.setAttribute('middleName', middleName);
+                    row.setAttribute('lastName', lastName);
+                    row.setAttribute('patientMviIdentifier', patientMviIdentifier);
+                    //    row.setAttribute('icn', icn);
+                    row.setAttribute('vetSensLevel', vetSensLevel);
+                    row.setAttribute('participantId', participantId);
+                    row.setAttribute('gender', gender);
+
+                    row.className = (i % 2 === 0) ? "even" : "odd";
+                    row.id = "resultstable-row-" + i;
+
+                    ////added by lucas to handle row doubleclick
+                    //row.ondblclick = function () { openSelectedPerson(this); };
+                    //row.onkeydown = function (e) {
+                    //    if (e.keyCode === 13 || e.keyCode === 32) {
+                    //        openSelectedPerson(this);
+                    //    }
+                    //};
+
+                    //added by lucas to query station data on row doubleclick or enter key press
+                    row.ondblclick = function () { aElem.setAttribute("id", "ClickedButton"); executeRetrieve(aElem); };
+                    row.onkeydown = function (e) {
+                        if (e.keyCode === 13 || e.keyCode === 32) {
+                            aElem.setAttribute("id", "ClickedButton");
+                            executeRetrieve(aElem);
+                        }
+                    };
+
+                    var stationRow = document.createElement('tr');
+                    stationRow.className = "StationRow";
+
+                    row.setAttribute('fullName', fullName);
+                    row.setAttribute('dateofbirth', dateOfBirth);
+                    row.setAttribute('fulladdress', address);
+                    row.setAttribute('ssn', ssn);
+                    row.setAttribute('edipi', edipi);
+                    row.setAttribute('recordSource', recordSource);
+                    row.setAttribute('firstName', firstName);
+                    row.setAttribute('middleName', middleName);
+                    row.setAttribute('lastName', lastName);
+                    row.setAttribute('patientMviIdentifier', patientMviIdentifier);
+                    row.setAttribute('icn', icn);
+                    //row.setAttribute('vetSensLevel', vetSensLevel);
+                    row.setAttribute('participantId', participantId);
+                    row.setAttribute('gender', gender);
+
+                    table.append(row);
+                    table.append(stationRow);
+                    table.append(thead);
+
+                    //if (isEdipi) {
+                    //    //create table holding station records by associating veteran ids between veteran and entire stationData table
+                    //    var veteranStations = getVeteranStation(veteranData[i].crme_personId, stationData);
+
+                    //    //update + button binding to display subgrid instead of conducting rest call
+                    //    createVeteranStationSubgrid(veteranStations, stationRow, isEdipi); //data, row, button
+                    //}
+                }
+
+                $("#StationTable").hide();
+
+                var tabIndex = 30;
+                $("#personSearchResultsTable tr").each(function () {
+                    $(this).children("td").each(function (index) {
+                        if (index == 0) {
+                            this.firstChild.tabIndex = tabIndex;
+                        } else {
+                            this.tabIndex = tabIndex;
+                        }
+                        tabIndex++;
+                    });
+                });
+
+                $("#resultsFieldSetDiv").show();
+                table.show();
+                $("#resultstable-row-0 td:eq(1)").focus();
+            }
+            else {
+                $("#notFoundDiv").show();
+            }
+
+
+            $("#resultsFieldSetDiv").show();
+            $("#searchResultsMessageDiv").show();
+            //  $("#searchResultsMessageDiv").text(displayMsg);
+            $("#searchResultsMessageDiv").text((returnData != null && returnData.length > 0 && returnData[0].crme_ReturnMessage != null && returnData[0].crme_ReturnMessage != "Unknown Key Identifier| Unknown Key Identifier") ? returnData[0].crme_ReturnMessage : "Your search in MVI did not find any records matching the search criteria.");
+
+        }
+
+        // called from searchCallBack methods above
+        function openSelectedPerson(obj) {
+
+            $('div#tmpDialog').show();
+            var firstName = obj.getAttribute('firstName');
+            var lastName = obj.getAttribute('lastName');
+            var patientMviIdentifier = obj.getAttribute('patientMviIdentifier');
+            //var ssn = obj.getAttribute('ssn');
+            var alias = obj.getAttribute('alias');
+            var USDEventLink = obj.getAttribute('link');
+            //var edipi = obj.getAttribute('edipi');
+            //var dob = obj.getAttribute('dateofbirth');
+            //var gender = obj.getAttribute('gender');
+            //var middleName = obj.getAttribute('middleName');
+            var edipi = _edipi;
+            var dob = _dob;
+            var gender = _gender
+            var middleName = _middleName
+            var ssn = _ssn;
+
+            var filterPrefix = "$select=*&$filter=";
+            //  var filter = buildQueryFilter("tri_VeteranID", edipi, false);
+            var filter = buildQueryFilter("FirstName", firstName, false);
+            filter += buildQueryFilter("LastName", lastName, true);
+            filter += buildQueryFilter("tri_searchtype_text", "CREATEUPDATEMVI", true);
+            //filter += buildQueryFilter("bah_MVIpatientidentifier", patientMviIdentifier, true); removed by kknab on 9/27 - cannot pass this field to a retrievemultiple of Contact, b/c the BAH.Core.Plugin will update that field in the DB, but we can no longer store bah_mviidentifier in CRM
+            if (ssn != "") filter += buildQueryFilter("GovernmentId", ssn, true);
+            if (middleName != "") filter += buildQueryFilter("MiddleName", middleName, true);
+            if (gender != "") filter += buildQueryFilter("ftp_Gender", gender, true);
+            //if (gender == "M"){
+            //	filter += " and GenderCode/Value eq 1";
+            //}
+            //else if (gender == "F"){
+            //	filter += " and GenderCode/Value eq 2";
+            //}
+            if (edipi != "") filter += buildQueryFilter("ftp_EDIPI", edipi, true);
+            if (dob != "") filter += buildQueryFilter("ftp_DateofBirth", dob, true);
+            filter = encodeURIComponent(filter);
+            filter = filterPrefix + filter;
+			
+			//added 9/27/16 by kknab, for more-accurate contact search in the absence of bah_MVIpatientidentifier
+			filter += " and StateCode/Value eq 0";
+			filter += "&$orderby=ModifiedOn desc&$top=1";
+			
+			//this window.open fires the USD event that is a property of each location in the Veteran's location list
+			//it saves the location to context
+            if (!!USDEventLink && USDEventLink.trim() != "") window.open(USDEventLink);
+			
+			
+			//SDK.REST.retrieveMultipleRecords("Contact", filter, selectedPersonCallBack, function (error) { alert(error.message); }, personSearchComplete);
+			var retrievedContacts = [];
+            SDK.REST.retrieveMultipleRecords(
+				"Contact",
+				filter,
+				function (retrievedRecords){
+					if(!!retrievedRecords) retrievedContacts = retrievedContacts.concat(retrievedRecords);
+				},
+				function (error) { alert(error.message); },
+				function (){
+					if(retrievedContacts.length > 0){
+						var thisContact = retrievedContacts[0];
+						$("#SearchByIdentifierButton").enable = true;
+						$('div#tmpDialog').hide(100);
+					
+						var recordUrl = Xrm.Page.context.getClientUrl();
+						recordUrl += "/main.aspx?etc=2&pagetype=entityrecord&id=%7b" + thisContact.ContactId + "%7d";
+						
+						//add ICN to query string, so we don't have to fetch it again from the form script
+						var ICN = !!patientMviIdentifier ? patientMviIdentifier.split("^")[0] : "MISSING";
+						recordUrl += "&extraqs=" + encodeURIComponent("ICN_0=" + ICN);
+
+						//this window.open() actually opens the CRM contact record (and USD routes it)
+						window.open(recordUrl);
+						
+						personSearchComplete();
+					}
+					else {
+						alert("No data returned by contact search in crm");
+					}
+				}
+			);
+
+            
+
+            return false;
+        }
+
+        var userSL;
+        function selectedPersonCallBack(data) {
+            // currently called after RetrieveMultiple Contact
+            $("#SearchByIdentifierButton").enable = true;
+            $('div#tmpDialog').hide(100);
+            if (data != null && data.length > 0) {
+                var url = Xrm.Page.context.getClientUrl();
+                url += "/main.aspx?etc=2&pagetype=entityrecord&id=%7b" + data[0].ContactId + "%7d";
+
+                //this window.open() actually opens the CRM contact record
+                window.open(url);
+            }
+            else {
+                alert("no data returned by contact search in crm");
+            }
+        }
+
+        // ------------Begin Veteran Station Logic----------------------------
+        function getVeteranStation(personId, stationData) {
+            var relatedStations = [];
+            for (var i = 0; i < stationData.length; i++) {
+                if (stationData[i].ftp_ParentPersonId.Id == personId) {
+                    relatedStations.push(stationData[i]);
+                }
+            }
+            return relatedStations;
+        }
+
+        var _dob = "1/1/1900";
+        var _edipi = "";
+        var _gender = "";
+        var _middleName = "";
+        var _ssn = "";
+
+        function executeRetrieve(element) {
+            if (element.innerText == "-") {
+                personRetrieveCallback(null);
+                return;
+            }
+
+            // testing placement for showing waiting screen when clicking +- for stations
+            $('div#tmpDialog').show();
+
+            _dob = "1/1/1900";
+            _edipi = "";
+            _gender = "";
+            _middleName = "";
+            _ssn = "";
+
+            // called when user click on the + or - to expand station subgrid
+            //var filter = element.getAttribute("data-retrieveFilter");  //"&select=*&filter=crme_PatientMviIdentifier eq '' and crme_SearchType eq 'SelectedPersonSearch'"
+            var patientMviIdentifier = element.getAttribute('patientMviIdentifier');
+            
+			var filterPrefix = "$select=*&$filter=";
+			var filter = "crme_PatientMviIdentifier eq '" + patientMviIdentifier + "' and crme_SearchType eq 'SelectedPersonSearch'";
+			// var filter = "&select=*&$filter=crme_PatientMviIdentifier eq '" + patientMviIdentifier + "' and crme_SearchType eq 'SelectedPersonSearch'";
+            // update filter/url from row attributes
+            var firstName = element.getAttribute('firstName');
+            var middleName = element.getAttribute('middleName');
+            var lastName = element.getAttribute('lastName');
+            var ssn = element.getAttribute('ssn');
+            var participantId = element.getAttribute('participantId');
+            var icn = element.getAttribute('icn');
+            var edipi = element.getAttribute('edipi');
+            var recordSource = element.getAttribute('recordSource');
+            var vetSensLevel = element.getAttribute('vetSensLevel');
+            var dob = element.getAttribute('dateofbirth');
+            var fullAddress = element.getAttribute('fulladdress');
+
+            _gender = element.getAttribute('gender');
+            _dob = element.getAttribute('dateofbirth');
+            _middleName = element.getAttribute('middleName');
+            _edipi = element.getAttribute('edipi');
+            _ssn = element.getAttribute('ssn');
+
+            if (firstName != null && firstName != "") filter += buildQueryFilter("crme_FirstName", firstName, true);
+            if (middleName != null && middleName != "") filter += buildQueryFilter("crme_MiddleName", middleName, true);
+            if (lastName != null && lastName != "") filter += buildQueryFilter("crme_LastName", lastName, true);
+            if (ssn != null && ssn != "") filter += buildQueryFilter("crme_SSN", ssn, true);
+            if (recordSource != null && recordSource != "") filter += buildQueryFilter("crme_RecordSource", recordSource, true);
+            if (icn != null && icn != "") filter += buildQueryFilter("crme_ICN", icn, true);
+            if ((icn == null || icn == "") && participantId != null && participantId != "") filter += buildQueryFilter("crme_ICN", participantId, true);
+            if (edipi != null && edipi != "") filter += buildQueryFilter("crme_EDIPI", edipi, true);
+            if (vetSensLevel != null && vetSensLevel != "") filter += buildQueryFilter("crme_VeteranSensitivityLevel", vetSensLevel, true);
+            if (dob != null && dob != "") filter += buildQueryFilter("crme_MVIDOBString", dob, true);
+          //  if (fullAddress != null && fullAddress != "") filter += buildQueryFilter("crme_MVIFullAddress", fullAddress, true);
+
+            filter = encodeURIComponent(filter);
+            filter = filterPrefix + filter;
+            SDK.REST.retrieveMultipleRecords("crme_person", filter, personRetrieveCallback, function (error) { alert(error.message); }, function () { });
+        }
+
+        function personRetrieveCallback(data) {
+            var clickedButton = $("#ClickedButton");
+            var nextRow = $(clickedButton).closest('tr').next('tr');
+            var className = nextRow.attr('class');
+
+            if (nextRow.has(".SubTableDiv").length === 0) {
+                //data not yet retrieved
+                createVeteranStationSubgrid(data, nextRow, false);
+            }
+
+            expandCollapse(clickedButton);
+            clickedButton.removeAttr("id");
+
+            // testing placement to hide waiting modal
+            $('div#tmpDialog').hide();
+        }
+
+        function expandCollapse(button) {
+            var nextRow = $(button).closest('tr').next('tr');
+            if ($(nextRow).attr('class') === undefined || $(nextRow).attr('class').indexOf("nav-expanded") === -1) {
+                nextRow.addClass("nav-expanded");
+                $(button).text("-");
+                $("#StationTable").show();
+            } else {
+                nextRow.removeClass("nav-expanded");
+                $(button).text("+");
+                $("#StationTable").hide();
+            }
+        }
+
+        function createVeteranStationSubgrid(data, row, isEdipi) {
+
+            var subTableCol = document.createElement('td');
+            var subTableDiv = document.createElement('div');
+            subTableDiv.className = "SubTableDiv";
+
+            var previousTabIndex = $(row).prev().children().last()[0].tabIndex;
+
+            var stationTable = createVeteranStationTable(data, previousTabIndex);
+
+            subTableCol.appendChild(stationTable);
+            subTableDiv.appendChild(subTableCol);
+
+            if (isEdipi) {
+                row.appendChild(subTableDiv);
+            } else { row.append(subTableDiv); }
+
+        }
+
+        function createVeteranStationTable(data, previousTabIndex) {
+            var table = document.createElement('table');
+            table.id = "StationTable";
+            // table.width = "200px";
+            table.className = "StationTable";
+
+            var thead = document.createElement("thead");
+            var tbody = document.createElement('tbody');
+
+            for (var i = 0; i < data.length; i++) {
+                var firstName = data[i].crme_FirstName == null ? "" : data[i].crme_FirstName;
+                var lastName = data[i].crme_LastName == null ? "" : data[i].crme_LastName;
+                var middleName = data[i].crme_MiddleName == null ? "" : data[i].crme_MiddleName;
+                var dateOfBirth = data[i].crme_DOBString == null ? "" : data[i].crme_DOBString;
+                var patientMviIdentifier = data[i].crme_PatientMviIdentifier == null ? "" : data[i].crme_PatientMviIdentifier;
+                var edipi = data[i].crme_EDIPI == null ? "" : data[i].crme_EDIPI;
+                var ssn = data[i].crme_SSN == null ? "" : data[i].crme_SSN;
+                var middleName = data[i].crme_MiddleName == null ? "" : data[i].crme_MiddleName;
+                var gender = data[i].crme_Gender == null ? "" : data[i].crme_Gender;
+                var participantId = data[i].crme_ParticipantID == null ? "" : data[i].crme_ParticipantID;
+                var theadRow = document.createElement("tr");
+                var stationName = data[i].crme_SiteName;
+                var link = data[i].crme_url;
+
+                if (i === 0) {
+                    var th0 = document.createElement('th');
+                    th0.appendChild(document.createTextNode('Location'));
+                    theadRow.appendChild(th0);
+                    thead.appendChild(theadRow);
+                    table.appendChild(thead);
+                }
+
+                // Table rows
+                var row = document.createElement('tr');
+                var col0 = document.createElement('td');
+
+                var stationElement = document.createElement('a');
+                stationElement.className = "StationName";
+                //    stationElement.href = link;
+                stationElement.target = "_blank";
+                stationElement.tabIndex = previousTabIndex;
+                var stationElementNode = document.createTextNode(stationName);
+                stationElement.appendChild(stationElementNode);
+
+                col0.appendChild(stationElement);
+                row.appendChild(col0);
+                row.setAttribute('StationName', stationName);
+
+                // adding code to call (click event) the retrieve multiple contact plugin (openSelectedPerson(obj)) and load the params up it needs
+                row.setAttribute('link', data[i].crme_url);
+                row.setAttribute('patientMviIdentifier', data[i].crme_PatientMviIdentifier);
+                row.setAttribute('ssn', ssn);
+                row.setAttribute('edipi', edipi);
+                row.setAttribute('firstName', firstName);
+                row.setAttribute('middleName', _middleName);
+                row.setAttribute('lastName', lastName);
+                row.setAttribute('participantId', participantId);
+                row.setAttribute('gender', _gender);
+                row.setAttribute('dateOfBirth', _dob);
+
+                // add click events
+                row.ondblclick = function () { openSelectedPerson(this); };
+                row.onkeydown = function (e) {
+                    if (e.keyCode === 13 || e.keyCode === 32) {
+                        openSelectedPerson(this);
+                    }
+                };
+
+                row.className = (i % 2 === 0) ? "even" : "odd";
+                tbody.appendChild(row);
+            }
+            table.appendChild(tbody);
+            return table;
+        }
+        // ------------End Veteran Station Logic-------------------------------
+
+        function formatDatePart(datepart) {
+            return datepart.length == 1 ? "0" + datepart : datepart;
+        }
+
+
+        // *This may need to be updated depending on expected fields 
+        //            when creating the new Veteran record
+        //       
+        function createNewVeteran() {
+            if (Xrm != null && Xrm.Page != null && Xrm.Page.context != null) {
+                var fname = $("#FirstNameTextBox").val();
+                var lname = $("#LastNameTextBox").val();
+                var ssn = $("#SocialSecurityTextBox").val();
+                var dobyear = $("#BirthYearTextBox").val();
+                var dobmonth = $("#BirthMonthTextBox").val();
+                var dobday = $("#BirthDayTextBox").val();
+                var source = "";                                                                                                             // *TODO: Add project name here
+                var url = Xrm.Page.context.getClientUrl();
+                url += "/main.aspx?etc=2&pagetype=entityrecord&extraqs=";
+                var urlExtraQs = "";
+                var parameters = {};
+                if (fname != null && fname != "") {
+                    urlExtraQs += "firstname=" + fname + "&";
+                }
+                if (lname != null && lname != "") {
+                    urlExtraQs += "lastname=" + lname + "&";
+                }
+
+                if (ssn != null && ssn != "") {
+                    urlExtraQs += "governmentid=" + ssn + "&";
+                }
+
+                if (dobday != null && isNumeric(dobday) && dobmonth != null && isNumeric(dobmonth) && dobyear != null && isNumeric(dobyear)) {
+                    urlExtraQs += "ftp_dateofbirth=" + dobmonth + "/" + dobday + "/" + dobyear;
+                }
+				
+                window.open(url + encodeURIComponent(urlExtraQs));
+                //window.open("http://event/?eventname=CreateContactButtonClicked&" + urlExtraQs);
+            }
+        }
+
+        function validateDateOfBirth(dobyear, dobmonth, dobday) {
+
+            if ((dobyear == "" || dobyear == "YYYY") && (dobmonth == "" || dobmonth == "MM") && (dobday == "" || dobday == "DD")) {
+                return true;
+            }
+
+            if (dobyear != "YYYY" || dobmonth != "MM" || dobday != "DD") {
+                if ((dobyear != "" && isNumeric(dobyear) == false) || (dobmonth != "" && isNumeric(dobmonth) == false) || (dobday != "" && isNumeric(dobday) == false)) {
+                    return false;
+                }
+            }
+
+            if (dobyear.length != 4) {
+                return false;
+            }
+
+            if (dobyear >= (new Date).getFullYear() + 1) {
+                return false;
+            }
+
+            if (dobyear < (new Date).getFullYear() - 200) {
+                return false;
+            }
+
+            if (dobmonth < 1 || dobmonth > 12) {
+                return false;
+            }
+
+            if (dobday < 1 || dobday > 31) {
+                return false;
+            }
+
+            return true;
+        }
+
+        function formatName(data) {
+
+            if (data.crme_FullName != null) {
+                return data.crme_FullName;
+            }
+
+            var firstName = data.crme_FirstName != null ? data.crme_FirstName : "";
+            var lastName = data.crme_LastName != null ? data.crme_LastName : "";
+
+            return firstName + " " + lastName;
+        }
+
+        function formatAddress(data) {
+            if (data.crme_FullAddress != null) {
+                return data.crme_FullAddress;
+            }
+
+            if (data.crme_StateProvinceId != null && data.crme_ZIPPostalCodeId != null) {
+
+                var street = data.crme_Address1 != null ? data.crme_Address1 : "";
+                var city = data.crme_City != null ? data.crme_City : "";
+                var state = data.crme_StateProvinceId.Name != null ? data.crme_StateProvinceId.Name : "";
+                var zip = data.crme_ZIPPostalCodeId.Name != null ? data.crme_ZIPPostalCodeId.Name : "";
+
+                return street + " " + city + " " + state + " " + zip;
+            }
+
+            return "";
+        }
+
+        //function formatSendingAddress() {
+        //    //if (data.crme_FullAddress != null) {
+        //    //    return data.crme_FullAddress;
+        //    //}
+
+        //    //var street = data.crme_Address1 != null ? data.crme_Address1 : "";
+        //    //var city = data.crme_City != null ? data.crme_City : "";
+        //    //var state = data.crme_StateProvinceId.Name != null ? data.crme_StateProvinceId.Name : "";
+        //    //var zip = data.crme_ZIPPostalCodeId.Name != null ? data.crme_ZIPPostalCodeId : "";
+
+        //    //return street + " " + city + " " + state + " " + zip;
+        //}
+
+        //});
+        ////end jQuery Document.ready
+
+        function searchByName() {
+            $("#searchResultsMessageDiv").val("");
+
+            if (validateSearchByTraits() == true) {
+
+                formatExecutingSearch();
+
+                var dobday = $("#BirthDayTextBox").val() == "dd" ? "" : $("#BirthDayTextBox").val();
+                var dobyear = $("#BirthYearTextBox").val() == "yyyy" ? "" : $("#BirthYearTextBox").val();
+                var dobmonth = $("#BirthMonthTextBox").val() == "mm" ? "" : $("#BirthMonthTextBox").val();
+                var dob = "";
+                if (dobmonth != "" && dobday != "" && dobyear != "") {
+                    dob = dobmonth + "/" + dobday + "/" + dobyear;
+                }
+
+                var ssn = "";
+                if ($("#SocialSecurityTextBox").val() != "") {
+                    ssn = $("#SocialSecurityTextBox").val();
+                    ssn = ssn.replace(/-/g, "");
+                }
+
+                var filterPrefix = "$select=*&$filter=";
+                var filter = buildQueryFilter("crme_LastName", $("#LastNameTextBox").val(), false);
+                filter += " and crme_IsAttended eq true";
+
+                if ($("#FirstNameTextBox").val() != "") {
+                    filter += buildQueryFilter("crme_FirstName", $("#FirstNameTextBox").val(), true);
+                }
+
+                if ($("#SocialSecurityTextBox").val() != "") {
+                    filter += buildQueryFilter("crme_SSN", ssn, true);
+                }
+
+                // adding additional search fields
+                if ($("#AddMiddleNameTextBox").val() != "") {
+                    filter += buildQueryFilter("crme_MiddleName", $("#AddMiddleNameTextBox").val(), true);
+                }
+
+                if ($("#AddGenderTextBox").val() != "") {
+                    filter += buildQueryFilter("crme_Gender", $("#AddGenderTextBox").val(), true);
+                }
+
+                if ($("#AddMMNTextBox").val() != "") {
+                    filter += buildQueryFilter("crme_MMN", $("#AddMMNTextBox").val(), true);
+                }
+
+                // Home Address...
+                if ($("#AddHomeStreetTextBox").val() != "") {
+                    // add the full address to send
+                    var address = $("#AddHomeStreetTextBox").val() + " " + $("#AddHomeCityTextBox").val() + " " + $("#AddHomeStateTextBox").val() + " " + $("#AddHomeZipTextBox").val();
+                    filter += buildQueryFilter("crme_FullAddress", address, true);
+                }
+
+                if ($("#AddPhoneNoTextBox").val() != "") {
+                    filter += buildQueryFilter("crme_PrimaryPhone", $("#AddPhoneNoTextBox").val(), true);
+                }
+
+                if ($("#BirthCityTextBox").val() != "") {
+                    filter += buildQueryFilter("crme_POBC", $("#AddBirthCityTextBox").val(), true);
+                }
+
+                if ($("#BirthStateTextBox").val() != "") {
+                    filter += buildQueryFilter("crme_POBS", $("#AddBirthStateTextBox").val(), true);
+                }
+
+                filter += buildQueryFilter("crme_SearchType", 'SearchByFilter', true);
+                if (dob != "") {
+                    filter += " and crme_DOBString eq '" + dob + "'";
+                }
+
+                filter = encodeURIComponent(filter);
+                filter = filterPrefix + filter;
+
+                SDK.REST.retrieveMultipleRecords("crme_person", filter, personSearchCallBack, function (error) { alert(error.message); }, personSearchComplete);
+
+            } else {
+                formatValidationFailed();
+            }
+        }
+
+        function searchByIdentitier() {
+            if (validateSearchByIdentifier() == true) {
+
+                formatExecutingSearch();
+
+                var filterPrefix = "$select=*&$filter=";
+                var filter = "";
+                if ($("#EdipiTextBox").val() != "") {
+                    filter += buildQueryFilter("crme_EDIPI", $("#EdipiTextBox").val(), false);
+                    filter += buildQueryFilter("crme_ClassCode", 'MIL', true);
+                }
+
+                filter += buildQueryFilter("crme_SearchType", 'SearchByIdentifier', true);
+                filter += " and crme_IsAttended eq false";
+
+                filter = encodeURIComponent(filter);
+                filter = filterPrefix + filter;
+                SDK.REST.retrieveMultipleRecords("crme_person", filter, edipiSearchCallBack, function (error) { alert(error.message); }, personSearchComplete);
+
+            } else {
+                formatValidationFailed();
+            }
+
+        }
+
+        function formatExecutingSearch() {
+            $('div#tmpDialog').show();
+            $("#validationFailedDiv").hide();
+            $("#resultsFieldSetDiv").hide();
+            $("#notFoundDiv").hide();
+            $("#searchResultsMessageDiv").hide();
+            $("#SearchByNameButton").attr('disabled', true);
+            $("#SearchByAddButton").attr('disabled', true);
+            $("#SearchByIdentifierButton").attr('disabled', true);
+        }
+
+        function formatValidationFailed() {
+            $("#validationFailedDiv").show();
+            $("#notFoundDiv").hide();
+            $("#resultsFieldSetDiv").hide();
+            $("#searchResultsMessageDiv").hide();
+            $("#personSearchResultsTable").find("thead, tr, th").remove();
+            $("#personSearchResultsTable").find("tr:gt(0)").remove();
+        }
+
+        function isNumeric(value) {
+            return !isNaN(parseFloat(value) && isFinite(value));
+        }
+
+        function validateSearchByIdentifier() {
+            var edipi = $("#EdipiTextBox").val();
+
+            if (edipi != "") {
+                if ((edipi.length != 10 || isNumeric(edipi) == false)) {
+                    $("#validationFailedDiv").text("VALIDATION FAILED: EDIPI is invalid.");
+                    return false;
+                }
+                return true;
+            }
+            else {
+                $("#validationFailedDiv").text("VALIDATION FAILED: The search requires an EDIPI.");
+                return false;
+            }
+        }
+
+        // Add fields here that are required for MVI call
+        // and at least fields 3 are required.
+        function validateSearchByTraits() {
+            var lname = $("#LastNameTextBox").val();
+            var fname = $("#FirstNameTextBox").val();
+            var mname = $("#AddMiddleNameTextBox").val();
+            var ssn = $("#SocialSecurityTextBox").val();
+            var dobyear = $("#BirthYearTextBox").val();
+            var dobmonth = $("#BirthMonthTextBox").val();
+            var dobday = $("#BirthDayTextBox").val();
+            var dob = dobyear + dobmonth + dobday;
+            var gender = $("#AddGenderTextBox").val();
+            var mmn = $("#AddMMNTextBox").val();
+            var phone = $("#AddPhoneNoTextBox").val();
+            var birthCity = $("#AddBirthCityTextBox").val();
+            var birthState = $("#AddBirthStateTextBox").val();
+            var errorMessage = "VALIDATION FAILED: ";
+            var errorCount = 0;
+            var states = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NM", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"];
+
+            // add checks for correct state and sex
+            if (gender != null && gender != "") {
+                if (gender.toLowerCase() != "m" && gender.toLowerCase() != "f") {
+                    errorMessage += "'Sex' must be either 'M' or 'F'.";
+                    $("#validationFailedDiv").text(errorMessage);
+                    return false;
+                }
+            }
+
+            if (birthState != null && birthState != "") {
+                if (states.indexOf(birthState.toUpperCase()) == -1) {
+                    errorMessage += "'Birth State' must be an acceptable state abbreviation.";
+                    $("#validationFailedDiv").text(errorMessage);
+                    return false;
+                }
+            }
+
+            if (lname == null || lname == "") {
+                errorMessage += "'Last Name' and at least 2 other fields are required for MVI search.";
+                $("#validationFailedDiv").text(errorMessage);
+                return false;
+            }
+
+            if (ssn == null || ssn.trim() == "") {
+                errorCount += 1;
+            }
+            else if (ssn != null && ssn != "") {
+                ssn = ssn.replace(/-/g, "");
+                if (ssn.trim().length != 9 || isNumeric(ssn.trim()) == false) {
+                    errorMessage += " SSN is invalid.";
+                    errorCount += 1;
+                    $("#validationFailedDiv").text(errorMessage);
+                    return false;
+                }
+            }
+
+            if (fname == "" || fname == null)
+                errorCount += 1;
+
+            if (dob == null || dob.trim() == "" || !isNumeric(dob.trim())) {
+                errorCount += 1;
+            } else if (!validateDateOfBirth(dobyear, dobmonth, dobday)) {
+                errorMessage += " DOB is invalid.";
+                $("#validationFailedDiv").text(errorMessage);
+                return false;
+            }
+
+            // if searching with no additional traits check for 3 fields
+            if ($("#showHideText").val() == "Show Additional Search Criteria") {
+                if (errorCount > 1) {
+                    errorMessage += " At least 3 fields are required for MVI search.";
+                    $("#validationFailedDiv").text(errorMessage);
+                    return false;
+                }
+
+                return true;
+            }
+
+            if (mname == "" || mname == null)
+                errorCount += 1;
+
+            if (gender == "" || gender == null)
+                errorCount += 1;
+
+            if (mmn == "" || mmn == null)
+                errorCount += 1;
+
+            var homeStreet = $("#AddHomeStreetTextBox").val();
+            var homeCity = $("#AddHomeCityTextBox").val();
+            var homeState = $("#AddHomeStateTextBox").val();
+            var homeZip = $("#AddHomeZipTextBox").val();
+            // need to ensure that we have the entire address
+            if (homeStreet == "" && homeCity == "" && homeState == "" && homeZip == "") {
+                // ok with none..
+                errorCount += 1;
+            }
+            else if (homeStreet != "" && homeCity != "" && homeState != "" && homeZip != "") {
+                // ok with all..validate
+                if (homeState != null) {
+                    if (states.indexOf(homeState.toUpperCase()) == -1) {
+                        errorMessage += "'State' must be an acceptable state abbreviation.";
+                        $("#validationFailedDiv").text(errorMessage);
+                        return false;
+                    }
+                }
+            }
+            else {
+                // need all 4 fields for complete address
+                errorMessage = errorMessage + " 'Street', 'City', 'State', and 'Zip' are required to search on the Home Address fields.";
+                $("#validationFailedDiv").text(errorMessage);
+                return false;
+            }
+            // end address
+
+            if (phone == "" || phone == null)
+                errorCount += 1;
+
+            if (birthCity == "" || birthCity == null)
+                errorCount += 1;
+
+            if (birthState == "" || birthState == null)
+                errorCount += 1;
+
+            if (errorCount > 8) {
+                errorMessage += " at least 3 fields are required.";
+                $("#validationFailedDiv").text(errorMessage);
+                return false;
+            }
+
+            return true;
+        }
+
+        function showHideTable(tblObj, imgObj, msgObj) {
+            if (tblObj.style.display != "") {  // show table & display -
+                tblObj.style.display = "";
+                imgObj.alt = "Hide Additional Search Criteria";
+                imgObj.src = "bah_collapse"; //"expand_collapse_minus.gif"; 
+                msgObj.value = "Hide Additional Search Criteria";
+            }
+            else {  // hide table & display +
+                tblObj.style.display = "none";
+                imgObj.alt = "Show Additional Search Criteria";
+                imgObj.src = "bah_expand"; //"expand_collapse_plus.gif";
+                msgObj.value = "Show Additional Search Criteria";
+            }
+        }
+
+        function showHideTableFromKeydown(tblObj, imgObj, msgObj, event) {
+
+            if (event.keyCode === 13 || event.keyCode === 32) {
+                if (tblObj.style.display != "") {  // show table & show -
+                    tblObj.style.display = "";
+                    imgObj.alt = "Hide Additional Search Criteria";
+                    imgObj.src = "bah_collapse"; //"expand_collapse_minus.gif";
+                    msgObj.value = "Hide Additional Search Criteria";
+                }
+                else {  // hide table & show +
+                    tblObj.style.display = "none";
+                    imgObj.alt = "Show Additional Search Criteria";
+                    imgObj.src = "bah_expand"; // "expand_collapse_plus.gif";
+                    msgObj.value = "Show Additional Search Criteria";
+                }
+
+                // need to set focus back on the image (**NOT WORKING IN CRM)
+                imgObj.focus();
+            }
+        }
+
+        function checkSubmit(event) {
+            if (event.keyCode === 13) {
+                // user has pressed Enter in one of the boxes
+                //    if (!isEDIPI) {
+                $("#SearchByNameButton").click();
+                //    }
+                //    else
+                //        $("#SearchByIdentifierButton").click();
+            }
+        }
+
+        function checkSubmitEDIPI(event) {
+
+            if (event.keyCode === 13) {
+                //// user has pressed Enter in one of the boxes
+                //   if (!isEDIPI) {
+                //       $("#SearchByNameButton").click();
+                //   }
+                //   else
+                $("#SearchByIdentifierButton").click();
+            }
+        }
+
+        function clearField(obj) {
+            if (obj.defaultValue == obj.value) obj.value = '';
+        }
+		
+		function getParameterByName(name, url) {
+			if (!url) url = window.location.href;
+			name = name.replace(/[\[\]]/g, "\\$&");
+			var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+				results = regex.exec(url);
+			if (!results) return null;
+			if (!results[2]) return '';
+			return decodeURIComponent(results[2].replace(/\+/g, " "));
+		}
+
+		function updateFieldsFromQueryString() {
+			// Function to set query string parameters on form when called from CTI Listener
+			// Create variables
+			var ANI = "";
+			var SSN = "";
+			var FNAME= "";
+			var LNAME= "";
+			var DOB= "";
+			var USER= "";
+			var datavalue = getParameterByName('data');
+			// Make sure data was passed in
+			if(datavalue != null){
+				//alert("Data found: " + datavalue);
+				//Parse the parameters
+				var params = decodeURIComponent(datavalue).split("&");
+				for (var i in params) {
+					params[i] = params[i].replace(/\+/g, " ").split("=");
+					switch(params[i][0]) {
+						case "ANI":
+							ANI = params[i][1];
+							break;
+					    case "SSN":
+							SSN = params[i][1];
+							break;
+					    case "DOB":
+							DOB = params[i][1];
+							break;
+					    case "USER":
+							USER = params[i][1];
+							break;
+							
+						default:
+							break;
+					}
+				}
+				
+				//alert("SSN=" + SSN);
+				// set the text box values
+				if (SSN !== "") $("#SocialSecurityTextBox").val(SSN);
+				if (FNAME !== "") $("#FirstNameTextBox").val(FNAME);
+				if (LNAME !== "") $("#LastNameTextBox").val(LNAME);
+				if (DOB !== "") {
+					// parse the DOB field into separate fields
+					var SplitDOB = DOB.split("/");
+					$("#BirthMonthTextBox").val(SplitDOB[0]);
+					$("#BirthDayTextBox").val(SplitDOB[1]);
+					$("#BirthYearTextBox").val(SplitDOB[2]);
+				}
+				
+				//Run the search
+				searchByDeterministicTelephony();
+			}
+		}
+
+		function searchByDeterministicTelephony() {
+		    $("#searchResultsMessageDiv").val("");
+
+		    if (validateDeterministicTelephony() == true) {
+		        formatExecutingSearch();
+
+		        var filterPrefix = "$select=*&$filter=";
+		        var filter = buildQueryFilter("crme_SearchType", 'DeterministicSearch', false);
+		        var dobday = $("#BirthDayTextBox").val() == "dd" ? "" : $("#BirthDayTextBox").val();
+		        var dobyear = $("#BirthYearTextBox").val() == "yyyy" ? "" : $("#BirthYearTextBox").val();
+		        var dobmonth = $("#BirthMonthTextBox").val() == "mm" ? "" : $("#BirthMonthTextBox").val();
+		        var dob = "";
+		        if (dobmonth != "" && dobday != "" && dobyear != "") {
+		            dob = dobmonth + "/" + dobday + "/" + dobyear;
+		        }
+
+		        var ssn = "";
+		        if ($("#SocialSecurityTextBox").val() != "") {
+		            ssn = $("#SocialSecurityTextBox").val();
+		            ssn = ssn.replace(/-/g, "");
+		        }
+
+		        if ($("#SocialSecurityTextBox").val() != "") {
+		            filter += buildQueryFilter("crme_SSN", ssn, true);
+		        }
+
+		        if (dob != "") {
+		            filter += " and crme_DOBString eq '" + dob + "'";
+		        }
+		        //filter += " and crme_IsAttended eq true";
+		        filter = encodeURIComponent(filter);
+		        filter = filterPrefix + filter;
+//alert(filter);
+		        SDK.REST.retrieveMultipleRecords("crme_person", filter, personSearchCallBack, function (error) { alert(error.message); }, personSearchComplete);
+		    }
+        }
+
+		function validateDeterministicTelephony() {
+		    var ssn = $("#SocialSecurityTextBox").val();
+		    var dobyear = $("#BirthYearTextBox").val();
+		    var dobmonth = $("#BirthMonthTextBox").val();
+		    var dobday = $("#BirthDayTextBox").val();
+		    var dob = dobyear + dobmonth + dobday;
+		    var errorMessage = "VALIDATION FAILED: ";
+		    var errorCount = 0;
+		    
+		    if (ssn == null || ssn.trim() == "") {
+		        errorCount += 1;
+		    }
+		    else if (ssn != null && ssn != "") {
+		        ssn = ssn.replace(/-/g, "");
+		        if (ssn.trim().length != 9 || isNumeric(ssn.trim()) == false) {
+		            errorMessage += " SSN is invalid.";
+		            errorCount += 1;
+		            $("#validationFailedDiv").text(errorMessage);
+		            return false;
+		        }
+		    }
+
+		    if (dob == null || dob.trim() == "" || !isNumeric(dob.trim())) {
+		        errorCount += 1;
+		    } else if (!validateDateOfBirth(dobyear, dobmonth, dobday)) {
+		        errorMessage += " DOB is invalid.";
+		        $("#validationFailedDiv").text(errorMessage);
+		        return false;
+		    }
+
+		    // if searching with no additional traits check for 3 fields
+		    if ($("#showHideText").val() == "Show Additional Search Criteria") {
+		        if (errorCount > 1) {
+		            errorMessage += " At least 2 fields are required for MVI search.";
+		            $("#validationFailedDiv").text(errorMessage);
+		            return false;
+		        }
+
+		        return true;
+		    }
+            
+		    return true;
+		}
+		
+		function knabTest(pArgs){
+			if(!!pArgs){
+				alert("arguments to function: " + pArgs);
+			}
+			else{
+				alert("no arguments to function.  Here is $Session.Count from context? [[$Session.Count]]");
+			}
+		}
+    </script>
+
+
+    <h1 style="padding-top: 12px;">Veteran Search</h1>
+    <div>
+        <table>
+            <tbody>
+                <tr>
+                    <td class="auto-style1">
+                        <h3>Section 1 - Search By Traits</h3>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <fieldset>
+            <legend>The criteria for a search by traits includes: First and Last Name, Social Security Number, and DOB. At least 3 fields are required.</legend>
+             <table>               
+                    <tbody><tr>
+                        <td class="auto-style1">
+                            <label for="SocialSecurityTextBox">SSN</label>
+                        </td>
+                        <td>
+                            <label for="FirstNameTextBox">First</label>
+                        </td>       
+                        <td>
+                            <label for="LastNameTextBox">*Last</label>
+                        </td>
+                        <td>
+                            <label for="BirthMonthTextBox">Month</label>
+                        </td>
+                        <td>
+                            <label for="BirthDayTextBox">Day</label>
+                        </td>
+                        <td>
+                            <label for="BirthYearTextBox">Year</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input name="ssn" tabindex="1" class="formInputText" id="SocialSecurityTextBox" required="" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="16" maxlength="11">
+                        </td>
+                        <td>
+                            <input name="firstName" tabindex="2" class="formInputText" id="FirstNameTextBox" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="16" maxlength="30"></td>
+                        <td>
+                            <input name="lastName" tabindex="3" class="formInputText" id="LastNameTextBox" required="" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="16" maxlength="30"></td>
+                           <td>
+                            <input name="dateOfBirthMonth" tabindex="4" class="formInputText" id="BirthMonthTextBox" style="height: 30px;" required="" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="2" maxlength="2" value="MM">
+                            /
+                        </td>
+                       <td>
+                            <input name="dateOfBirthDay" tabindex="5" class="formInputText" id="BirthDayTextBox" style="height: 30px;" required="" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="2" maxlength="2" value="DD">
+                            /
+                        </td>
+                        <td>
+                            <input name="dateOfBirthYear" tabindex="6" class="formInputText" id="BirthYearTextBox" style="height: 30px;" required="" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="4" maxlength="4" value="YYYY">
+                        </td>
+                    </tr>    
+             </tbody></table>     
+
+            <table>
+                <tbody><tr>
+                  <td><img tabindex="7" class="showHide" id="showHideImage" onkeydown="showHideTableFromKeydown(additionalSearchTable, this, showHideText, event)" onclick="showHideTable(additionalSearchTable, this, showHideText)" alt="Show additional search criteria." src="bah_expand">
+                        <input disabled="disabled" class="noBorder" id="showHideText" type="text" size="25" value="Show Additional Search Criteria">
+                  </td>                    
+               </tr>        
+            </tbody></table>
+       <!--       <table id="addSearchCriteriaDescTable"> 
+                    <tr><td>Additional search criteria includes: Middle Name, Sex, Mother's Maiden Name, Home Phone Number and Address, Birth City and State</td></tr>
+             </table>-->
+             <table id="additionalSearchTable" style="display: none;">        
+       <!--           <table id="additionalSearchTable">           -->
+                   <tbody>
+                    <tr>                         
+                        <td class="auto-style1">
+                            <label for="AddMiddleNameTextBox">Middle</label>
+                        </td>
+                        <td>
+                            <label for="AddGenderTextBox">Sex</label>
+                        </td>
+                        <td colspan="2">        
+                           <label for="AddMMNTextBox">Mother's Maiden Name</label>
+                       </td>
+                       <td>
+                          <label for="AddPhoneNoTextBox">Home Phone</label>
+                       </td>
+                    </tr>
+                    <tr>   
+                        <td>
+                            <input name="middleName" tabindex="8" class="formInputText" id="AddMiddleNameTextBox" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="16" maxlength="30"></td>
+                        <td>
+                            <input name="personGender" tabindex="9" class="formInputText" id="AddGenderTextBox" style="height: 30px;" required="" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="4" maxlength="1" value="">
+                        </td><td colspan="2">
+                            <input name="motherMaidenName" tabindex="10" class="formInputText" id="AddMMNTextBox" style="height: 30px;" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="16" maxlength="15">
+                    </td>
+                      <td>
+                          <input name="phoneNo" tabindex="11" class="formInputText" id="AddPhoneNoTextBox" style="height: 30px;" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="16" maxlength="15">
+                    </td>
+                 </tr>
+                 <tr>          
+                     <td>
+                        <label for="AddHomeStreetTextBox">Street</label>
+                    </td>
+                    <td>
+                        <label for="AddHomeCityTextBox">City</label>
+                    </td>
+                    <td>
+                        <label for="AddHomeStateTextBox">State</label>
+                    </td>
+                    <td>
+                        <label for="AddHomeZipTextBox">Zip</label>
+                    </td>                 
+                 </tr>
+                <tr>                        
+                     <td>
+                        <input name="streetAddress" tabindex="12" class="formInputText" id="AddHomeStreetTextBox" style="height: 30px;" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="17" maxlength="30">
+                    </td>
+                     <td>
+                        <input name="cityAddress" tabindex="13" class="formInputText" id="AddHomeCityTextBox" style="height: 30px;" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="16" maxlength="25">
+                    </td>
+                     <td>
+                        <input name="stateAddress" tabindex="14" class="formInputText" id="AddHomeStateTextBox" style="height: 30px;" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="4" maxlength="2">
+                    </td>
+                    <td>
+                        <input name="zipAddress" tabindex="15" class="formInputText" id="AddHomeZipTextBox" style="height: 30px;" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="9" maxlength="15">
+                    </td> 
+                </tr>  
+                <tr>
+                    <td>
+                        <label for="AddBirthCityTextBox">Birth City</label>
+                    </td>
+                    <td>
+                        <label for="AddBirthStateTextBox">Birth State</label>
+                    </td>
+                </tr> 
+                <tr>
+                     <td>
+                        <input name="cityAddress" tabindex="16" class="formInputText" id="AddBirthCityTextBox" style="height: 30px;" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="16" maxlength="25">
+                     </td>
+                     <td>
+                        <input name="stateAddress" tabindex="17" class="formInputText" id="AddBirthStateTextBox" style="height: 30px;" onkeyup="checkSubmit(event)" onfocus="clearField(this)" size="4" maxlength="2">
+                    </td> 
+                </tr>
+            </tbody></table>
+            <table>  
+                <tbody>
+                  <tr>
+                    <td style="padding-top: 10px;" colspan="4">
+                        <button tabindex="18" id="SearchByNameButton" aria-label="Search by Traits">Search</button>  
+                       <button tabindex="19" id="clearNameFieldsButton" aria-label="Reset Search by Traits">Reset</button>
+                    </td>
+                </tr>     
+              </tbody>
+            </table>
+        </fieldset>          
+        <table>
+            <tbody>
+                <tr>
+                    <td class="auto-style1">
+                        <h3>Section 2 - Search By EDIPI</h3>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <fieldset>
+            <legend>The search criteria for a search by EDIPI includes the EDIPI</legend>
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <label for="EdipiTextBox">*EDIPI</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input name="edipi" tabindex="20" class="formInputText" id="EdipiTextBox" required="" onkeyup="checkSubmitEDIPI(event)" onfocus="clearField(this)" size="16" maxlength="10">
+                    </td>
+                </tr>
+               <tr>
+                    <td style="padding-top: 10px;">
+                        <button tabindex="21" id="SearchByIdentifierButton" aria-label="Search by EDIPI">Search</button>
+                        <button tabindex="22" id="clearIdentifierFieldsButton" aria-label="Reset Search by EDIPI">Reset</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+      </fieldset>
+    </div>
+    <div><br></div>
+    <div style="clear: both;"></div>
+    <div id="validationFailedDiv" style="color: rgb(128, 0, 0); clear: both; font-size: 1em; font-weight: bold; display: none;" aria-label="Search validation failed message">The search requires some additional information. Please follow the instructions above to execute your search.</div>
+    <div id="resultsFieldSetDiv" style="width: 100%; float: left; display: none;">
+    <h3>Section 3 - Search Results</h3>
+    <div style="clear: both;"></div>
+    <div id="searchResultsMessageDiv" style="color: rgb(128, 0, 0); font-size: 1em; font-weight: bold; display: none;" aria-label="Search Results Message"></div>
+        <fieldset id="SearchResultFieldSet">
+            <legend style="display: none;">Search Results</legend>
+            <table id="personSearchResultsTable" style="width: 100%;">
+            </table>
+        </fieldset>
+    </div>
+    <div id="notFoundDiv" style="width: 100%; float: left; display: none;">
+        <fieldset id="notFoundFieldset">
+            <legend>No Records Found</legend>
+            <hr style="border: 1px solid gray; border-image: none;">
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <h3 style="padding-bottom: 5px;">Veteran Not Found?</h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button tabindex="23" id="createNewVeteranButton" aria-label="Create New Contact">Create Contact</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </fieldset>
+    </div>
+    <div id="tmpDialog">
+        <p>Working on it. Please wait ...</p>
+    </div>
+</body></html>

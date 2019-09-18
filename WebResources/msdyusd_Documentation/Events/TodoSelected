@@ -1,0 +1,12 @@
+<HTML xmlns:o = "urn:schemas-microsoft-com:office:office"><HEAD><BASE>
+<META charset=utf-8></HEAD>
+<BODY>
+<P style="MARGIN: 0in 0in 10pt" class=MsoNormal><SPAN style="mso-ansi-language: EN-US"><FONT face=Calibri>Invoked when the user double-clicks a "things to do" entry in the Todo List hosted control.<o:p></o:p></FONT></SPAN></P><FONT size=2 face="Tahoma, Verdana, Arial"></FONT>
+<TABLE border=1>
+<TBODY>
+<TR>
+<TD><STRONG>Data</STRONG></TD>
+<TD>The data that was passed in on the action call to the AddTodo action.</TD></TR>
+<TR>
+<TD><STRONG>Todo</STRONG></TD>
+<TD>The name of the "things to do" entry that was previously registered in a call to the AddTodo action.</TD></TR></TBODY></TABLE></BODY></HTML>

@@ -1,0 +1,15 @@
+function FCRViewChange() {
+//debugger;
+Xrm.Page.getControl("tri_wrapupcode").addPreSearch( function(){
+filter = "<filter type='and'><condition attribute='tri_wrapupcodetype' operator='eq' value='167410000' /></filter>";
+filter2 = "<filter type='and'><condition attribute='tri_wrapupcodetype' operator='ne' value='167410000' /></filter>";
+		   
+var value = Xrm.Page.getAttribute("tri_firstcallinteraction").getValue();  
+if (value === true){
+Xrm.Page.getControl("tri_wrapupcode").addCustomFilter(filter);
+}
+else{
+Xrm.Page.getControl("tri_wrapupcode").addCustomFilter(filter2);
+}
+});
+}
