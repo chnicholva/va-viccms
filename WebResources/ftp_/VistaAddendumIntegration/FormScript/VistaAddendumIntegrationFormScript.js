@@ -180,7 +180,10 @@ function vadi_ribbonButtonSaveToVistA() {
             return false;
         }
         var creds = tryGetCreds(pFacilityCode.getValue());
-
+        if (!creds) {
+            alert("Please log into site: " + pFacilityCode.getValue());
+            return false;
+        }
         ////Check if VIA Login cookie exist (not expired)
         //var vadi_ViaLoginCookie = vadi_getCookie("viasessionlink");
         //if (vadi_ViaLoginCookie == "") {
