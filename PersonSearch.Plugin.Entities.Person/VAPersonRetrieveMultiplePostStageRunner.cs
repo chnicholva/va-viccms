@@ -156,6 +156,10 @@ namespace PersonSearch.Plugin.Entities.Person
                     if (base.PluginExecutionContext.InputParameters["Query"] is FetchExpression)
                     {
                         FetchExpression feExp = base.PluginExecutionContext.InputParameters["Query"] as FetchExpression;
+
+                        //base.Logger.WriteDebugMessage(string.Format("DEBUG::Input: {0}", feExp.Query));
+
+
                         FetchXmlToQueryExpressionRequest req = new FetchXmlToQueryExpressionRequest();
                         req.FetchXml = feExp.Query;
                         var feResp = (FetchXmlToQueryExpressionResponse)this.OrganizationService.Execute(req);
@@ -163,8 +167,9 @@ namespace PersonSearch.Plugin.Entities.Person
                     }
                     else
                     {
-                        qe = base.PluginExecutionContext.InputParameters["Query"] as QueryExpression;
+                       qe = base.PluginExecutionContext.InputParameters["Query"] as QueryExpression;                        
                     }
+                    
                     var eCol = (EntityCollection)base.PluginExecutionContext.OutputParameters["BusinessEntityCollection"];
                     try
                     {
@@ -172,7 +177,8 @@ namespace PersonSearch.Plugin.Entities.Person
                         
                         var searchType = qe.GetSearchType();
                         if (string.IsNullOrWhiteSpace(searchType))
-                        {// stop all processing is no search type
+                        {
+                            // stop all processing is no search type
                             return;
                         }
                         VeisConfig config = RetrieveVeisConfig("ftp_mviserviceurl", "ftp_mvisubscriptionkey");
@@ -209,6 +215,36 @@ namespace PersonSearch.Plugin.Entities.Person
                                                 base.Logger.WriteDebugMessage(string.Format("ERROR::" + searchType + ": Search Exception Message: {0} MVI Message: {1}", personSearchResponse.Message, personSearchResponse.CORPDbMessage));
                                             }
                                             bool flag = (personSearchResponse.Person != null && personSearchResponse.Person.Length > 0) ? true : false;
+
+                                            //GLM- 09/18/2019 - Rational Item (CM) Task 1102072
+                                            //                  RN Triage tab - DOB is not formatted correctly, age is not correctly represented in progress note
+                                            //                  - AND - possibly not being passed correctly to the Q&A system
+                                            //
+                                            // I still have to wonder if best to edit when creating the contact record via the MVI search page???
+                                            if (personSearchResponse.Person != null)
+                                            {
+                                                if (personSearchResponse.Person.Count() > 0)
+                                                {
+                                                    foreach (PatientPerson patient in personSearchResponse.Person)
+                                                    {
+                                                        if (!string.IsNullOrEmpty(patient.BirthDate))
+                                                        {
+                                                            if (!patient.BirthDate.Contains("/"))
+                                                            {
+                                                                if (patient.BirthDate.Length == 8)
+                                                                {
+                                                                    var strBirthDate = string.Format("{0}/{1}/{2}",
+                                                                                                        patient.BirthDate.Substring(4, 2),
+                                                                                                        patient.BirthDate.Substring(6, 2),
+                                                                                                        patient.BirthDate.Substring(0, 4));
+                                                                    patient.BirthDate = strBirthDate;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+
                                             Map(personSearchResponse, config);
                                             base.Logger.WriteDebugMessage(string.Format("DEBUG::" + searchType + ": Search Response Message: {0} Person Found: {1}", personSearchResponse.Message, flag));
                                         }
@@ -228,6 +264,28 @@ namespace PersonSearch.Plugin.Entities.Person
                                         selectedPersonRequest.LogTiming = config.LogTimer;
                                         //selectedPersonRequest.noAddPerson = false;
                                         CorrespondingIdsResponse correspondingIdsResponse = WebApiUtility.SendReceiveVeisRequest<CorrespondingIdsResponse>(config, "SelectedPerson", selectedPersonRequest);
+
+                                        //correspondingIdsResponse.DateofBirth
+                                        //GLM- 09/18/2019 - Rational Item (CM) Task 1102072
+                                        //                  RN Triage tab - DOB is not formatted correctly, age is not correctly represented in progress note
+                                        //                  - AND - possibly not being passed correctly to the Q&A system
+                                        //
+                                        // I still have to wonder if best to edit when creating the contact record via the MVI search page???
+                                        if (!string.IsNullOrEmpty(correspondingIdsResponse.DateofBirth))
+                                        {
+                                            if (!correspondingIdsResponse.DateofBirth.Contains("/"))
+                                            {
+                                                if (correspondingIdsResponse.DateofBirth.Length == 8)
+                                                {
+                                                    var strBirthDate = string.Format("{0}/{1}/{2}",
+                                                                                        correspondingIdsResponse.DateofBirth.Substring(4, 2),
+                                                                                        correspondingIdsResponse.DateofBirth.Substring(6, 2),
+                                                                                        correspondingIdsResponse.DateofBirth.Substring(0, 4));
+                                                    correspondingIdsResponse.DateofBirth = strBirthDate;
+                                                }
+                                            }
+                                        }
+
                                         MapCorrespondingIds(correspondingIdsResponse, selectedPersonRequest, config);
                                     }
                                 }
@@ -242,12 +300,75 @@ namespace PersonSearch.Plugin.Entities.Person
                                     personSearchRequest.LogTiming = config.LogTimer;
                                     string message = searchType == "SearchByIdentifier" ? "SearchMessage" : "SearchPerson";
 
+                                    //base.Logger.WriteDebugMessage(string.Format("DEBUG::" + searchType + ": Search Request: {0},{1},{2},{3}",
+                                    //    personSearchRequest.BirthDate, 
+                                    //    personSearchRequest.FirstName, 
+                                    //    personSearchRequest.PhoneNumber, 
+                                    //    personSearchRequest.Address));
+                                    //string reqBody = JsonHelper.Serialize(personSearchRequest);
+                                    //base.Logger.WriteDebugMessage(string.Format("DEBUG::" + searchType + ": Search Request Body: {0}", reqBody));
+
                                     PersonSearchResponse personSearchResponse2 = WebApiUtility.SendReceiveVeisRequest<PersonSearchResponse>(config, message, personSearchRequest);
                                     if (personSearchResponse2.ExceptionOccured)
                                     {
                                         base.Logger.WriteDebugMessage(string.Format("ERROR::" + searchType + ": Search Exception Message: {0} MVI Message: {1}", personSearchResponse2.Message, personSearchResponse2.CORPDbMessage));
                                     }
+
+                                    //string resBody = JsonHelper.Serialize(personSearchResponse2);
+                                    //base.Logger.WriteDebugMessage(string.Format("DEBUG::" + searchType + ": Search Response: {0}", resBody));
+
                                     bool flag3 = (personSearchResponse2.Person != null && personSearchResponse2.Person.Length > 0) ? true : false;
+
+                                    //GLM- 09/18/2019 - Rational Item (CM) Task 1102072
+                                    //                  RN Triage tab - DOB is not formatted correctly, age is not correctly represented in progress note
+                                    //                  - AND - possibly not being passed correctly to the Q&A system
+                                    //
+                                    // I still have to wonder if best to edit when creating the contact record via the MVI search page???
+                                    if (personSearchResponse2.Person != null)
+                                    {
+                                        if (personSearchResponse2.Person.Count() > 0)
+                                        {
+                                            foreach (PatientPerson patient in personSearchResponse2.Person)
+                                            {
+                                                //GLM - 09/19/2019 - Garrh, using trace messages to collect data for meself - shiver me timbers
+                                                //Name[] patientNames = null;
+                                                //string familyName = string.Empty;
+
+                                                //if (patient.NameList != null)
+                                                //{
+                                                //    patientNames = patient.NameList.ToArray();
+                                                //    familyName = patientNames[0].FamilyName;
+                                                //}
+                                                
+                                                //base.Logger.WriteDebugMessage(string.Format("DEBUG::" + searchType + ": Search Response: Birthdate={0}, Address={1}, Branch of Service={2}, Full Address={3}, Phone Number={4}, EDIPI={5}, Gender={6}, Full Name={7} and Family Name={8}",
+                                                //    patient.BirthDate,
+                                                //    patient.Address.StreetAddressLine + " " + patient.Address.City + " " + patient.Address.State + " " + patient.Address.PostalCode, 
+                                                //    patient.BranchOfService,
+                                                //    patient.FullAddress,
+                                                //    patient.PhoneNumber,
+                                                //    patient.EdiPi,
+                                                //    patient.GenderCode,
+                                                //    patient.FullName,
+                                                //    familyName));
+
+                                                if (!string.IsNullOrEmpty(patient.BirthDate))
+                                                {
+                                                    if (!patient.BirthDate.Contains("/"))
+                                                    {
+                                                        if (patient.BirthDate.Length == 8)
+                                                        {
+                                                            var strBirthDate = string.Format("{0}/{1}/{2}",
+                                                                                                patient.BirthDate.Substring(4, 2),
+                                                                                                patient.BirthDate.Substring(6, 2),
+                                                                                                patient.BirthDate.Substring(0, 4));
+                                                            patient.BirthDate = strBirthDate;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
                                     Map(personSearchResponse2, config);
                                     base.Logger.WriteDebugMessage(string.Format("DEBUG::" + searchType + ": Search Response Message: {0} Person Found: {1}", personSearchResponse2.Message, flag3));
                                 }
@@ -720,63 +841,156 @@ namespace PersonSearch.Plugin.Entities.Person
 
         private static string GetStringValueOrDefault(FilterExpression expression, string fieldName)
         {
+            //GLM - 09/19/2019 - rational task #1105939
+            // added try/catch blocks for if (val == null)
+            // was getting an indexd error after a certain point and code failed after that 
+            // which was returning empty strings every time
             try
             {
                 ConditionExpression val = ((IEnumerable<ConditionExpression>)((Collection<FilterExpression>)expression.Filters)[0].Conditions).FirstOrDefault((ConditionExpression v) => v.AttributeName.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
+
                 if (val == null)
                 {
-                    val = ((IEnumerable<ConditionExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)expression.Filters)[0].Filters)[0].Conditions).FirstOrDefault((ConditionExpression v) => v.AttributeName.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
+                    try
+                    {
+                        val = ((IEnumerable<ConditionExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)expression.Filters)[0].Filters)[0].Conditions).FirstOrDefault((ConditionExpression v) => v.AttributeName.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
+                    }
+                    catch(Exception)
+                    {
+                        val = null;
+                    }
                 }
                 if (val == null)
                 {
-                    val = ((IEnumerable<ConditionExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)expression.Filters)[0].Filters)[0].Filters)[0].Conditions).FirstOrDefault((ConditionExpression v) => v.AttributeName.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
+                    try
+                    {
+                        val = ((IEnumerable<ConditionExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)expression.Filters)[0].Filters)[0].Filters)[0].Conditions).FirstOrDefault((ConditionExpression v) => v.AttributeName.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
+                    }
+                    catch(Exception)
+                    {
+                        val = null;
+                    }
                 }
                 if (val == null)
                 {
-                    val = ((IEnumerable<ConditionExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)expression.Filters)[0].Filters)[0].Filters)[0].Filters)[0].Conditions).FirstOrDefault((ConditionExpression v) => v.AttributeName.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
+                    try
+                    {
+                        val = ((IEnumerable<ConditionExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)expression.Filters)[0].Filters)[0].Filters)[0].Filters)[0].Conditions).FirstOrDefault((ConditionExpression v) => v.AttributeName.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
+                    }
+                    catch (Exception)
+                    {
+                        val = null;
+                    }
                 }
                 if (val == null)
                 {
-                    val = ((IEnumerable<ConditionExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)expression.Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Conditions).FirstOrDefault((ConditionExpression v) => v.AttributeName.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
+                    try
+                    {
+                        val = ((IEnumerable<ConditionExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)expression.Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Conditions).FirstOrDefault((ConditionExpression v) => v.AttributeName.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
+                    }
+                    catch (Exception)
+                    {
+                        val = null;
+                    }
                 }
                 if (val == null)
                 {
-                    val = ((IEnumerable<ConditionExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)expression.Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Conditions).FirstOrDefault((ConditionExpression v) => v.AttributeName.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
+                    try
+                    {
+                        val = ((IEnumerable<ConditionExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)expression.Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Conditions).FirstOrDefault((ConditionExpression v) => v.AttributeName.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
+                    }
+                    catch (Exception)
+                    {
+                        val = null;
+                    }
                 }
                 if (val == null)
                 {
-                    val = ((IEnumerable<ConditionExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)expression.Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Conditions).FirstOrDefault((ConditionExpression v) => v.AttributeName.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
+                    try
+                    {
+                        val = ((IEnumerable<ConditionExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)expression.Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Conditions).FirstOrDefault((ConditionExpression v) => v.AttributeName.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
+                    }
+                    catch (Exception)
+                    {
+                        val = null;
+                    }
                 }
                 if (val == null)
                 {
-                    val = ((IEnumerable<ConditionExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)expression.Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Conditions).FirstOrDefault((ConditionExpression v) => v.AttributeName.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
+                    try
+                    {
+                        val = ((IEnumerable<ConditionExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)expression.Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Conditions).FirstOrDefault((ConditionExpression v) => v.AttributeName.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
+                    }
+                    catch (Exception)
+                    {
+                        val = null;
+                    }
                 }
                 if (val == null)
                 {
-                    val = ((IEnumerable<ConditionExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)expression.Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Conditions).FirstOrDefault((ConditionExpression v) => v.AttributeName.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
+                    try
+                    {
+                        val = ((IEnumerable<ConditionExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)expression.Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Conditions).FirstOrDefault((ConditionExpression v) => v.AttributeName.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
+                    }
+                    catch (Exception)
+                    {
+                        val = null;
+                    }
                 }
                 if (val == null)
                 {
-                    val = ((IEnumerable<ConditionExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)expression.Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Conditions).FirstOrDefault((ConditionExpression v) => v.AttributeName.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
+                    try
+                    {
+                        val = ((IEnumerable<ConditionExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)expression.Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Conditions).FirstOrDefault((ConditionExpression v) => v.AttributeName.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
+                    }
+                    catch (Exception)
+                    {
+                        val = null;
+                    }
                 }
                 if (val == null)
                 {
-                    val = ((IEnumerable<ConditionExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)expression.Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Conditions).FirstOrDefault((ConditionExpression v) => v.AttributeName.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
+                    try
+                    {
+                        val = ((IEnumerable<ConditionExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)expression.Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Conditions).FirstOrDefault((ConditionExpression v) => v.AttributeName.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
+                    }
+                    catch (Exception)
+                    {
+                        val = null;
+                    }
                 }
                 if (val == null)
                 {
-                    val = ((IEnumerable<ConditionExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)expression.Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Conditions).FirstOrDefault((ConditionExpression v) => v.AttributeName.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
+                    try
+                    {
+                        val = ((IEnumerable<ConditionExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)((Collection<FilterExpression>)expression.Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Filters)[0].Conditions).FirstOrDefault((ConditionExpression v) => v.AttributeName.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
+                    }
+                    catch (Exception)
+                    {
+                        val = null;
+                    }
                 }
                 if (val != null)
                 {
-                    return ((Collection<object>)val.Values)[0].ToString();
+                    try
+                    {
+                        return ((Collection<object>)val.Values)[0].ToString();
+                    }
+                    catch (Exception)
+                    {
+                        return string.Empty;
+                    }
+                }
+                else
+                {
+                    return GetStringValueOrDefaultFetch(expression, fieldName);
                 }
             }
             catch (Exception)
             {
                 return string.Empty;
             }
-            return string.Empty;
+            //return string.Empty;
         }
 
         public int GetOptionSetValue(string optionSetString, string entityName, string attributeName)
