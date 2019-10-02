@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmrServiceTest", "EmrServic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VCCM.VistA.Actions", "VistA.Actions\VCCM.VistA.Actions.csproj", "{DB3094C7-3772-43CD-9616-219CC0CDD934}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VEIS.Workflows", "VEIS.Workflows\VEIS.Workflows.csproj", "{2EAC35D3-19A5-49B8-860F-91782DACC780}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{DB3094C7-3772-43CD-9616-219CC0CDD934}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB3094C7-3772-43CD-9616-219CC0CDD934}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB3094C7-3772-43CD-9616-219CC0CDD934}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EAC35D3-19A5-49B8-860F-91782DACC780}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EAC35D3-19A5-49B8-860F-91782DACC780}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EAC35D3-19A5-49B8-860F-91782DACC780}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EAC35D3-19A5-49B8-860F-91782DACC780}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -142,6 +142,7 @@
     <Compile Include="AuthExtensions.cs" />
     <Compile Include="BaseAction.cs" />
     <Compile Include="BasePluginContext.cs" />
+    <Compile Include="GetVeisPresentationCallout.cs" />
     <Compile Include="JsonHelper.cs" />
     <Compile Include="Messages\VeisRequest.cs" />
     <Compile Include="Messages\VistALoginRequest.cs" />
@@ -151,6 +152,7 @@
     <Compile Include="Models\VeisConfiguration.cs" />
     <Compile Include="Models\VEISSvcLOBConfiguration.cs" />
     <Compile Include="EmrServiceCall.cs" />
+    <Compile Include="VEISPresenationCallout.cs" />
     <Compile Include="VistALogin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
