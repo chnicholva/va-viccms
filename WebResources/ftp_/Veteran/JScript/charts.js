@@ -50,7 +50,20 @@ $(document).ready(function () {
     $.ajaxSetup({ cache: false });
 });
 
+function deltaDate(input, days, months, years) {
+    var date = new Date(input);
+    date.setDate(date.getDate() + days);
+    date.setMonth(date.getMonth() + months);
+    date.setFullYear(date.getFullYear() + years);
+    return date;
+}
+
 function loadButtons() {
+    var orderStart = deltaDate(new Date(), 0, -15, 0);
+    var orderEnd = new Date();
+    var orderStartStr = orderStart.getMonth() + 1 + "/" + orderStart.getDate() + "/" + orderStart.getFullYear();
+    var orderEndStr = orderEnd.getMonth() + 1 + "/" + orderEnd.getDate() + "/" + orderEnd.getFullYear();
+
     buttonConfigurations = {
         btnSCD: {
             id: "btnSCD",
@@ -82,7 +95,8 @@ function loadButtons() {
             unsecureURLFieldName: "ftp_OrderChartURL",
             secureURLFieldName: "ftp_OrderChartSecureURL",
             secure: false,
-            url: ""
+            url: "",
+            additionalParameters: "&startDate=" + orderStartStr + "&endDate=" + orderEndStr
         },
         btnAppointments: {
             id: "btnAppointments",
@@ -217,7 +231,7 @@ function reloadChartSource(additionalParams) {
 function setChartSource(pElement) {
     if (!!pElement.id) {
         var thisButtonConfig = buttonConfigurations[pElement.id];
-        setChartSourceFromButtonConfig(thisButtonConfig, "");
+        setChartSourceFromButtonConfig(thisButtonConfig, (thisButtonConfig.additionalParameters ? thisButtonConfig.additionalParameters : ""));
     }
 }
 function setChartSourceFromButtonConfig(thisButtonConfig, additionalParams) {
