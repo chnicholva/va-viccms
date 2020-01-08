@@ -43,12 +43,12 @@ function formResolved() {
 }
 
 
-Xrm.Utility.getNationalId = function (){
-	return _nationalId;
+Xrm.Utility.getNationalId = function () {
+    return _nationalId;
 }
 
 function form_onLoad() {
-	//debugger;
+    //debugger;
     var formType = Xrm.Page.ui.getFormType();
     var reasonData = getCurrentReasonForRequest();
     if (reasonData != null) {
@@ -60,39 +60,39 @@ function form_onLoad() {
             otherReasonControl.getAttribute().setRequiredLevel(require && formType > 1 ? "required" : "none");
         }
     }
-	
+
     //Xrm.Page.getControl('WebResource_HorizontalTabs').setSrc(Xrm.Page.getControl('WebResource_HorizontalTabs').getSrc());
     var tabs = parent.document.getElementById("WebResource_HorizontalTabs") ? parent.document.getElementById("WebResource_HorizontalTabs") : parent.document.getElementById("header_WebResource_HorizontalTabs");
-	if (tabs != null){
-		parent.document.getElementById("header_WebResource_HorizontalTabs").style.height = "35px";
-                //parent.document.getElementById("header_WebResource_HorizontalTabs").style.top="20px";
-	}
+    if (tabs != null) {
+        parent.document.getElementById("header_WebResource_HorizontalTabs").style.height = "35px";
+        //parent.document.getElementById("header_WebResource_HorizontalTabs").style.top="20px";
+    }
     retrieveActiveSettings();
-	
-	var cachedICN = parent.Xrm.Page.getAttribute("ftp_cachedicnid");
-	if (cachedICN != null){
-		var cachedICNValue = cachedICN.getValue();
-		if (cachedICNValue != null){
-			if (cachedICNValue.length > 0){
-				if (cachedICNValue[0].name != null){
-					if (cachedICNValue[0].name.length >= 10){
-						_nationalId = cachedICNValue[0].name.substring(0, 10);
-					}	
-				}
-			}
-		}
-	}
+
+    var cachedICN = parent.Xrm.Page.getAttribute("ftp_cachedicnid");
+    if (cachedICN != null) {
+        var cachedICNValue = cachedICN.getValue();
+        if (cachedICNValue != null) {
+            if (cachedICNValue.length > 0) {
+                if (cachedICNValue[0].name != null) {
+                    if (cachedICNValue[0].name.length >= 10) {
+                        _nationalId = cachedICNValue[0].name.substring(0, 10);
+                    }
+                }
+            }
+        }
+    }
 
     //always save ftp_hungupinqueue value
     var hungUpInQueueAttr = Xrm.Page.getAttribute("ftp_ishungupinqueue_bool");
-    if (!!hungUpInQueueAttr) 
-		hungUpInQueueAttr.setSubmitMode("always");
-	
-	retrieveCurrentUserAndOwnerTeamsAndRoles(ExecuteBusinessRules);
-	//ftp_assigneetype_onChange();
+    if (!!hungUpInQueueAttr)
+        hungUpInQueueAttr.setSubmitMode("always");
+
+    retrieveCurrentUserAndOwnerTeamsAndRoles(ExecuteBusinessRules);
+    //ftp_assigneetype_onChange();
 
     //fire USD event to fire form_onLoadWithParameters with parameters from USD $Context
-    window.open("http://event?eventname=RequestFormReady");
+    window.open("http://event?eventname=RequestFormReady&logicalName=incident&appid=955cda1c-27f0-e911-a994-001dd800951b&id=" + Xrm.Page.data.entity.getId().replace(/\{|\}/gi, ''));
 }
 
 function getCurrentReasonForRequest() {
@@ -110,6 +110,11 @@ function getCurrentReasonForRequest() {
 }
 
 function form_onLoadWithParameters(pICN, pVeteranPACTTeamName, pVeteranFacilityId, pVeteranFacilityIdName, pMHVID) {
+    debugger;
+    var locale = window.location;
+    if (local.indexOf("appid") == -1) {
+        window.location.replace(locale + "appid=955cda1c-27f0-e911-a994-001dd800951b");
+    }
     var thisOrgUrl = Xrm.Page.context.getClientUrl();
     _notProd = thisOrgUrl.indexOf("ftp.dev") > 1 || thisOrgUrl.indexOf("INTFTP") > 1 || thisOrgUrl.indexOf("QAFTP") > 1 || thisOrgUrl.indexOf("PREFTP") > 1;
 
@@ -319,8 +324,8 @@ function ExecuteBusinessRules() {
         ftp_reasonforrequest_onChange(pharmacyBoolean, pactBoolean, true);
 
         //Warm Transfer is visible to anyone if the owner is the Pharmacy team or a user on the Pharmacy team
-        var showWarmTransfer = userIsOnTeam("Pharmacy", owningUserDetails.teams) || ownerIsTeam("Pharmacy", ownerValue);
-        Xrm.Page.getControl("ftp_iswarmtransfer").setVisible(showWarmTransfer);
+        //var showWarmTransfer = userIsOnTeam("Pharmacy", owningUserDetails.teams) || ownerIsTeam("Pharmacy", ownerValue);
+        //Xrm.Page.getControl("ftp_iswarmtransfer").setVisible(showWarmTransfer);
     }
 }
 
@@ -445,6 +450,7 @@ function saveID() {
     if (ftype !== 1) {
         //deprecated.  this Logic is already covered in ExecuteBusinessRules
         return;
+		/*
         retrieveTeamsForUser(
             function (retrievedRecords) {
                 for (var i = 0, l = retrievedRecords.length; i < l; i++) {
@@ -455,7 +461,7 @@ function saveID() {
                 }
             }
         );
-
+		*/
         /* if (location.href.indexOf("Outlook15White") != -1) {
             //USD Session
             window.open("http://event/?EventName=Saved Request&id=" + Xrm.Page.data.entity.getId() + "");
@@ -512,11 +518,11 @@ function ftp_reasonforrequest_onChange(pPharmacyBoolean, pPactBoolean, pFiredOnL
     //Refresh Tabbed Control	
     //Xrm.Page.getControl('WebResource_HorizontalTabs').setSrc(Xrm.Page.getControl('WebResource_HorizontalTabs').getSrc());
     var tabs = Xrm.Page.getControl('WebResource_HorizontalTabs') ? Xrm.Page.getControl('WebResource_HorizontalTabs') : Xrm.Page.getControl('header_WebResource_HorizontalTabs');
-    if (tabs != null){
-		var source = tabs.getSrc();
-		tabs.setSrc(source);
-	}
-	
+    if (tabs != null) {
+        var source = tabs.getSrc();
+        tabs.setSrc(source);
+    }
+
     var subReasonControl = Xrm.Page.getControl("ftp_subreasonid");
     if (!!subReasonControl) {
         var visible = (isNarcoticRefillOrRenewal || isNonNarcoticRefillOrRenewal) && (pharmacyBoolean || pactBoolean);
@@ -600,10 +606,10 @@ function ftp_reasonforrequest_onChange(pPharmacyBoolean, pPactBoolean, pFiredOnL
     //Refresh Tabbed Control	
     //Xrm.Page.getControl('WebResource_HorizontalTabs').setSrc(Xrm.Page.getControl('WebResource_HorizontalTabs').getSrc());
     var tabs = Xrm.Page.getControl('WebResource_HorizontalTabs') ? Xrm.Page.getControl('WebResource_HorizontalTabs') : Xrm.Page.getControl('header_WebResource_HorizontalTabs');
-    if (tabs != null){
-		var source = tabs.getSrc();
-		tabs.setSrc(source);
-	}
+    if (tabs != null) {
+        var source = tabs.getSrc();
+        tabs.setSrc(source);
+    }
 
     var nonNarcoticRenewalDetailsFieldSet = [
         "ftp_rxtype",
@@ -677,61 +683,77 @@ function ftp_reasonforrequest_onChange(pPharmacyBoolean, pPactBoolean, pFiredOnL
         if (visible) {
             var medPickerWR = Xrm.Page.getControl("WebResource_MedicationPicker");
             if (!!medPickerWR) {
-				var medSrc = medPickerWR.getSrc();
+                var medSrc = medPickerWR.getSrc();
                 medPickerWR.setSrc("blank");
-				medPickerWR.setSrc(medSrc);
+                medPickerWR.setSrc(medSrc);
             }
         }
     }
-	
+
     //Refresh Tabbed Control	
     //Xrm.Page.getControl('WebResource_HorizontalTabs').setSrc(Xrm.Page.getControl('WebResource_HorizontalTabs').getSrc());
     var tabs = Xrm.Page.getControl('WebResource_HorizontalTabs') ? Xrm.Page.getControl('WebResource_HorizontalTabs') : Xrm.Page.getControl('header_WebResource_HorizontalTabs');
-    if (tabs != null){
-		var source = tabs.getSrc();
-		tabs.setSrc(source);
-	}
-	
-	//refreshFreqButtons();	
+    if (tabs != null) {
+        var source = tabs.getSrc();
+        tabs.setSrc(source);
+    }
+
+    //refreshFreqButtons();	
 }
 
-function refreshFreqButtons(){
 
-debugger;
+Xrm.Utility.refreshAfterLogin = function () {
+    var resource = Xrm.Page.getControl("WebResource_ViaWorkloadLookup");
+    if (resource != null) {
+        var source = resource.getSrc();
+        resource.setSrc("about:blank");
+        resource.setSrc(source);
+    }
+}
 
-	var freqButtons = 
-		[
-			"WebResource_ApplyNoteTemplateButton",
-			"WebResource_CancelNoteButton",
-			"WebResource_SelectSignersButton",
-			"WebResource_SaveNoteButton",
-			"WebResource_SaveToVistaButton",
-                        "WebResource_ViaWorkloadLookup",
-                        "WebResource_FreqUsedLocationButton",
-                        "WebResource_FreqUsedNoteTitleButton",
-                        "WebResource_RequestNoteSignerSearch"
-		];	
+Xrm.Utility.refreshRequestPageFromUSD = function () {
+    alert('refreshing');
+    Xrm.Page.data.refresh();
+    refreshFreqButtons();
+}
 
-	for (var index = 0; index < freqButtons.length; index++) { 
-		var resource = Xrm.Page.getControl(freqButtons[index]);
-		//var resource = parent.Xrm.Page.ui.controls.get(freqButtons[index]) as Xrm.Page.FramedControl;
-		if (resource != null){
-			var source = resource.getSrc();
-                        resource.setSrc("about:blank");
-			resource.setSrc(source);
-		}		
-	}
-	
-	//var viawlDOM = parent.Xrm.Page.getControl("WebResource_ViaWorkloadLookup").getObject().contentWindow.document;
-	
-	//viawlDOM.getElementById('viawl_searchNoteTitle').disabled = false;
-	//viawlDOM.getElementById('viawl_searchLocation').disabled = false;
-	//viawlDOM.getElementById('selFreqUsedNoteTitle').disabled = false;
-	//viawlDOM.getElementById('selFreqUsedLocation').disabled = false;
-	//viawlDOM.getElementById('selVisit').disabled = false;
-	//viawlDOM.getElementById('selSite').disabled = false;	
-	
-	//viawl_selectSiteRefresh();
+function refreshFreqButtons() {
+
+    //debugger;
+
+    var freqButtons =
+        [
+            "WebResource_ApplyNoteTemplateButton",
+            "WebResource_CancelNoteButton",
+            "WebResource_SelectSignersButton",
+            "WebResource_SaveNoteButton",
+            "WebResource_SaveToVistaButton",
+            "WebResource_ViaWorkloadLookup",
+            "WebResource_FreqUsedLocationButton",
+            "WebResource_FreqUsedNoteTitleButton",
+            "WebResource_RequestNoteSignerSearch"
+        ];
+
+    for (var index = 0; index < freqButtons.length; index++) {
+        var resource = Xrm.Page.getControl(freqButtons[index]);
+        //var resource = parent.Xrm.Page.ui.controls.get(freqButtons[index]) as Xrm.Page.FramedControl;
+        if (resource != null) {
+            var source = resource.getSrc();
+            resource.setSrc("about:blank");
+            resource.setSrc(source);
+        }
+    }
+
+    //var viawlDOM = parent.Xrm.Page.getControl("WebResource_ViaWorkloadLookup").getObject().contentWindow.document;
+
+    //viawlDOM.getElementById('viawl_searchNoteTitle').disabled = false;
+    //viawlDOM.getElementById('viawl_searchLocation').disabled = false;
+    //viawlDOM.getElementById('selFreqUsedNoteTitle').disabled = false;
+    //viawlDOM.getElementById('selFreqUsedLocation').disabled = false;
+    //viawlDOM.getElementById('selVisit').disabled = false;
+    //viawlDOM.getElementById('selSite').disabled = false;	
+
+    //viawl_selectSiteRefresh();
 
 }
 
@@ -1177,8 +1199,8 @@ function ownerid_onChange(pContext) {
 
         retrieveCurrentUserAndOwnerTeamsAndRoles(ExecuteBusinessRules);
     }
-	
-	refreshFreqButtons();
+
+    refreshFreqButtons();
 }
 
 function ftp_statedrugmonitoringreport_onChange() {
@@ -1221,7 +1243,7 @@ function ownerIsTeam(pTeamName, pOwnerValue) {
 }
 
 function form_onSave(pContext) {
-	debugger;
+    debugger;
     var saveMode = pContext.getEventArgs().getSaveMode();
     if (saveMode == 1 || saveMode == 70) {
         var recordId = Xrm.Page.data.entity.getId();
@@ -1233,7 +1255,7 @@ function form_onSave(pContext) {
 
     //set title to match reason for request
     var newTitle = setTitleField();
-	//refreshFreqButtons();
+    //refreshFreqButtons();
 }
 
 function setTitleField(pReasonForRequestValue) {
@@ -1314,6 +1336,7 @@ function collapseBusinessProcessBanner() {
 function hideRules() {
     //deprecated
     return false;
+	/*
     try {
         var fType = Xrm.Page.ui.getFormType();
         var currentUser = Xrm.Page.context.getUserId();
@@ -1346,6 +1369,7 @@ function hideRules() {
     catch (e) {
         alert("Error in hideRules(): " + e);
     }
+	*/
 }
 
 function hideActionTaken() {
@@ -1518,14 +1542,14 @@ function enableTriageButton() {
         }
     }
     catch (e) {
-		alert("Error in enable Triage Button. Error" + e);
+        alert("Error in enable Triage Button. Error" + e);
     }
     return TANTeam;
 }
 
 function ftp_assigneetype_onChange() {
     //return;
-	//debugger;
+    //debugger;
     //not yet implemented
     try {
         var assigneeTypeAttr = Xrm.Page.getAttribute("ftp_assigneetype");
@@ -1860,7 +1884,7 @@ function filterLookupByParentLookupFields(pTargetFieldName, pFieldMappings, pFil
     }
 }
 
-function hideAddNewActionTaken(){
-//debugger;
-return false;
+function hideAddNewActionTaken() {
+    //debugger;
+    return false;
 }

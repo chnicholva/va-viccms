@@ -16,7 +16,7 @@ function vcmn_launchNewProgressNote() {
         //Populate values of the crm attributes to be included on the form
         var vcmn_extraqs = "";
         vcmn_extraqs += "subject=" + "New Progress Note";
-        vcmn_extraqs += "&parameter_regardingobjectid=" + vcmn_entityId + "&parameter_regardingobjectidname=" + vcmn_primaryAtributeValue + "&parameter_regardingobjectidtype=" + vcmn_entityType + "&parameter_triageexpert=NO";
+        vcmn_extraqs += "&regardingobjectid=" + vcmn_entityId + "&regardingobjectidname=" + vcmn_primaryAtributeValue + "&regardingobjectidtype=" + vcmn_entityType + "&parameter_triageexpert=NO";
         var vcmn_progressNoteUrl = vcmn_serverUrl + "/apps/vicccms/main.aspx?etn=" + "ftp_progressnote" + "&pagetype=entityrecord&navbar=off" + "&extraqs=" +
             encodeURIComponent(vcmn_extraqs);  //+ "&newWindow=true";
         var vcmn_progressNoteWindow = window.open(vcmn_progressNoteUrl, "_blank", "toolbar=no, scrollbars=yes, status=no, resizable=yes, top=1, left=1, width=1000, height=800", false);

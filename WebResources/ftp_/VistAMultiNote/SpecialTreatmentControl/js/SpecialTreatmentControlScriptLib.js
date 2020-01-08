@@ -17,6 +17,7 @@ var sptr_EnrollmentEligibilitySummaryURLbase = '';
 //Set Default Service Return value = null
 var sptr_EnrollmentEligibilitySummaryData = null;
 var sptr_regardingobjectid = null;
+var sptr_regardingobjectidtype = null;
 var sptr_tanConfiguration = false;
 
 function sptr_SettingsWebServiceURL_response(sptr_settingData, sptr_lastSkip, sptr_eesummaryURLbase_NA) {
@@ -52,15 +53,27 @@ function sptr_SettingsWebServiceURL_response(sptr_settingData, sptr_lastSkip, sp
                     return false;
                 }
                 sptr_regardingobjectid = sptr_requestId[0].id;
+                sptr_regardingobjectidtype = sptr_requestId[0].entityType;
             }
 
             var sptr_veteranId = null;  //From request customerid
+            var sptr_requestData = null;
 
-            var sptr_requestData = sptr_getSingleEntityDataSync('IncidentSet', 'CustomerId', sptr_regardingobjectid);
-            if (sptr_requestData != null) {
-                if (sptr_requestData.d.CustomerId != null) {
-                    //Set as veteran id
-                    sptr_veteranId = sptr_requestData.d.CustomerId.Id
+            if (sptr_regardingobjectidtype === 'ftp_interaction') {
+                sptr_requestData = sptr_getSingleEntityDataSync('ftp_interactionSet', 'ftp_Veteran', sptr_regardingobjectid); if (sptr_requestData != null) {
+                    if (sptr_requestData.d.ftp_Veteran != null) {
+                        //Set as veteran id
+                        sptr_veteranId = sptr_requestData.d.ftp_Veteran.Id
+                    }
+                }
+            }
+            else {
+                sptr_requestData = sptr_getSingleEntityDataSync('IncidentSet', 'CustomerId', sptr_regardingobjectid);
+                if (sptr_requestData != null) {
+                    if (sptr_requestData.d.CustomerId != null) {
+                        //Set as veteran id
+                        sptr_veteranId = sptr_requestData.d.CustomerId.Id
+                    }
                 }
             }
 

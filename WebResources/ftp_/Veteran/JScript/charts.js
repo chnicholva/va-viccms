@@ -25,9 +25,10 @@ $(document).ready(function () {
     //setup global objects...
     context = getContext();
     configData = null;
+
     parseDataParametersFromUrl(location.search);
     window.addEventListener('message', function (args) {
-        debugger;
+        //debugger;
         args
             && args.data
             && args.data.data
@@ -63,6 +64,11 @@ function loadButtons() {
     var orderEnd = new Date();
     var orderStartStr = orderStart.getMonth() + 1 + "/" + orderStart.getDate() + "/" + orderStart.getFullYear();
     var orderEndStr = orderEnd.getMonth() + 1 + "/" + orderEnd.getDate() + "/" + orderEnd.getFullYear();
+
+    var consultStart = deltaDate(new Date(), 0, -24, 0);
+    var consultEnd = new Date();
+    var consultStartStr = consultStart.getMonth() + 1 + "/" + consultStart.getDate() + "/" + consultStart.getFullYear();
+    var consultEndStr = consultEnd.getMonth() + 1 + "/" + consultEnd.getDate() + "/" + consultEnd.getFullYear();
 
     buttonConfigurations = {
         btnSCD: {
@@ -144,7 +150,11 @@ function loadButtons() {
             unsecureURLFieldName: "ftp_ConsultChartURL",
             secureURLFieldName: "ftp_ConsultChartSecureURL",
             secure: false,
-            url: ""
+            url: "",
+            additionalParameters: "&startDate=" + consultStartStr + "&endDate=" + consultEndStr,
+            postProcessor: function (html) {
+                return html.replace(/Consults \(within previous 12 month, all status\)/, "Consults (within previous 24 month, all status)");
+            }
         },
         btnNonVAMeds: {
             id: "btnNonVAMeds",
@@ -235,6 +245,7 @@ function setChartSource(pElement) {
     }
 }
 function setChartSourceFromButtonConfig(thisButtonConfig, additionalParams) {
+    debugger;
     if (!!thisButtonConfig) {
         if (!!thisButtonConfig.url) {
             lastButtonConfig = thisButtonConfig;
@@ -273,6 +284,7 @@ function setChartSourceFromButtonConfig(thisButtonConfig, additionalParams) {
                         }
                     },
                     success: function (data) {
+                        thisButtonConfig.postProcessor && (data = thisButtonConfig.postProcessor(data));
                         data = data.replace(new RegExp('/Content/', 'g'), retrievedSettings.ftp_VEISContentSiteURL + 'Content/');
                         data = data.replace(new RegExp('/Scripts/', 'g'), retrievedSettings.ftp_VEISContentSiteURL + 'Scripts/');
                         data = data.replace(new RegExp('window.location.href', 'g'), "'" + thisButtonConfig.url + additionalParams + "'");
@@ -289,6 +301,22 @@ function setChartSourceFromButtonConfig(thisButtonConfig, additionalParams) {
                         //data = data.replace("\"btnAddSigner\"", "\"btnAddSigner\" style=\"display:none\"");
                         data = data.replace(new RegExp('glyphicon glyphicon-info-sign', 'g'), "fa fa-info-circle");
                         data = data.replace(new RegExp('span.glyphicon-info-sign', 'g'), "span.fa-info-circle");
+
+                        var newJS = context.getClientUrl() + "//WebResources/ftp_NotesFtpCRM.js";
+
+                        data = data.replace("https://veispresentationcontent-veis.nprod.vaec.va.gov/Scripts/Views/NotesFtpCRM.js", newJS);
+
+                        ///////////////////////////////////////////////
+                        //GLM - 11/25/2019 - User Story 1159280		
+                        data = data.replace("val = val.replace(/<.+>/, \"\").trim();", "val = val.replace(/<.+>/, \"\").trim();window.parent.document.getElementById('commonfacility').value=$(this).val();");
+                        data = data.replace("select.append('<option value=\"' + d + '\">' + d + ' </option>');", "var defaultFacility = window.parent.document.getElementById('commonfacility').value; defaultFacility = defaultFacility.replace(/\\\\/, \"\").trim(); var col = this.column(column.index()).header().innerHTML; if (col == \"Facility\"){ if (d == defaultFacility){ select.append('<option value=\"' + d + '\" selected>' + d + ' </option>'); }else{ select.append('<option value=\"' + d + '\">' + d + ' </option>'); }	}else{ select.append('<option value=\"' + d + '\">' + d + ' </option>');}");
+                        //data = data.replace(");\r\n        });\r\n    }\r\n    // populate page load","var table =  $('#DataGrid').DataTable(); for(var x = 0; x < 9; x++){if (table.column(x).header().innerHTML == \"Facility\"){table.columns(x).search( window.parent.document.getElementById('commonfacility').value ).draw(); break;}}	}); }  // populate page load queue");
+                        //data.substring(data.indexOf("// populate page")-18, data.indexOf("// populate page"));	
+                        var idx = data.indexOf("// populate page");
+                        data = data.substring(0, idx - 28) + "\r\nvar table =  $('#DataGrid').DataTable();\r\nfor(var x = 0; x < 9; x++){\r\nif (table.column(x).header().innerHTML == \"Facility\"){\r\ntable.columns(x).search( window.parent.document.getElementById('commonfacility').value ).draw(); \r\nbreak;\r\n}\r\n}" + data.substring(idx - 28);
+                        ///////////////////////////////////////////////
+
+
 
                         //inject our js into this doc
                         data = data.replace(retrievedSettings.ftp_VEISContentSiteURL + "Scripts/Views/WidgetDateFilter.js", context.getClientUrl() + "/WebResources/ftp_/Veteran/JScript/datefilter.js");
@@ -321,19 +349,36 @@ function setChartSourceFromButtonConfig(thisButtonConfig, additionalParams) {
     }
 
 }
+
 function openNewAddendumForm(args, pNoteVistAId) {
+    debugger;
     //open ftp_addendum form to create new addendum attached to note in VistA
     if (typeof pNoteVistAId == "string") {
-        var noteJson = JSON.parse(args.source.$('#' + pNoteVistAId + ' > td.json').text());
-        var fCode = noteJson.OriginalNote.FacilityCode;
 
-        var newAddendumUrl = context.getClientUrl() + "/main.aspx?etn=ftp_addendum&pagetype=entityrecord";
-        var extraQs = "&extraqs=";
-        extraQs += encodeURIComponent("ftp_vistanoteid=" + pNoteVistAId + "&ftp_facilityid=" + fCode);
-        if (!!configData && configData.hasOwnProperty("contactid") && !!configData.contactid && configData.hasOwnProperty("fullname") && !!configData.fullname) {
-            extraQs += encodeURIComponent("&ftp_veteran=" + configData.contactid + "&ftp_veteranname=" + configData.fullname);
-        }
-        window.open(newAddendumUrl + extraQs);
+        //var noteJson = JSON.parse(args.source.$('#' + pNoteVistAId + ' > td.json').text());
+        // loop over each table row (tr)
+        args.source.$("#DataGrid tr").each(function () {
+            var currentRow = $(this);
+            try {
+                var noteJson = JSON.parse(this.cells[8].innerHTML);
+                if (noteJson.OriginalNote.AddendumUid != null) {
+                    if (noteJson.OriginalNote.AddendumUid.indexOf(pNoteVistAId) > -1) {
+
+                        var fCode = noteJson.OriginalNote.FacilityCode;
+
+                        var newAddendumUrl = context.getClientUrl() + "/main.aspx?etn=ftp_addendum&pagetype=entityrecord";
+                        var extraQs = "&extraqs=";
+                        extraQs += encodeURIComponent("ftp_vistanoteid=" + pNoteVistAId + "&ftp_facilityid=" + fCode);
+                        if (!!configData && configData.hasOwnProperty("contactid") && !!configData.contactid && configData.hasOwnProperty("fullname") && !!configData.fullname) {
+                            extraQs += encodeURIComponent("&ftp_veteran=" + configData.contactid + "&ftp_veteranname=" + configData.fullname);
+                        }
+                        window.open(newAddendumUrl + extraQs);
+                        return;
+                    }
+                }
+            } catch (e) {
+            }
+        });
     }
 }
 
@@ -392,12 +437,26 @@ function openCRMRecordForAdditionalSigners(pVistaRecordId, pEntitySchemaName, pV
 }
 
 function openNewAdditionalSignerForm(args, pVistaRecordId, pVistaRecordType) {
+    debugger;
     //create placeholder ftp_additionalsigner record, then open it to give user an interface for selecting usrs and adding them to the current note/addendum
     if (typeof pVistaRecordId == "string" && typeof pVistaRecordType == "string") {
         var fCode = '';
         if (pVistaRecordType === 'note') {
-            var noteJson = JSON.parse(args.source.$('#' + pVistaRecordId + ' > td.json').text());
-            fCode = noteJson.OriginalNote.FacilityCode;
+            //var noteJson = JSON.parse(args.source.$('#' + pVistaRecordId + ' > td.json').text());
+            args.source.$("#DataGrid tr").each(function () {
+                var currentRow = $(this);
+                try {
+                    var noteJson = JSON.parse(this.cells[8].innerHTML);
+                    if (noteJson.OriginalNote.AddendumUid != null) {
+                        if (noteJson.OriginalNote.AddendumUid.indexOf(pVistaRecordId) > -1) {
+
+                            fCode = noteJson.OriginalNote.FacilityCode;
+                            return;
+                        }
+                    }
+                } catch (e) {
+                }
+            });
         }
         else {
             var addendums = args.source.$('#addendGrid td[data-json]');
@@ -575,9 +634,11 @@ function fixTrackingURLs(pString) {
 }
 
 function getContext() {
+    debugger;
     return (typeof GetGlobalContext != "undefined") ? GetGlobalContext() : null;
 }
 function parseDataParametersFromUrl(pQueryString) {
+    debugger;
     //example query string (unencoded): contactid={32CA1B55-DC81-E611-9445-0050568D743D}&fullname=TIFINKLE, ANDREW&sensitivity=true&IsUSD=true
     var fullParameterArray = pQueryString.substr(1).split("&");
 

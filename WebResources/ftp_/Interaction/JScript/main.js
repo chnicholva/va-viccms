@@ -2,7 +2,7 @@
 var _usedOutboundCallScript = false;
 
 function form_onLoad() {
-debugger;
+    debugger;
     showContactInfo();
     populateDate();
     var callBackNumberAttr = Xrm.Page.getAttribute("ftp_callbacknumber");
@@ -17,9 +17,35 @@ debugger;
         Xrm.Page.getAttribute("tri_firstcallinteraction").fireOnChange();
     }
 
+    var mviSite = Xrm.Page.getAttribute('ftp_mvisite');
+    var mviSiteId = Xrm.Page.getAttribute('ftp_mvisiteid');
+
+    var mviSiteValue = null;
+    var mviSiteIdValue = null;
+
+    if (mviSite != null)
+        mviSiteValue = mviSite.getValue();
+
+    if (mviSiteId != null)
+        mviSiteIdValue = mviSiteId.getValue();
+
+    if (mviSiteValue != null && mviSiteIdValue != null) {
+        //ftp_requestfacilityid
+        Xrm.Page.getAttribute('ftp_requestfacilityid').setValue();
+        var lookupValue = new Array();
+        lookupValue[0] = new Object();
+        lookupValue[0].id = "{" + mviSiteIdValue + "}";
+        lookupValue[0].name = mviSiteValue; // Name of the lookup
+        lookupValue[0].entityType = "ftp_facility"; //Entity Type of the lookup entity
+        Xrm.Page.getAttribute("ftp_requestfacilityid").setValue(lookupValue);
+    }
+
     getAnyMissingDataFromVeteran();
     refreshLinker();
     lockdownFormForSubsequentUSDSessions();
+    if (Xrm.Page.data.entity.getId()) {
+        VCCM.USDHelper.CopyToUSDContext(["InteractionId=" + Xrm.Page.data.entity.getId().replace(/\{|\}/gi, '')]);
+    }
 }
 
 function lockdownFormForSubsequentUSDSessions() {
@@ -63,33 +89,33 @@ function setInteractionDirectionByTeamMembership() {
     //true = outbound
     //false = inbound
     retrieveTeamsForUser(
-		function (retrievedRecords) {
-		    for (var i = 0, l = retrievedRecords.length; i < l; i++) {
-		        if (retrievedRecords[i].hasOwnProperty("Name")) {
-		            var thisTeamName = retrievedRecords[i].Name;
-		            //INBOUND
-		            if (thisTeamName == "CCA Team" || thisTeamName == "RN" || thisTeamName == "Pharmacy") {
-		                writeToConsole("User is member of " + thisTeamName + ".  Direction: Inbound");
-		                Xrm.Page.getAttribute("ftp_direction").setValue(false);
-		                break;
-		            }
-		            //OUTBOUND
-		            if (thisTeamName == "LIP User") {
-		                writeToConsole("User is member of " + thisTeamName + ".  Direction: Outbound");
-		                Xrm.Page.getAttribute("ftp_direction").setValue(true);
-		                break;
-		            }
-		        }
-		    }
-		});
+        function (retrievedRecords) {
+            for (var i = 0, l = retrievedRecords.length; i < l; i++) {
+                if (retrievedRecords[i].hasOwnProperty("Name")) {
+                    var thisTeamName = retrievedRecords[i].Name;
+                    //INBOUND
+                    if (thisTeamName == "CCA Team" || thisTeamName == "RN" || thisTeamName == "Pharmacy") {
+                        writeToConsole("User is member of " + thisTeamName + ".  Direction: Inbound");
+                        Xrm.Page.getAttribute("ftp_direction").setValue(false);
+                        break;
+                    }
+                    //OUTBOUND
+                    if (thisTeamName == "LIP User") {
+                        writeToConsole("User is member of " + thisTeamName + ".  Direction: Outbound");
+                        Xrm.Page.getAttribute("ftp_direction").setValue(true);
+                        break;
+                    }
+                }
+            }
+        });
 }
 
 function refreshLinker() {
-	debugger;
+    debugger;
     if (Xrm.Page.ui.getFormType() > 1) {
         var rlinker = Xrm.Page.getControl("WebResource_RequestLinker");
-		var source = rlinker.getSrc();
-		rlinker.setSrc("about:blank");		
+        var source = rlinker.getSrc();
+        rlinker.setSrc("about:blank");
         rlinker.setSrc(source);
     }
 }
@@ -101,9 +127,9 @@ function getAnyMissingDataFromVeteran() {
 		But if we are missing any phone numbers when this form loads for the first time, check the veteran record to see if we can fill in any missing data that ESR did not provide.
 		*/
         var mappedFieldList = [
-			{ contactField: "ftp_HomePhone", interactionField: "ftp_homephone" },
-			{ contactField: "ftp_WorkPhone", interactionField: "ftp_businessphone" },
-			{ contactField: "ftp_MobilePhone", interactionField: "ftp_mobilephone" }
+            { contactField: "ftp_HomePhone", interactionField: "ftp_homephone" },
+            { contactField: "ftp_WorkPhone", interactionField: "ftp_businessphone" },
+            { contactField: "ftp_MobilePhone", interactionField: "ftp_mobilephone" }
         ];
 
         for (var i = mappedFieldList.length - 1; i > -1; i--) {
@@ -119,23 +145,23 @@ function getAnyMissingDataFromVeteran() {
                 var queryString = "";
                 for (var i = 0; i < mappedFieldList.length; i++) { queryString += (i == 0 ? mappedFieldList[i].contactField : ("," + mappedFieldList[i].contactField)); }
                 SDK.REST.retrieveRecord(
-					veteranValue[0].id,
-					"Contact",
-					queryString,
-					null,
-					function (retrievedContact) {
-					    if (!!retrievedContact) {
-					        for (var i = 0; i < mappedFieldList.length; i++) {
-					            var thisPhoneNumber = mappedFieldList[i];
-					            if (retrievedContact.hasOwnProperty(thisPhoneNumber.contactField) && !!retrievedContact[thisPhoneNumber.contactField]) {
-					                Xrm.Page.getAttribute(thisPhoneNumber.interactionField).setValue(retrievedContact[thisPhoneNumber.contactField]);
-					                Xrm.Page.getAttribute(thisPhoneNumber.interactionField).setSubmitMode("always");
-					            }
-					        }
-					    }
-					},
-					errorHandler
-				);
+                    veteranValue[0].id,
+                    "Contact",
+                    queryString,
+                    null,
+                    function (retrievedContact) {
+                        if (!!retrievedContact) {
+                            for (var i = 0; i < mappedFieldList.length; i++) {
+                                var thisPhoneNumber = mappedFieldList[i];
+                                if (retrievedContact.hasOwnProperty(thisPhoneNumber.contactField) && !!retrievedContact[thisPhoneNumber.contactField]) {
+                                    Xrm.Page.getAttribute(thisPhoneNumber.interactionField).setValue(retrievedContact[thisPhoneNumber.contactField]);
+                                    Xrm.Page.getAttribute(thisPhoneNumber.interactionField).setSubmitMode("always");
+                                }
+                            }
+                        }
+                    },
+                    errorHandler
+                );
             }
         }
     }
@@ -199,8 +225,8 @@ function formatTelephoneNumber(pContext) {
             var value = changedAttribute.getValue();
             if (!!value) {
                 var formattedValue = value;
-                try{
-                    formattedValue = formatTelephoneNumberNANP(value);                
+                try {
+                    formattedValue = formatTelephoneNumberNANP(value);
                     changedAttribute.setValue(formattedValue);
                 }
                 catch (e) {
@@ -306,10 +332,10 @@ function updateIdProofBusinessRulesOnChange() {
     var ssnChecked = ssnControl.getAttribute().getValue();
 
     if ((!lastNameChecked && !dobChecked && !ssnChecked) //all unchecked
-		 || (lastNameChecked && !dobChecked && !ssnChecked) //two unchecked
-		 || (dobChecked && !ssnChecked && !lastNameChecked) //two unchecked
-		 || (ssnChecked && !lastNameChecked && !dobChecked) //two unchecked
-		 || (lastNameChecked && dobChecked & ssnChecked)) { //all checked
+        || (lastNameChecked && !dobChecked && !ssnChecked) //two unchecked
+        || (dobChecked && !ssnChecked && !lastNameChecked) //two unchecked
+        || (ssnChecked && !lastNameChecked && !dobChecked) //two unchecked
+        || (lastNameChecked && dobChecked & ssnChecked)) { //all checked
         setControlsBusinessRequired([lastNameControl, dobControl, ssnControl]); //all check boxes required
     }
     else if (lastNameChecked && dobChecked && !ssnChecked) { //two checked
@@ -335,8 +361,8 @@ function passesIdProtocol() {
     var ssnChecked = Xrm.Page.getAttribute("ftp_dob").getValue();
 
     if ((!lastNameChecked && !dobChecked)
-		 || (!dobChecked && !ssnChecked)
-		 || (!ssnChecked && !lastNameChecked)) {
+        || (!dobChecked && !ssnChecked)
+        || (!ssnChecked && !lastNameChecked)) {
 
         Xrm.Page.getControl("ftp_lastname").setNotification("Please validate at least two fields before saving.", "VALIDATION");
         return false;
@@ -364,6 +390,7 @@ function removeCarriageReturns(pText) {
 }
 
 function form_onSave(econtext) {
+    debugger;
     var eventArgs = econtext.getEventArgs();
 
     //prevent auto save
@@ -371,8 +398,8 @@ function form_onSave(econtext) {
         eventArgs.preventDefault();
         return;
     }
-	
-	refreshLinker();
+
+    refreshLinker();
 
     var isOutbound = Xrm.Page.getAttribute("ftp_direction").getValue() == true;
 
@@ -381,6 +408,13 @@ function form_onSave(econtext) {
         populateSubject();
         var number = Xrm.Page.getAttribute("ftp_callbacknumber").getValue();
         var isFirstCallResolution = Xrm.Page.getAttribute("tri_firstcallinteraction").getValue();
+        var vetAttr = Xrm.Page.getAttribute('ftp_veteran').getValue()[0];
+        var vetName = vetAttr.name;
+        var vetId = vetAttr.id.replace(/\{|\}/gi, '');
+
+        var sFacAttr = Xrm.Page.getAttribute('ftp_requestfacilityid').getValue()[0];
+        var sfacName = sFacAttr.name.replace(/\s/gi, ' ');
+        var sfacId = sFacAttr.id.replace(/\{|\}/gi, '');
         debugger;
 
         //this is required because USD Saved event on Interaction hosted control is not working
@@ -390,6 +424,7 @@ function form_onSave(econtext) {
             var rfrName = !!rfrValue ? rfrValue[0].name : "";
             var rfrId = !!rfrValue ? rfrValue[0].id : "";
             var rfrOtherText = !!Xrm.Page.getAttribute("ftp_reasonforrequestother_text") ? Xrm.Page.getAttribute("ftp_reasonforrequestother_text").getValue() : "";
+
             VCCM.USDHelper.FireUSDEvent(
                 "Set interaction fields",
                 [
@@ -397,7 +432,11 @@ function form_onSave(econtext) {
                     "callbacknumber=" + number,
                     "reasonforrequestname=" + rfrName,
                     "reasonforrequestid=" + rfrId,
-                    "reasonforrequestothertext=" + rfrOtherText
+                    "reasonforrequestothertext=" + rfrOtherText,
+                    "servicingfacilityidname=" + sfacName,
+                    "servicingfacilityid=" + sfacId,
+                    "veteranid=" + vetId,
+                    "veteranname=" + vetName
                 ],
                 null
             );
@@ -436,7 +475,11 @@ function form_onSave(econtext) {
                         "reasonforrequestothertext=" + rfrOtherText,
                         "subreasonname=" + subreasonName,
                         "subreasonid=" + subreasonId,
-                        "subreasonothertext=" + Xrm.Page.getAttribute("ftp_outboundinteractioncallreasonother").getValue()
+                        "subreasonothertext=" + Xrm.Page.getAttribute("ftp_outboundinteractioncallreasonother").getValue(),
+                        "servicingfacilityidname=" + sfacName,
+                        "servicingfacilityid=" + sfacId,
+                        "veteranid=" + vetId,
+                        "veteranname=" + vetName
                     ],
                     null
                 );
@@ -495,19 +538,19 @@ function setUpControlledSubstanceRenewalForPharmacyTeamMembers() {
             var rfrValue = rfrAtt.getValue();
             if (!!rfrValue && rfrValue[0].name == "Medication - Renewal Narcotic") {
                 retrieveTeamsForUser(
-					function (retrievedRecords) {
-					    if (retrievedRecords.length < 1) return;
-					    for (var i = 0, l = retrievedRecords.length; i < l; i++) {
-					        var thisTeam = retrievedRecords[i];
-					        if (thisTeam.hasOwnProperty("Name") && thisTeam.Name == "Pharmacy") {
-					            reasonForSubstanceRenewalControl.getAttribute().setRequiredLevel("required");
-					            reasonForSubstanceRenewalControl.clearNotification();
-					            reasonForSubstanceRenewalControl.setVisible(true);
-					            break;
-					        }
-					    }
-					}
-				);
+                    function (retrievedRecords) {
+                        if (retrievedRecords.length < 1) return;
+                        for (var i = 0, l = retrievedRecords.length; i < l; i++) {
+                            var thisTeam = retrievedRecords[i];
+                            if (thisTeam.hasOwnProperty("Name") && thisTeam.Name == "Pharmacy") {
+                                reasonForSubstanceRenewalControl.getAttribute().setRequiredLevel("required");
+                                reasonForSubstanceRenewalControl.clearNotification();
+                                reasonForSubstanceRenewalControl.setVisible(true);
+                                break;
+                            }
+                        }
+                    }
+                );
             }
             else {
                 reasonForSubstanceRenewalControl.getAttribute().setValue();
@@ -525,49 +568,49 @@ function filterRFR() {
     try {
         if (Xrm.Page.getControl("tri_reasonforrequest")) {
             retrieveTeamsForUser(
-				function (retrievedRecords) {
-				    if (retrievedRecords.length < 1) return;
-				    for (var i = 0, l = retrievedRecords.length; i < l; i++) {
-				        var thisTeam = retrievedRecords[i];
-				        if (thisTeam.hasOwnProperty("Name") && thisTeam.hasOwnProperty("TeamId") &&
-							(thisTeam.Name == "Pharmacy" || thisTeam.Name == "LIP User" || thisTeam.Name == "CCA Team" || thisTeam.Name == "RN")) {
-				            var fetchXml = '<fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">' +
-								'     <entity name="ftp_reasonforrequest">' +
-								'         <attribute name="ftp_reasonforrequestid" />' +
-								'         <attribute name="ftp_reason" />' +
-								'         <attribute name="createdon" />' +
-								'         <filter type="and">' +
-								'             <condition attribute="statecode" operator="eq" value="0" />' +
-								'             <condition attribute="ftp_display" operator="eq" value="1" />' +
-								'         </filter>' +
-								'        <link-entity name="ftp_ftp_reasonforrequest_team" from="ftp_reasonforrequestid" to="ftp_reasonforrequestid">' +
-								'            <link-entity name="team" from="teamid" to="teamid" alias="ac">' +
-								'                <filter type="and">' +
-								'                    <condition attribute="teamid" value="' + thisTeam.TeamId + '" uitype="team" uiname="' + thisTeam.Name + '" operator="eq" />' +
-								'                </filter>' +
-								'            </link-entity>' +
-								'        </link-entity>' +
-								'     </entity>' +
-								' </fetch>';
-				            var layoutXml = '<grid name="resultset" object="1" jump="ftp_reasonforrequestid" select="1" icon="1" preview="1">' +
-								'<row name="result" id="ftp_reasonforrequestid">' +
-								'<cell name="ftp_reason" width="150" />' +
-								'<cell name="createdon" width="150" />' +
-								'</row>' +
-								'</grid>';
-				            Xrm.Page.getControl("tri_reasonforrequest").addCustomView(
-								"{00000000-0000-0000-0000-00000000000" + i + "}",
-								"ftp_reasonforrequest",
-								"Reasons for Request",
-								fetchXml,
-								layoutXml,
-								true
-							);
-				            break;
-				        }
-				    }//end for loop
-				}
-			);
+                function (retrievedRecords) {
+                    if (retrievedRecords.length < 1) return;
+                    for (var i = 0, l = retrievedRecords.length; i < l; i++) {
+                        var thisTeam = retrievedRecords[i];
+                        if (thisTeam.hasOwnProperty("Name") && thisTeam.hasOwnProperty("TeamId") &&
+                            (thisTeam.Name == "Pharmacy" || thisTeam.Name == "LIP User" || thisTeam.Name == "CCA Team" || thisTeam.Name == "RN")) {
+                            var fetchXml = '<fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">' +
+                                '     <entity name="ftp_reasonforrequest">' +
+                                '         <attribute name="ftp_reasonforrequestid" />' +
+                                '         <attribute name="ftp_reason" />' +
+                                '         <attribute name="createdon" />' +
+                                '         <filter type="and">' +
+                                '             <condition attribute="statecode" operator="eq" value="0" />' +
+                                '             <condition attribute="ftp_display" operator="eq" value="1" />' +
+                                '         </filter>' +
+                                '        <link-entity name="ftp_ftp_reasonforrequest_team" from="ftp_reasonforrequestid" to="ftp_reasonforrequestid">' +
+                                '            <link-entity name="team" from="teamid" to="teamid" alias="ac">' +
+                                '                <filter type="and">' +
+                                '                    <condition attribute="teamid" value="' + thisTeam.TeamId + '" uitype="team" uiname="' + thisTeam.Name + '" operator="eq" />' +
+                                '                </filter>' +
+                                '            </link-entity>' +
+                                '        </link-entity>' +
+                                '     </entity>' +
+                                ' </fetch>';
+                            var layoutXml = '<grid name="resultset" object="1" jump="ftp_reasonforrequestid" select="1" icon="1" preview="1">' +
+                                '<row name="result" id="ftp_reasonforrequestid">' +
+                                '<cell name="ftp_reason" width="150" />' +
+                                '<cell name="createdon" width="150" />' +
+                                '</row>' +
+                                '</grid>';
+                            Xrm.Page.getControl("tri_reasonforrequest").addCustomView(
+                                "{00000000-0000-0000-0000-00000000000" + i + "}",
+                                "ftp_reasonforrequest",
+                                "Reasons for Request",
+                                fetchXml,
+                                layoutXml,
+                                true
+                            );
+                            break;
+                        }
+                    }//end for loop
+                }
+            );
         }
     }
     catch (e) {
@@ -586,39 +629,39 @@ function setupOutboundInteraction(pOutboundCallRFRName) {
     var rfrName = !!pOutboundCallRFRName ? pOutboundCallRFRName : "Pharmacy Outbound Call";
     var query = "$select=ftp_reasonforrequestId,ftp_reason&$filter=ftp_reason eq '" + rfrName + "' and statecode/Value eq 0&$orderby=CreatedOn desc";
     SDK.REST.retrieveMultipleRecords(
-		"ftp_reasonforrequest",
-		query,
-		function (retrievedRecords) {
-		    if (!!retrievedRecords && retrievedRecords.length > 0) retrievedReasons = retrievedReasons.concat(retrievedRecords);
-		},
-		errorHandler,
-		function () {
-		    if (retrievedReasons.length > 0) {
-		        var outboundRFR = retrievedReasons[0];
-		        Xrm.Page.getAttribute("tri_interactiontype").setValue(167410009); /*set type to 'Other'*/
-		        Xrm.Page.getAttribute("tri_reasonforrequest").setValue([{ id: outboundRFR.ftp_reasonforrequestId, name: outboundRFR.ftp_reason, entityType: "ftp_reasonforrequest" }]);/*reason for request*/
-		        Xrm.Page.getAttribute("ftp_direction").setValue(true);/*outbound*/
-		        Xrm.Page.getAttribute("tri_firstcallinteraction").setValue(false);/*first call resolution = no, as of 5/30/17*/
-		        Xrm.Page.getAttribute("ftp_interactedwith").setRequiredLevel("none");
+        "ftp_reasonforrequest",
+        query,
+        function (retrievedRecords) {
+            if (!!retrievedRecords && retrievedRecords.length > 0) retrievedReasons = retrievedReasons.concat(retrievedRecords);
+        },
+        errorHandler,
+        function () {
+            if (retrievedReasons.length > 0) {
+                var outboundRFR = retrievedReasons[0];
+                Xrm.Page.getAttribute("tri_interactiontype").setValue(167410009); /*set type to 'Other'*/
+                Xrm.Page.getAttribute("tri_reasonforrequest").setValue([{ id: outboundRFR.ftp_reasonforrequestId, name: outboundRFR.ftp_reason, entityType: "ftp_reasonforrequest" }]);/*reason for request*/
+                Xrm.Page.getAttribute("ftp_direction").setValue(true);/*outbound*/
+                Xrm.Page.getAttribute("tri_firstcallinteraction").setValue(false);/*first call resolution = no, as of 5/30/17*/
+                Xrm.Page.getAttribute("ftp_interactedwith").setRequiredLevel("none");
 
-		        /*Hide Combo Request button?*/
+                /*Hide Combo Request button?*/
 
-		        /*Show Outbound Interaction Details tab*/
-		        Xrm.Page.ui.tabs.get("Tab_OutboundPharmacyInteraction").setVisible(true);
-		        Xrm.Page.ui.tabs.get("Tab_OutboundPharmacyInteraction").setDisplayState("expanded");
-		        Xrm.Page.getControl("ftp_outboundinteractionwhoansweredtext").setVisible(false);
+                /*Show Outbound Interaction Details tab*/
+                Xrm.Page.ui.tabs.get("Tab_OutboundPharmacyInteraction").setVisible(true);
+                Xrm.Page.ui.tabs.get("Tab_OutboundPharmacyInteraction").setDisplayState("expanded");
+                Xrm.Page.getControl("ftp_outboundinteractionwhoansweredtext").setVisible(false);
 
-		        _usedOutboundCallScript = true;
-		    }
-		    else {
+                _usedOutboundCallScript = true;
+            }
+            else {
 		        /*
 				could not find the "Pharmacy Outbound Call" reason for request record
 				future: if we setup the proper N:N relationship between ftp_reasonforrequest and ftp_facility entity, we can filter against current user's facility.
 				*/
-		        alert("Script error in setupOutboundInteraction(): Could not find '" + rfrName + "' reason for request.");
-		    }
-		}
-	);
+                alert("Script error in setupOutboundInteraction(): Could not find '" + rfrName + "' reason for request.");
+            }
+        }
+    );
 }
 
 /*used by USD agent script answers*/
@@ -637,26 +680,26 @@ function setOutboundInteractionSubReasonSelection(pName) {
         var retrievedReasons = [];
         var query = "$select=ftp_subreasonId,ftp_name&$filter=ftp_name eq '" + pName + "' and statecode/Value eq 0&$orderby=CreatedOn desc";
         SDK.REST.retrieveMultipleRecords(
-			"ftp_subreason",
-			query,
-			function (retrievedRecords) {
-			    if (!!retrievedRecords && retrievedRecords.length > 0) retrievedReasons = retrievedReasons.concat(retrievedRecords);
-			},
-			errorHandler,
-			function () {
-			    if (retrievedReasons.length > 0) {
-			        var subreason = retrievedReasons[0];
-			        Xrm.Page.getAttribute("ftp_outboundinteractionsubreasonid").setValue([{ id: subreason.ftp_subreasonId, name: subreason.ftp_name, entityType: "ftp_subreason" }]);
-			        Xrm.Page.getAttribute("ftp_outboundinteractionsubreasonid").fireOnChange();
-			    }
-			    else {
+            "ftp_subreason",
+            query,
+            function (retrievedRecords) {
+                if (!!retrievedRecords && retrievedRecords.length > 0) retrievedReasons = retrievedReasons.concat(retrievedRecords);
+            },
+            errorHandler,
+            function () {
+                if (retrievedReasons.length > 0) {
+                    var subreason = retrievedReasons[0];
+                    Xrm.Page.getAttribute("ftp_outboundinteractionsubreasonid").setValue([{ id: subreason.ftp_subreasonId, name: subreason.ftp_name, entityType: "ftp_subreason" }]);
+                    Xrm.Page.getAttribute("ftp_outboundinteractionsubreasonid").fireOnChange();
+                }
+                else {
 			        /*
 					could not find the reason for request record called pName
 					*/
-			        alert("Script error in setOutboundInteractionSubReasonSelection(): Could not find '" + pName + "' sub-reason record.");
-			    }
-			}
-		);
+                    alert("Script error in setOutboundInteractionSubReasonSelection(): Could not find '" + pName + "' sub-reason record.");
+                }
+            }
+        );
     }
 }
 
@@ -701,4 +744,129 @@ function tri_firstcallinteraction_onChange() {
 function errorHandler(error) {
     writeToConsole(error.message);
     alert(error.message);
+}
+
+function newProgressNoteFromRibbon() {
+
+    debugger;
+
+    try {
+        var vcmn_crmOdataEndPoint = '/XRMServices/2011/OrganizationData.svc';
+        var vcmn_serverUrl = Xrm.Page.context.getClientUrl();
+        //alert('Launched New Progress Note Window');
+        var vcmn_entityId = Xrm.Page.data.entity.getId();
+        var vcmn_entityType = Xrm.Page.data.entity.getEntityName();
+        var vcmn_primaryAtributeValue = Xrm.Page.data.entity.getPrimaryAttributeValue();
+        var vcm_patientAttr = Xrm.Page.getAttribute("ftp_veteran").getValue()[0];
+        var vcm_patientId = vcm_patientAttr.id.replace(/\{|\}/gi, '');
+        var vcm_patientName = vcm_patientAttr.name;
+
+        //Populate values of the crm attributes to be included on the form
+        var vcmn_extraqs = "";
+        vcmn_extraqs += "subject=" + "New Progress Note";
+        vcmn_extraqs += "&regardingobjectid=" + vcmn_entityId + "&regardingobjectidname=" + vcmn_primaryAtributeValue + "&regardingobjectidtype=" + vcmn_entityType;
+        vcmn_extraqs += "&ftp_patient=" + vcm_patientId + "&ftp_patientname=" + vcm_patientName;
+        vcmn_extraqs += "&parameter_regardingobjectid=" + vcmn_entityId + "&parameter_regardingobjectidname=" + vcmn_primaryAtributeValue + "&parameter_regardingobjectidtype=" + vcmn_entityType + "&parameter_triageexpert=NO";
+        var vcmn_progressNoteUrl = vcmn_serverUrl + "/apps/vicccms/main.aspx?etn=" + "ftp_progressnote" + "&pagetype=entityrecord&navbar=off" + "&extraqs=" +
+            encodeURIComponent(vcmn_extraqs);  //+ "&newWindow=true";
+        var vcmn_progressNoteWindow = window.open(vcmn_progressNoteUrl, "_blank", "toolbar=no, scrollbars=yes, status=no, resizable=yes, top=1, left=1, width=1000, height=800", false);
+    }
+    catch (err) {
+        alert('VistA CPRS Multi Note Ribbon Function Error(vcmn_launchNewProgressNote): ' + err.message);
+    }
+	/*
+
+	
+	//ftp_patient
+
+	
+	//ftp_patientfacility
+	//not on this form - where to get?
+	
+	//ftp_reasonforrequest
+	var reason  = Xrm.Page.getAttribute("tri_reasonforrequest");
+	if (reason != null){
+		var reasonId = reason.getValue();
+		if (reasonId != null && reasonId.length > 0){
+			formParameters["ftp_reasonforrequestid"] = reasonId[0].id;
+			formParameters["ftp_reasonforrequestidname"] = reasonId[0].name;
+			formParameters["ftp_reasonforrequestidtype"] = "ftp_reasonforrequest";	
+		}
+	}
+	
+	//ftp_callbacknumber
+	var callback  = Xrm.Page.getAttribute("ftp_callbacknumber");
+	if (callback != null){
+		var callbackVal = callback.getValue();
+		formParameters["ftp_callbacknumber"] = callbackVal;
+	}
+	
+	Xrm.Navigation.openForm(entityFormOptions,formParameters).then(successCallback,errorCallback);
+	*/
+
+    /*
+    var myID = Xrm.Page.data.entity.getId();
+    if (myID.indexOf('{') > -1)
+        myID = myID.substring(1, myID.length - 1);
+
+
+    var veteranID = null;
+    var patient = Xrm.Page.getAttribute("ftp_veteran");
+    var patientId = null;
+    if (patient != null) {
+        patientId = patient.getValue();
+        if (patientId != null && patientId.length > 0) {
+            veteranID = patientId[0].id;
+        }
+    }
+
+    if (veteranID.indexOf('{') > -1)
+        veteranID = veteranID.substring(1, veteranID.length - 1);
+
+    var myID = Xrm.Page.data.entity.getId();
+    if (myID.indexOf('{') > -1)
+        myID = myID.substring(1, myID.length - 1);
+
+
+    var veteranID = null;
+    var veteranName = null;
+    var patient = Xrm.Page.getAttribute("ftp_veteran");
+    var patientId = null;
+    if (patient != null) {
+        patientId = patient.getValue();
+        if (patientId != null && patientId.length > 0) {
+            veteranID = patientId[0].id;
+            veteranName = patientId[0].name;
+        }
+    }
+
+    if (veteranID.indexOf('{') > -1)
+        veteranID = veteranID.substring(1, veteranID.length - 1);
+
+
+    var pnData = {};
+    pnData["ftp_callbacknumber"] = Xrm.Page.getAttribute("ftp_callbacknumber").getValue();
+    pnData["regardingobjectid_ftp_interaction@odata.bind"] = "/ftp_interactions(" + myID + ")";
+    pnData["ftp_createdfromscript"] = true;
+    pnData["ftp_isworkloadencounter"] = true;
+
+    Xrm.WebApi.createRecord("ftp_progressnote", pnData).then(
+        function success(result) {
+            var entityFormOptions = {};
+            entityFormOptions["entityName"] = "ftp_progressnote";//Logical name of the entity
+            entityFormOptions["entityId"] = result.id; //ID of the entity record
+            Xrm.Navigation.openForm(entityFormOptions).then(
+                function success(result) {
+                },
+                function (error) {
+                    Xrm.Utility.alertDialog("Error :" + error.message, null);
+                }
+            );
+        },
+        function (error) {
+            // Show Error
+            Xrm.Utility.alertDialog("Error :" + error.message, null);
+        }
+    );
+    */
 }

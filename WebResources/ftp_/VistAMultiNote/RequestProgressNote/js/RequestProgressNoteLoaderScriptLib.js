@@ -1490,7 +1490,7 @@ function vcmn_getAppointmentData(vcmn_nationalId) {
         vialib_callAction('ftp_VEISGetCallout',
             {
                 "Request": vcmn_nationalId,
-                "Api":"ftp_appointmentapiurl"
+                "Api": "ftp_appointmentapiurl"
             },
             function (data) {
                 debugger;
@@ -1503,7 +1503,7 @@ function vcmn_getAppointmentData(vcmn_nationalId) {
         );
         //if (vcmn_useSecureAppointmentAPI) {
         //    try {
-        
+
         //        var vcmn_secureAppointmentParams = [{ key: "identifier", type: "c:string", value: JSON.stringify({ NationalId: vcmn_nationalId }) }];
         //        CrmSecurityTokenEncryption(
         //            vcmn_AppointmentsSecureUrl,
@@ -1808,20 +1808,22 @@ function vcmn_unattendedMviSearchComplete() {
 
 function vcmn_noteTypeChange() {
     try {
+        debugger;
         //Determine if the parent tab is collapsed or open (used to remain at that state at end of this function)
         var vcmn_noteTabStatus = Xrm.Page.ui.tabs.get("tab_progressnote").getDisplayState();
 
         //Hide all custom note buttons
-        Xrm.Page.getControl('WebResource_ApplyNoteTemplateButton').setVisible(true);
-        Xrm.Page.getControl('WebResource_ApplyNoteTemplateButton').setSrc(Xrm.Page.getControl('WebResource_ApplyNoteTemplateButton').getSrc());
-        Xrm.Page.getControl('WebResource_CancelNoteButton').setVisible(true);
-        Xrm.Page.getControl('WebResource_CancelNoteButton').setSrc(Xrm.Page.getControl('WebResource_CancelNoteButton').getSrc());
-        Xrm.Page.getControl('WebResource_SelectSignersButton').setVisible(true);
-        Xrm.Page.getControl('WebResource_SelectSignersButton').setSrc(Xrm.Page.getControl('WebResource_SelectSignersButton').getSrc());
-        Xrm.Page.getControl('WebResource_SaveNoteButton').setVisible(true);
-        Xrm.Page.getControl('WebResource_SaveNoteButton').setSrc(Xrm.Page.getControl('WebResource_SaveNoteButton').getSrc());
-        Xrm.Page.getControl('WebResource_SaveToVistaButton').setVisible(true);
-        Xrm.Page.getControl('WebResource_SaveToVistaButton').setSrc(Xrm.Page.getControl('WebResource_SaveToVistaButton').getSrc());
+        //Xrm.Page.getControl('WebResource_ApplyNoteTemplateButton').setVisible(true);
+        //Xrm.Page.getControl('WebResource_ApplyNoteTemplateButton').setSrc(Xrm.Page.getControl('WebResource_ApplyNoteTemplateButton').getSrc());
+        //Xrm.Page.getControl('WebResource_CancelNoteButton').setVisible(true);
+        //Xrm.Page.getControl('WebResource_CancelNoteButton').setSrc(Xrm.Page.getControl('WebResource_CancelNoteButton').getSrc());
+        //Xrm.Page.getControl('WebResource_SelectSignersButton').setVisible(true);
+        //Xrm.Page.getControl('WebResource_SelectSignersButton').setSrc(Xrm.Page.getControl('WebResource_SelectSignersButton').getSrc());
+        //Xrm.Page.getControl('WebResource_SaveNoteButton').setVisible(true);
+        //Xrm.Page.getControl('WebResource_SaveNoteButton').setSrc(Xrm.Page.getControl('WebResource_SaveNoteButton').getSrc());
+        //Xrm.Page.getControl('WebResource_SaveToVistaButton').setVisible(true);
+        //Xrm.Page.getControl('WebResource_SaveToVistaButton').setSrc(Xrm.Page.getControl('WebResource_SaveToVistaButton').getSrc());
+        parent.Xrm.Utility.showAllProgressNoteSignButtons();
 
         //Show non-crm note type specific fields
         Xrm.Page.getControl("ftp_userentrydate").setVisible(true);
@@ -1854,8 +1856,9 @@ function vcmn_noteTypeChange() {
                 Xrm.Page.ui.tabs.get('tab_progressnote').sections.get('tab_progressnote_section_signers').setVisible(false);
 
                 //Hide unused custom note buttons
-                Xrm.Page.getControl('WebResource_SaveNoteButton').setVisible(false);
-                Xrm.Page.getControl('WebResource_SaveNoteButton').setSrc(Xrm.Page.getControl('WebResource_SaveNoteButton').getSrc());
+                //Xrm.Page.getControl('WebResource_SaveNoteButton').setVisible(false);
+                //Xrm.Page.getControl('WebResource_SaveNoteButton').setSrc(Xrm.Page.getControl('WebResource_SaveNoteButton').getSrc());
+                parent.Xrm.Utility.hideProgressNoteSignButton('savetocrm');
             }
             else if (vcmn_noteTypeValue == 100000001) {
                 //Workload Note
@@ -1868,8 +1871,9 @@ function vcmn_noteTypeChange() {
                 Xrm.Page.ui.tabs.get('tab_progressnote').sections.get('tab_progressnote_section_signers').setVisible(false);
 
                 //Hide unused custom note buttons
-                Xrm.Page.getControl('WebResource_SaveNoteButton').setVisible(false);
-                Xrm.Page.getControl('WebResource_SaveNoteButton').setSrc(Xrm.Page.getControl('WebResource_SaveNoteButton').getSrc());
+                //Xrm.Page.getControl('WebResource_SaveNoteButton').setVisible(false);
+                //Xrm.Page.getControl('WebResource_SaveNoteButton').setSrc(Xrm.Page.getControl('WebResource_SaveNoteButton').getSrc());
+                parent.Xrm.Utility.hideProgressNoteSignButton('savetocrm');
 
                 //Set Required Fields and correct missing data issues if there is note text present
                 vcmn_noteTextChange();
@@ -1887,10 +1891,14 @@ function vcmn_noteTypeChange() {
                 //Hide unused custom note buttons
                 //*Xrm.Page.getControl('WebResource_ApplyNoteTemplateButton').setVisible(false);
                 //*Xrm.Page.getControl('WebResource_ApplyNoteTemplateButton').setSrc(Xrm.Page.getControl('WebResource_ApplyNoteTemplateButton').getSrc());
-                Xrm.Page.getControl('WebResource_SelectSignersButton').setVisible(false);
-                Xrm.Page.getControl('WebResource_SelectSignersButton').setSrc(Xrm.Page.getControl('WebResource_SelectSignersButton').getSrc());
-                Xrm.Page.getControl('WebResource_SaveToVistaButton').setVisible(false);
-                Xrm.Page.getControl('WebResource_SaveToVistaButton').setSrc(Xrm.Page.getControl('WebResource_SaveToVistaButton').getSrc());
+
+                //Xrm.Page.getControl('WebResource_SelectSignersButton').setVisible(false);
+                //Xrm.Page.getControl('WebResource_SelectSignersButton').setSrc(Xrm.Page.getControl('WebResource_SelectSignersButton').getSrc());
+                parent.Xrm.Utility.hideProgressNoteSignButton('signers');
+
+                //Xrm.Page.getControl('WebResource_SaveToVistaButton').setVisible(false);
+                //Xrm.Page.getControl('WebResource_SaveToVistaButton').setSrc(Xrm.Page.getControl('WebResource_SaveToVistaButton').getSrc());
+                parent.Xrm.Utility.hideProgressNoteSignButton('savetovista');
 
                 //Hide non-crm note type specific fields
                 Xrm.Page.getControl("ftp_userentrydate").setVisible(false);
@@ -2256,6 +2264,8 @@ function vcmn_integrateVistaNote(vcmn_noteType) {
         if (vcmn_ProgressNoteId == 'FAIL' || vcmn_ProgressNoteId == null) {
             //The integration failed
             alert("Error: Unable to create a progress note entity record, Save to VistA/CPRS Failed!");
+            //GLM - Added 09/25/2019
+            Xrm.Page.ui.clearFormNotification("SAVEVISTA");
             return false;
         }
 

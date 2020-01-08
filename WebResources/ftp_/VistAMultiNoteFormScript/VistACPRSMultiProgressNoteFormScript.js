@@ -383,8 +383,8 @@ function vcmn_newProgressNoteLoad_WebURL() {
             Xrm.Page.getAttribute("ftp_selectedworkloadnotetitletext").setRequiredLevel("required");
             Xrm.Page.getAttribute("ftp_selectedworkloadlocationtext").setRequiredLevel("required");
             Xrm.Page.getAttribute("ftp_workloadinpatient").setRequiredLevel("required");
-            Xrm.Page.getAttribute("ftp_cptcode").setRequiredLevel("required");
-            Xrm.Page.getAttribute("ftp_diagnosiscode").setRequiredLevel("required");
+            //Xrm.Page.getAttribute("ftp_cptcode").setRequiredLevel("required");
+            //Xrm.Page.getAttribute("ftp_diagnosiscode").setRequiredLevel("required");
             //Set Sign this note to Yes
             Xrm.Page.getAttribute('ftp_signthisnote').setValue(100000001);
             Xrm.Page.getAttribute('ftp_signthisnote').setSubmitMode('always');
@@ -518,8 +518,8 @@ function vcmn_newProgressNoteLoad_WebURL() {
                     Xrm.Page.getAttribute("ftp_selectedworkloadnotetitletext").setRequiredLevel("required");
                     Xrm.Page.getAttribute("ftp_selectedworkloadlocationtext").setRequiredLevel("required");
                     Xrm.Page.getAttribute("ftp_workloadinpatient").setRequiredLevel("required");
-                    Xrm.Page.getAttribute("ftp_cptcode").setRequiredLevel("required");
-                    Xrm.Page.getAttribute("ftp_diagnosiscode").setRequiredLevel("required");
+                    //Xrm.Page.getAttribute("ftp_cptcode").setRequiredLevel("required");
+                    //Xrm.Page.getAttribute("ftp_diagnosiscode").setRequiredLevel("required");
                     Xrm.Page.ui.tabs.get('Tab_ProgressNoteType').setLabel("Workload Encounter");
 
                     Xrm.Page.getAttribute("ftp_notehospitallocation").setRequiredLevel("none");
@@ -536,8 +536,8 @@ function vcmn_newProgressNoteLoad_WebURL() {
             Xrm.Page.getAttribute("ftp_selectedworkloadnotetitletext").setRequiredLevel("required");
             Xrm.Page.getAttribute("ftp_selectedworkloadlocationtext").setRequiredLevel("required");
             Xrm.Page.getAttribute("ftp_workloadinpatient").setRequiredLevel("required");
-            Xrm.Page.getAttribute("ftp_cptcode").setRequiredLevel("required");
-            Xrm.Page.getAttribute("ftp_diagnosiscode").setRequiredLevel("required");
+            //Xrm.Page.getAttribute("ftp_cptcode").setRequiredLevel("required");
+            //Xrm.Page.getAttribute("ftp_diagnosiscode").setRequiredLevel("required");
             Xrm.Page.ui.tabs.get('Tab_ProgressNoteType').setLabel("Workload Encounter");
 
             Xrm.Page.getAttribute("ftp_notehospitallocation").setRequiredLevel("none");
@@ -590,570 +590,606 @@ function vcmn_newProgressNoteLoad_WebURL() {
         var vcmn_minorReasonTemplateText = null;
         var vcmn_minorReasonNoteSubText = null;
 
-        var vcmn_requestData = vcmn_getSingleEntityDataSync('IncidentSet', 'ftp_CallbackNumber, ftp_ReasonforRequest, ftp_SubReasonId, ftp_MinorReasonId, Description, CustomerId, ftp_LastFilled, ftp_QuantityReportsTaking, ftp_RxNumber, ftp_RxRefillQuantity, ftp_TrackingNumber, ftp_OpiodAgreementOnfile, ftp_UDSonfile, ftp_StateDrugMonitoringReport, ftp_spdmpstateonfile, ftp_SPDMPState2, ftp_pickupmethod, ftp_earlyrefillcomment, ftp_quantitytaking, ftp_vacationstart, ftp_vacationend, ftp_rxtype, ftp_methodofrequest, ftp_age, ftp_pcp, ftp_calccrcl, ftp_LatesteGFRResult, ftp_lastdirectionsonfile, ftp_patientstatesdirections, ftp_directionsby, ftp_veteranchangeddose, ftp_othertext, ftp_lostorstolen, ftp_TrackingNumber, ftp_RxRefillQuantity, ftp_othercopayreversal, ftp_reasonforstopping, ftp_QuantityReportsTaking', vcmn_regardingobjectid);
-        if (vcmn_requestData != null) {
-            if (vcmn_requestData.d.ftp_CallbackNumber != null) {
-                Xrm.Page.getAttribute('ftp_callbacknumber').setValue(vcmn_requestData.d.ftp_CallbackNumber);
-                Xrm.Page.getAttribute('ftp_callbacknumber').setSubmitMode('always');
-            }
-            if (vcmn_requestData.d.ftp_ReasonforRequest != null) {
-                vcmn_setSimpleLookupValue('ftp_reasonforrequest', vcmn_requestData.d.ftp_ReasonforRequest.LogicalName, vcmn_requestData.d.ftp_ReasonforRequest.Id, vcmn_requestData.d.ftp_ReasonforRequest.Name);
-                Xrm.Page.getAttribute('ftp_reasonforrequest').setSubmitMode('always');
+        if (vcmn_regardingobjectidtype == "ftp_interaction") {
+            var vcmn_interactionData = vcmn_getSingleEntityDataSync('ftp_interactionSet', 'ftp_CallbackNumber,tri_reasonforrequest,ftp_Veteran,ftp_requestfacilityid', vcmn_regardingobjectid);
+            if (vcmn_interactionData != null) {
 
-                //Check if Non-Narcotic request, if so default note signing to yes so that it will not prompt the user
-                if (vcmn_requestData.d.ftp_ReasonforRequest.Name == vcmn_nonNarcoticRenewalRequestName || vcmn_regardingobjectidname.indexOf(vcmn_nonNarcoticRenewalRequestName) > -1 || vcmn_requestData.d.ftp_ReasonforRequest.Name == vcmn_nonNarcoticRefillRequestName || vcmn_regardingobjectidname.indexOf(vcmn_nonNarcoticRefillRequestName) > -1) {
-                    //Set Sign this note to Yes
-                    Xrm.Page.getAttribute('ftp_signthisnote').setValue(100000001);
-                    Xrm.Page.getAttribute('ftp_signthisnote').setSubmitMode('always');
+                if (vcmn_interactionData.d.ftp_CallbackNumber != null) {
+                    Xrm.Page.getAttribute('ftp_callbacknumber').setValue(vcmn_interactionData.d.ftp_CallbackNumber);
+                    Xrm.Page.getAttribute('ftp_callbacknumber').setSubmitMode('always');
                 }
-            }
 
-            if (vcmn_requestData.d.ftp_ReasonforRequest.Name == "Pharmacy Outbound Call") {
-                if (typeof outboundTemplate_buildNoteText == "function") {
-                    outboundTemplate_buildNoteText();
-                }
-            }
-            //*****NON NARCOTIC*****
-            else if (vcmn_requestData.d.ftp_ReasonforRequest.Name == vcmn_nonNarcoticRenewalRequestName || vcmn_regardingobjectidname.indexOf(vcmn_nonNarcoticRenewalRequestName) > -1 || vcmn_requestData.d.ftp_ReasonforRequest.Name == vcmn_nonNarcoticRefillRequestName || vcmn_regardingobjectidname.indexOf(vcmn_nonNarcoticRefillRequestName) > -1) {
-                //Define as Non Narcotic Template
-                vcmn_nonNarcoticTemplate = true;
-                //Construct Non-Narcotic Template Text
-                var vcmn_nonNarcoticTemplateText = ""; // '---------------Medications Selected-------------------\n\n\n---------------------------------------------------------';
-                //Do Middle Section
-                if (vcmn_requestData.d.ftp_rxtype != null) {
-                    var vcmn_rxType = ""
-                    if (vcmn_requestData.d.ftp_rxtype.Value == 100000000) { vcmn_rxType = "Refill"; }
-                    if (vcmn_requestData.d.ftp_rxtype.Value == 100000001) { vcmn_rxType = "Renewal"; }
-                    vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nVeteran is requesting a " + vcmn_rxType;
-                }
-                if (vcmn_requestData.d.ftp_SubReasonId != null) {
-                    vcmn_subReasonId = vcmn_requestData.d.ftp_SubReasonId.Id;
-                    if (vcmn_subReasonId != null) {
-                        //Get Template Text
-                        var vcmn_subreasonData = vcmn_getSingleEntityDataSync('ftp_subreasonSet', 'ftp_notetext', vcmn_subReasonId);
-                        if (vcmn_subreasonData.d.ftp_notetext != null) {
-                            vcmn_subReasonTemplateText = vcmn_subreasonData.d.ftp_notetext;
-                        }
+                if (vcmn_interactionData.d.tri_reasonforrequest != null) {
+                    vcmn_setSimpleLookupValue('ftp_reasonforrequest', vcmn_interactionData.d.tri_reasonforrequest.LogicalName, vcmn_interactionData.d.tri_reasonforrequest.Id, vcmn_interactionData.d.tri_reasonforrequest.Name);
+                    Xrm.Page.getAttribute('ftp_reasonforrequest').setSubmitMode('always');
+
+                    //Check if Non-Narcotic request, if so default note signing to yes so that it will not prompt the user
+                    if (vcmn_interactionData.d.tri_reasonforrequest.Name == vcmn_nonNarcoticRenewalRequestName || vcmn_regardingobjectidname.indexOf(vcmn_nonNarcoticRenewalRequestName) > -1 || vcmn_interactionData.d.tri_reasonforrequest.Name == vcmn_nonNarcoticRefillRequestName || vcmn_regardingobjectidname.indexOf(vcmn_nonNarcoticRefillRequestName) > -1) {
+                        //Set Sign this note to Yes
+                        Xrm.Page.getAttribute('ftp_signthisnote').setValue(100000001);
+                        Xrm.Page.getAttribute('ftp_signthisnote').setSubmitMode('always');
                     }
                 }
-                if (vcmn_requestData.d.ftp_MinorReasonId != null) {
-                    vcmn_minorReasonId = vcmn_requestData.d.ftp_MinorReasonId.Id;
-                    if (vcmn_minorReasonId != null) {
-                        //Get Template Text
-                        var vcmn_minorreasonData = vcmn_getSingleEntityDataSync('ftp_minorreasonSet', 'ftp_name, ftp_notetext', vcmn_minorReasonId);
-                        if (vcmn_minorreasonData.d.ftp_name != null) {
-                            vcmn_minorReasonTemplateText = vcmn_minorreasonData.d.ftp_name;
-                        }
-                        if (vcmn_minorreasonData.d.ftp_notetext != null) {
-                            vcmn_minorReasonNoteSubText = vcmn_minorreasonData.d.ftp_notetext;
-                        }
-                    }
-                }
-                if (vcmn_requestData.d.CustomerId != null) {
-                    vcmn_setSimpleLookupValue('ftp_patient', vcmn_requestData.d.CustomerId.LogicalName, vcmn_requestData.d.CustomerId.Id, vcmn_requestData.d.CustomerId.Name);
+
+                if (vcmn_interactionData.d.ftp_Veteran != null) {
+                    vcmn_setSimpleLookupValue('ftp_patient', vcmn_interactionData.d.ftp_Veteran.LogicalName, vcmn_interactionData.d.ftp_Veteran.Id, vcmn_interactionData.d.ftp_Veteran.Name);
                     Xrm.Page.getAttribute('ftp_patient').setSubmitMode('always');
                     //Set as veteran id
-                    vcmn_veteranId = vcmn_requestData.d.CustomerId.Id
+                    vcmn_veteranId = vcmn_interactionData.d.ftp_Veteran.Id
                 }
 
-                //Display sub-reason note text
-                if (vcmn_subReasonTemplateText != null && vcmn_subReasonTemplateText != "") {
-                    vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\n" + vcmn_subReasonTemplateText;
-                    if (vcmn_minorReasonNoteSubText != null && vcmn_minorReasonNoteSubText != "") {
-                        vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\n" + vcmn_minorReasonNoteSubText;
-                        if (vcmn_minorReasonNoteSubText == "Medication used to treat service connected conditions") {
-                            //Add Service Connected Disabilities TAG for later update from function
-                            vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\n" +
-                                "~~~~SCDTAG~~~~";
-                        }
-                    }
-                }
-
-                //Included required fields in template based on sub and minor reasons
-                if ((vcmn_subReasonTemplateText == "Veteran is requesting a renewal of a medication no longer on their medication profile" &&
-                    vcmn_minorReasonNoteSubText == "Medication dose change or was taking differently than prescribed. Patient stated they have been taking regularly")
-                    || (vcmn_subReasonTemplateText == "Medication dose change or taken differently than prescribed")) {
-
-                    if (vcmn_requestData.d.ftp_lastdirectionsonfile != null) {
-                        vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nLast Directions On File: " + vcmn_requestData.d.ftp_lastdirectionsonfile;
-                    }
-                    if (vcmn_requestData.d.ftp_patientstatesdirections != null) {
-                        vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nPatient States Directions: " + vcmn_requestData.d.ftp_patientstatesdirections;
-                    }
-                    if (vcmn_requestData.d.ftp_directionsby != null) {
-                        vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nDirections by: " + vcmn_requestData.d.ftp_directionsby;
-                    }
-                    if (vcmn_requestData.d.ftp_veteranchangeddose != null) {
-                        var vcmn_veteranChangedDose = null;
-                        if (vcmn_requestData.d.ftp_veteranchangeddose == false) { vcmn_veteranChangedDose = "No"; }
-                        if (vcmn_requestData.d.ftp_veteranchangeddose == true) { vcmn_veteranChangedDose = "Yes"; }
-                        vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nVeteran Changed Dose: " + vcmn_veteranChangedDose;
-                    }
-                }
-                if (vcmn_subReasonTemplateText == "Other:") {
-                    if (vcmn_requestData.d.ftp_othertext != null) {
-                        vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nOther Text: " + vcmn_requestData.d.ftp_othertext;
-                    }
-                }
-                if (vcmn_subReasonTemplateText == "Veteran is requesting medication replacement" && vcmn_minorReasonNoteSubText == "Medication lost or stolen") {
-                    if (vcmn_requestData.d.ftp_lostorstolen != null) {
-                        vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nLost or Stolen: " + vcmn_requestData.d.ftp_lostorstolen;
-                    }
-                }
-                if (vcmn_subReasonTemplateText == "Veteran is requesting medication replacement" && vcmn_minorReasonNoteSubText == "Medication never arrived in mail. Tracking #:") {
-                    if (vcmn_requestData.d.ftp_TrackingNumber != null) {
-                        vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nTracking Number: " + vcmn_requestData.d.ftp_TrackingNumber;
-                    }
-                }
-                if (vcmn_subReasonTemplateText == "Veteran requesting refill quantity to be changed to a _____ day supply") {
-                    //if (vcmn_requestData.d.ftp_RxRefillQuantity != null) {
-                    //    vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nRx Refill Quantity: " + vcmn_requestData.d.ftp_RxRefillQuantity;
-                    //}
-
-                    //adjusted 5/7/18 kknab
-                    if (vcmn_requestData.d.ftp_dayssupply_text != null) {
-                        //vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nRx Refill Quantity: " + vcmn_requestData.d.ftp_dayssupply_text;
-                        vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText.replace(vcmn_subReasonTemplateText, vcmn_subReasonTemplateText.replace("_____", vcmn_requestData.d.ftp_dayssupply_text));
-                    }
-                }
-                if (vcmn_subReasonTemplateText == "Veteran requests medication copay reversal" && vcmn_minorReasonNoteSubText == "Other:") {
-                    if (vcmn_requestData.d.ftp_othercopayreversal != null) {
-                        vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nOther (copay reversal): " + vcmn_requestData.d.ftp_othercopayreversal;
-                    }
-                }
-                if (vcmn_subReasonTemplateText == "Veteran has stopped taking the medication") {
-                    if (vcmn_requestData.d.ftp_reasonforstopping != null) {
-                        vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nReason for Stopping: " + vcmn_requestData.d.ftp_reasonforstopping;
-                    }
-                }
-                if ((vcmn_subReasonTemplateText == "Medication requesting early refill:" &&
-                    vcmn_minorReasonNoteSubText == "Veteran has been requiring extra medication and is taking more than prescribed (reports taking ________ tablets / capsules per day):")
-                    || (vcmn_subReasonTemplateText == "Veteran is requesting a partial fill" &&
-                        vcmn_minorReasonNoteSubText == "Veteran has been requiring extra medication and is taking more than prescribed (reports taking ________ tablets / capsules per day):")) {
-                    if (vcmn_requestData.d.ftp_QuantityReportsTaking != null) {
-                        //vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nQuantity Reports Taking: " + vcmn_requestData.d.ftp_QuantityReportsTaking;
-                        vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText.replace(vcmn_minorReasonNoteSubText, vcmn_minorReasonNoteSubText.replace("________", vcmn_requestData.d.ftp_QuantityReportsTaking));
-                    }
-                }
-
-                //Always include last filled
-                if (vcmn_requestData.d.ftp_LastFilled != null) {
-                    //vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nLast Filled: " + new Date(parseInt(vcmn_requestData.d.ftp_LastFilled.toString().replace("/Date(", "").replace(")/", ""), 10));
-                    var vcmn_fillDate = new Date(parseInt(vcmn_requestData.d.ftp_LastFilled.toString().replace("/Date(", "").replace(")/", ""), 10));
-                    vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nLast Filled: " +
-                        (vcmn_fillDate.getMonth() + 1).toString() + "/" + vcmn_fillDate.getDate().toString() + "/" + vcmn_fillDate.getFullYear().toString();
-                }
-
-                //Do Bottom Section
-                vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\n";
-                if (vcmn_requestData.d.ftp_methodofrequest != null) {
-                    var vcmn_methodOfRequest = "";
-                    if (vcmn_requestData.d.ftp_methodofrequest.Value == 100000000) { vcmn_methodOfRequest = "Phone"; }
-                    if (vcmn_requestData.d.ftp_methodofrequest.Value == 100000001) { vcmn_methodOfRequest = "In Person"; }
-                    if (vcmn_requestData.d.ftp_methodofrequest.Value == 100000002) { vcmn_methodOfRequest = "Mail"; }
-                    if (vcmn_requestData.d.ftp_methodofrequest.Value == 100000003) { vcmn_methodOfRequest = "Internet"; }
-                    vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nMethod of Request: " + vcmn_methodOfRequest;
-                }
-                if (vcmn_requestData.d.ftp_pickupmethod != null) {
-                    var vcmn_pickupmethod = vcmn_requestData.d.ftp_pickupmethod.Value;
-                    if (vcmn_pickupmethod == 100000000) {
-                        vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nPick-Up Method: " + "Mail ";
-                    }
-                    if (vcmn_pickupmethod == 100000001) {
-                        vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nPick-Up Method: " + "Window ***** ";
-                    }
-                }
-                //Get veteran's current address
-                if (vcmn_veteranId != null) {
-                    var vcmn_contactData = vcmn_getSingleEntityDataSync('ContactSet', 'Address1_Composite', vcmn_veteranId);
-                    if (vcmn_contactData != null) {
-                        if (vcmn_contactData.d.Address1_Composite != null && vcmn_contactData.d.Address1_Composite != '') {
-                            vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\n\nAddress confirmed:";
-                            vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\n" + vcmn_contactData.d.Address1_Composite;
-                        }
-                    }
-                }
-                if (Xrm.Page.getAttribute('ftp_callbacknumber').getValue() != null) {
-                    vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nCallback Number: " + Xrm.Page.getAttribute('ftp_callbacknumber').getValue() + "\n";
-                }
-                if (vcmn_requestData.d.ftp_age != null) {
-                    vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nAge: " + vcmn_requestData.d.ftp_age;
-                }
-                if (vcmn_requestData.d.ftp_pcp != null) {
-                    vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nPCP: " + vcmn_requestData.d.ftp_pcp;
-                }
-                if (vcmn_requestData.d.ftp_calccrcl != null) {
-                    vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nCalc CrCl: " + vcmn_requestData.d.ftp_calccrcl;
-                }
-                if (vcmn_requestData.d.ftp_LatesteGFRResult != null) {
-                    vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nLatest eGFR: " + vcmn_requestData.d.ftp_LatesteGFRResult;
-                }
-
-                //Write Non Narcotic Template Text as long as it is not a Triage
-                if (vcmn_triageexpert == 'NO' || vcmn_triageexpert == null) {
-                    Xrm.Page.getAttribute("ftp_notedetail").setValue(vcmn_nonNarcoticTemplateText);
-                    Xrm.Page.getAttribute("ftp_notedetail").setSubmitMode("always");
+                //ftp_progressnotefacility
+                if (vcmn_interactionData.d.ftp_requestfacilityid != null) {
+                    vcmn_setSimpleLookupValue('ftp_progressnotefacility', vcmn_interactionData.d.ftp_requestfacilityid.LogicalName, vcmn_interactionData.d.ftp_requestfacilityid.Id, vcmn_interactionData.d.ftp_requestfacilityid.Name);
+                    //Xrm.Page.getAttribute('ftp_progressnotefacility').setSubmitMode('always');
                 }
             }
-            //*****NON NARCOTIC END*****
-
-            //*****STANDARD TEMPLATE START*****
-            else {
-                if (vcmn_requestData.d.ftp_SubReasonId != null) {
-                    vcmn_subReasonId = vcmn_requestData.d.ftp_SubReasonId.Id;
-                    if (vcmn_subReasonId != null) {
-                        //Get Template Text
-                        var vcmn_subreasonData = vcmn_getSingleEntityDataSync('ftp_subreasonSet', 'ftp_notetext', vcmn_subReasonId);
-                        if (vcmn_subreasonData.d.ftp_notetext != null) {
-                            vcmn_subReasonTemplateText = vcmn_subreasonData.d.ftp_notetext;
-                        }
-                    }
+        } else if (vcmn_regardingobjectidtype == "incident") {
+            var vcmn_requestData = vcmn_getSingleEntityDataSync('IncidentSet', 'ftp_CallbackNumber, ftp_ReasonforRequest, ftp_SubReasonId, ftp_MinorReasonId, Description, CustomerId, ftp_LastFilled, ftp_QuantityReportsTaking, ftp_RxNumber, ftp_RxRefillQuantity, ftp_TrackingNumber, ftp_OpiodAgreementOnfile, ftp_UDSonfile, ftp_StateDrugMonitoringReport, ftp_spdmpstateonfile, ftp_SPDMPState2, ftp_pickupmethod, ftp_earlyrefillcomment, ftp_quantitytaking, ftp_vacationstart, ftp_vacationend, ftp_rxtype, ftp_methodofrequest, ftp_age, ftp_pcp, ftp_calccrcl, ftp_LatesteGFRResult, ftp_lastdirectionsonfile, ftp_patientstatesdirections, ftp_directionsby, ftp_veteranchangeddose, ftp_othertext, ftp_lostorstolen, ftp_TrackingNumber, ftp_RxRefillQuantity, ftp_othercopayreversal, ftp_reasonforstopping, ftp_QuantityReportsTaking', vcmn_regardingobjectid);
+            if (vcmn_requestData != null) {
+                if (vcmn_requestData.d.ftp_CallbackNumber != null) {
+                    Xrm.Page.getAttribute('ftp_callbacknumber').setValue(vcmn_requestData.d.ftp_CallbackNumber);
+                    Xrm.Page.getAttribute('ftp_callbacknumber').setSubmitMode('always');
                 }
-                if (vcmn_requestData.d.ftp_MinorReasonId != null) {
-                    vcmn_minorReasonId = vcmn_requestData.d.ftp_MinorReasonId.Id;
-                    if (vcmn_minorReasonId != null) {
-                        //Get Template Text
-                        var vcmn_minorreasonData = vcmn_getSingleEntityDataSync('ftp_minorreasonSet', 'ftp_name, ftp_notetext', vcmn_minorReasonId);
-                        if (vcmn_minorreasonData.d.ftp_name != null) {
-                            vcmn_minorReasonTemplateText = vcmn_minorreasonData.d.ftp_name;
-                        }
-                        if (vcmn_minorreasonData.d.ftp_notetext != null) {
-                            vcmn_minorReasonNoteSubText = vcmn_minorreasonData.d.ftp_notetext;
-                        }
+                if (vcmn_requestData.d.ftp_ReasonforRequest != null) {
+                    vcmn_setSimpleLookupValue('ftp_reasonforrequest', vcmn_requestData.d.ftp_ReasonforRequest.LogicalName, vcmn_requestData.d.ftp_ReasonforRequest.Id, vcmn_requestData.d.ftp_ReasonforRequest.Name);
+                    Xrm.Page.getAttribute('ftp_reasonforrequest').setSubmitMode('always');
+
+                    //Check if Non-Narcotic request, if so default note signing to yes so that it will not prompt the user
+                    if (vcmn_requestData.d.ftp_ReasonforRequest.Name == vcmn_nonNarcoticRenewalRequestName || vcmn_regardingobjectidname.indexOf(vcmn_nonNarcoticRenewalRequestName) > -1 || vcmn_requestData.d.ftp_ReasonforRequest.Name == vcmn_nonNarcoticRefillRequestName || vcmn_regardingobjectidname.indexOf(vcmn_nonNarcoticRefillRequestName) > -1) {
+                        //Set Sign this note to Yes
+                        Xrm.Page.getAttribute('ftp_signthisnote').setValue(100000001);
+                        Xrm.Page.getAttribute('ftp_signthisnote').setSubmitMode('always');
                     }
                 }
 
-                if (vcmn_requestData.d.CustomerId != null) {
-                    vcmn_setSimpleLookupValue('ftp_patient', vcmn_requestData.d.CustomerId.LogicalName, vcmn_requestData.d.CustomerId.Id, vcmn_requestData.d.CustomerId.Name);
-                    Xrm.Page.getAttribute('ftp_patient').setSubmitMode('always');
-                    //Set as veteran id
-                    vcmn_veteranId = vcmn_requestData.d.CustomerId.Id
+                if (vcmn_requestData.d.ftp_ReasonforRequest.Name == "Pharmacy Outbound Call") {
+                    if (typeof outboundTemplate_buildNoteText == "function") {
+                        outboundTemplate_buildNoteText();
+                    }
                 }
-
-                //Construct Template Note
-                var vcmn_subReasonName = null;
-                var vcmn_templateNote = "";
-                var vcmn_lastFilled = "";
-                var vcmn_quantityReportsTaking = null;
-                var vcmn_rxNumber = null;
-                var vcmn_rxRefillQuantity = null;
-                var vcmn_trackingNumber = null;
-                var vcmn_opioidAgreementOnfile = null;
-                var vcmn_UDSonfile = null;
-                var vcmn_stateDrugMonitoringReport = null;
-                var vcmn_spdmpstateonfile = null;
-                var vcmn_sPDMPState2 = null;
-                var vcmn_pickupmethod = null;
-
-                var vcmn_earlyRefillComment = null;
-                var vcmn_quantityTaking = null;
-                var vcmn_vacationStart = null;
-                var vcmn_vacationEnd = null;
-
-                if (vcmn_requestData.d.ftp_LastFilled != null) {
-                    //vcmn_lastFilled = new Date(parseInt(vcmn_requestData.d.ftp_LastFilled.toString().replace("/Date(", "").replace(")/", ""), 10));
-                    var vcmn_fillDate = new Date(parseInt(vcmn_requestData.d.ftp_LastFilled.toString().replace("/Date(", "").replace(")/", ""), 10));
-                    vcmn_lastFilled = (vcmn_fillDate.getMonth() + 1).toString() + "/" + vcmn_fillDate.getDate().toString() + "/" + vcmn_fillDate.getFullYear().toString();
-                }
-                if (vcmn_requestData.d.ftp_QuantityReportsTaking != null) { vcmn_quantityReportsTaking = vcmn_requestData.d.ftp_QuantityReportsTaking; }
-                if (vcmn_requestData.d.ftp_RxNumber != null) { vcmn_rxNumber = vcmn_requestData.d.ftp_RxNumber; }
-                if (vcmn_requestData.d.ftp_RxRefillQuantity != null) { vcmn_rxRefillQuantity = vcmn_requestData.d.ftp_RxRefillQuantity; }
-                if (vcmn_requestData.d.ftp_TrackingNumber != null) { vcmn_trackingNumber = vcmn_requestData.d.ftp_TrackingNumber; }
-                if (vcmn_requestData.d.ftp_OpiodAgreementOnfile != null) { vcmn_opioidAgreementOnfile = vcmn_requestData.d.ftp_OpiodAgreementOnfile.Value; }
-                if (vcmn_requestData.d.ftp_UDSonfile != null) { vcmn_UDSonfile = vcmn_requestData.d.ftp_UDSonfile.Value; }
-                if (vcmn_requestData.d.ftp_StateDrugMonitoringReport != null) { vcmn_stateDrugMonitoringReport = vcmn_requestData.d.ftp_StateDrugMonitoringReport.Value; }
-                if (vcmn_requestData.d.ftp_spdmpstateonfile != null) { vcmn_spdmpstateonfile = vcmn_requestData.d.ftp_spdmpstateonfile.Value; }
-                if (vcmn_requestData.d.ftp_SPDMPState2 != null) { vcmn_sPDMPState2 = vcmn_requestData.d.ftp_SPDMPState2.Value; }
-                if (vcmn_requestData.d.ftp_pickupmethod != null) { vcmn_pickupmethod = vcmn_requestData.d.ftp_pickupmethod.Value; }
-
-                if (vcmn_requestData.d.ftp_earlyrefillcomment != null) { vcmn_earlyRefillComment = vcmn_requestData.d.ftp_earlyrefillcomment; }
-                if (vcmn_requestData.d.ftp_quantitytaking != null) { vcmn_quantityTaking = vcmn_requestData.d.ftp_quantitytaking; }
-                if (vcmn_requestData.d.ftp_vacationstart != null) { vcmn_vacationStart = new Date(parseInt(vcmn_requestData.d.ftp_vacationstart.toString().replace("/Date(", "").replace(")/", ""), 10)); }
-                if (vcmn_requestData.d.ftp_vacationend != null) { vcmn_vacationEnd = new Date(parseInt(vcmn_requestData.d.ftp_vacationend.toString().replace("/Date(", "").replace(")/", ""), 10)); }
-
-                if (vcmn_requestData.d.ftp_SubReasonId != null) {
-                    vcmn_subReasonId = vcmn_requestData.d.ftp_SubReasonId.Id;
-                    vcmn_subReasonName = vcmn_requestData.d.ftp_SubReasonId.Name;
-
-                    if (vcmn_subReasonName == 'Regular') {
-                        vcmn_templateNote = vcmn_templateNote + "Veteran is requesting a RENEWAL." + "\n\n";
-                        vcmn_templateNote = vcmn_templateNote + "Last Filled: " + vcmn_lastFilled + "\n\n";
-                        if (vcmn_pickupmethod != null) {
-                            if (vcmn_pickupmethod == 100000000) {
-                                vcmn_templateNote = vcmn_templateNote + "\nPick-Up Method: " + "Mail ";
-                            }
-                            if (vcmn_pickupmethod == 100000001) {
-                                vcmn_templateNote = vcmn_templateNote + "\nPick-Up Method: " + "Window ***** ";
+                //*****NON NARCOTIC*****
+                else if (vcmn_requestData.d.ftp_ReasonforRequest.Name == vcmn_nonNarcoticRenewalRequestName || vcmn_regardingobjectidname.indexOf(vcmn_nonNarcoticRenewalRequestName) > -1 || vcmn_requestData.d.ftp_ReasonforRequest.Name == vcmn_nonNarcoticRefillRequestName || vcmn_regardingobjectidname.indexOf(vcmn_nonNarcoticRefillRequestName) > -1) {
+                    //Define as Non Narcotic Template
+                    vcmn_nonNarcoticTemplate = true;
+                    //Construct Non-Narcotic Template Text
+                    var vcmn_nonNarcoticTemplateText = ""; // '---------------Medications Selected-------------------\n\n\n---------------------------------------------------------';
+                    //Do Middle Section
+                    if (vcmn_requestData.d.ftp_rxtype != null) {
+                        var vcmn_rxType = ""
+                        if (vcmn_requestData.d.ftp_rxtype.Value == 100000000) { vcmn_rxType = "Refill"; }
+                        if (vcmn_requestData.d.ftp_rxtype.Value == 100000001) { vcmn_rxType = "Renewal"; }
+                        vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nVeteran is requesting a " + vcmn_rxType;
+                    }
+                    if (vcmn_requestData.d.ftp_SubReasonId != null) {
+                        vcmn_subReasonId = vcmn_requestData.d.ftp_SubReasonId.Id;
+                        if (vcmn_subReasonId != null) {
+                            //Get Template Text
+                            var vcmn_subreasonData = vcmn_getSingleEntityDataSync('ftp_subreasonSet', 'ftp_notetext', vcmn_subReasonId);
+                            if (vcmn_subreasonData.d.ftp_notetext != null) {
+                                vcmn_subReasonTemplateText = vcmn_subreasonData.d.ftp_notetext;
                             }
                         }
-                        if (vcmn_minorReasonTemplateText != null) {
-                            vcmn_templateNote = vcmn_templateNote + vcmn_minorReasonTemplateText + "\n\n";
+                    }
+                    if (vcmn_requestData.d.ftp_MinorReasonId != null) {
+                        vcmn_minorReasonId = vcmn_requestData.d.ftp_MinorReasonId.Id;
+                        if (vcmn_minorReasonId != null) {
+                            //Get Template Text
+                            var vcmn_minorreasonData = vcmn_getSingleEntityDataSync('ftp_minorreasonSet', 'ftp_name, ftp_notetext', vcmn_minorReasonId);
+                            if (vcmn_minorreasonData.d.ftp_name != null) {
+                                vcmn_minorReasonTemplateText = vcmn_minorreasonData.d.ftp_name;
+                            }
+                            if (vcmn_minorreasonData.d.ftp_notetext != null) {
+                                vcmn_minorReasonNoteSubText = vcmn_minorreasonData.d.ftp_notetext;
+                            }
                         }
-                        if (vcmn_minorReasonNoteSubText != null) {
-                            vcmn_templateNote = vcmn_templateNote + vcmn_minorReasonNoteSubText + "\n\n";
-                        }
-                        if (vcmn_subReasonTemplateText != null) {
-                            vcmn_templateNote = vcmn_templateNote + vcmn_subReasonTemplateText + "\n\n";
+                    }
+                    if (vcmn_requestData.d.CustomerId != null) {
+                        vcmn_setSimpleLookupValue('ftp_patient', vcmn_requestData.d.CustomerId.LogicalName, vcmn_requestData.d.CustomerId.Id, vcmn_requestData.d.CustomerId.Name);
+                        Xrm.Page.getAttribute('ftp_patient').setSubmitMode('always');
+                        //Set as veteran id
+                        vcmn_veteranId = vcmn_requestData.d.CustomerId.Id
+                    }
+
+                    //Display sub-reason note text
+                    if (vcmn_subReasonTemplateText != null && vcmn_subReasonTemplateText != "") {
+                        vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\n" + vcmn_subReasonTemplateText;
+                        if (vcmn_minorReasonNoteSubText != null && vcmn_minorReasonNoteSubText != "") {
+                            vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\n" + vcmn_minorReasonNoteSubText;
+                            if (vcmn_minorReasonNoteSubText == "Medication used to treat service connected conditions") {
+                                //Add Service Connected Disabilities TAG for later update from function
+                                vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\n" +
+                                    "~~~~SCDTAG~~~~";
+                            }
                         }
                     }
 
-                    if (vcmn_subReasonName == 'Early') {
-                        vcmn_templateNote = vcmn_templateNote + "Veteran is requesting EARLY FILL." + "\n\n";
-                        vcmn_templateNote = vcmn_templateNote + "Last Filled: " + vcmn_lastFilled + "\n\n";
-                        if (vcmn_minorReasonTemplateText != null) {
-                            vcmn_templateNote = vcmn_templateNote + vcmn_minorReasonTemplateText + "\n\n";
-                        }
+                    //Included required fields in template based on sub and minor reasons
+                    if ((vcmn_subReasonTemplateText == "Veteran is requesting a renewal of a medication no longer on their medication profile" &&
+                        vcmn_minorReasonNoteSubText == "Medication dose change or was taking differently than prescribed. Patient stated they have been taking regularly")
+                        || (vcmn_subReasonTemplateText == "Medication dose change or taken differently than prescribed")) {
 
-                        if (vcmn_quantityTaking != null) {
-                            vcmn_templateNote = vcmn_templateNote + "Quantity Taking: " + vcmn_quantityTaking + "\n\n";
+                        if (vcmn_requestData.d.ftp_lastdirectionsonfile != null) {
+                            vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nLast Directions On File: " + vcmn_requestData.d.ftp_lastdirectionsonfile;
                         }
-
-                        if (vcmn_vacationStart != null && vcmn_vacationEnd != null) {
-                            vcmn_templateNote = vcmn_templateNote + "Veteran Leaving Town: " + vcmn_vacationStart + ' - ' + vcmn_vacationEnd + "\n\n";
+                        if (vcmn_requestData.d.ftp_patientstatesdirections != null) {
+                            vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nPatient States Directions: " + vcmn_requestData.d.ftp_patientstatesdirections;
                         }
-
-                        if (vcmn_minorReasonNoteSubText != null) {
-                            vcmn_templateNote = vcmn_templateNote + vcmn_minorReasonNoteSubText + "\n\n";
+                        if (vcmn_requestData.d.ftp_directionsby != null) {
+                            vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nDirections by: " + vcmn_requestData.d.ftp_directionsby;
                         }
-                        if (vcmn_subReasonTemplateText != null) {
-                            vcmn_templateNote = vcmn_templateNote + vcmn_subReasonTemplateText + "\n\n";
+                        if (vcmn_requestData.d.ftp_veteranchangeddose != null) {
+                            var vcmn_veteranChangedDose = null;
+                            if (vcmn_requestData.d.ftp_veteranchangeddose == false) { vcmn_veteranChangedDose = "No"; }
+                            if (vcmn_requestData.d.ftp_veteranchangeddose == true) { vcmn_veteranChangedDose = "Yes"; }
+                            vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nVeteran Changed Dose: " + vcmn_veteranChangedDose;
                         }
                     }
-
-                    if (vcmn_subReasonName == 'Lost') {
-                        vcmn_templateNote = vcmn_templateNote + "Veteran claims prescriptions(s) were LOST and is requesting a new prescription/early fill." + "\n\n";
-                        if (vcmn_rxNumber != null) {
-                            vcmn_templateNote = vcmn_templateNote + "RX#: " + vcmn_rxNumber + "\n\n";
-                        }
-                        if (vcmn_rxRefillQuantity != null) {
-                            vcmn_templateNote = vcmn_templateNote + "Rx Refill Quantity: " + vcmn_rxRefillQuantity + "\n\n";
-                        }
-                        vcmn_templateNote = vcmn_templateNote + "Last Filled: " + vcmn_lastFilled + "\n\n";
-                        if (vcmn_minorReasonTemplateText != null) {
-                            vcmn_templateNote = vcmn_templateNote + vcmn_minorReasonTemplateText + "\n\n";
-                        }
-                        if (vcmn_trackingNumber != null) {
-                            vcmn_templateNote = vcmn_templateNote + "Tracking Number: " + vcmn_trackingNumber + "\n\n";
-                        }
-                        if (vcmn_minorReasonNoteSubText != null) {
-                            vcmn_templateNote = vcmn_templateNote + vcmn_minorReasonNoteSubText + "\n\n";
-                        }
-                        if (vcmn_subReasonTemplateText != null) {
-                            vcmn_templateNote = vcmn_templateNote + vcmn_subReasonTemplateText + "\n\n";
-                        }
-                    }
-
-                    if (vcmn_subReasonName == 'Stolen') {
-                        vcmn_templateNote = vcmn_templateNote + "Veteran claims prescriptions(s) were STOLEN and is requesting a new prescription/early fill." + "\n\n";
-                        vcmn_templateNote = vcmn_templateNote + "Last Filled: " + vcmn_lastFilled + "\n\n";
-                        if (vcmn_minorReasonTemplateText != null) {
-                            vcmn_templateNote = vcmn_templateNote + vcmn_minorReasonTemplateText + "\n\n";
-                        }
-                        if (vcmn_minorReasonNoteSubText != null) {
-                            vcmn_templateNote = vcmn_templateNote + vcmn_minorReasonNoteSubText + "\n\n";
-                        }
-                        if (vcmn_subReasonTemplateText != null) {
-                            vcmn_templateNote = vcmn_templateNote + vcmn_subReasonTemplateText + "\n\n";
-                        }
-                    }
-
-                    if (vcmn_subReasonName == 'Requesting Hold / Unhold') {
-                        if (vcmn_subReasonTemplateText != null) {
-                            vcmn_templateNote = vcmn_templateNote + vcmn_subReasonTemplateText + "\n\n";
-                        }
-                        if (vcmn_minorReasonTemplateText != null) {
-                            vcmn_templateNote = vcmn_templateNote + vcmn_minorReasonTemplateText + "\n\n";
-                        }
-                        if (vcmn_requestData.d.ftp_rxtype != null) {
-                            var vcmn_rxType = ""
-                            if (vcmn_requestData.d.ftp_rxtype.Value == 100000000) { vcmn_rxType = "Refill"; }
-                            if (vcmn_requestData.d.ftp_rxtype.Value == 100000001) { vcmn_rxType = "Renewal"; }
-                            vcmn_templateNote = vcmn_templateNote + "\nRx Type: " + vcmn_rxType;
-                        }
-                        vcmn_templateNote = vcmn_templateNote + "\nLast Filled: " + vcmn_lastFilled + "\n\n";
-                        if (vcmn_pickupmethod != null) {
-                            if (vcmn_pickupmethod == 100000000) {
-                                vcmn_templateNote = vcmn_templateNote + "\nPick-Up Method: " + "Mail ";
-                            }
-                            if (vcmn_pickupmethod == 100000001) {
-                                vcmn_templateNote = vcmn_templateNote + "\nPick-Up Method: " + "Window ***** ";
-                            }
-                        }
+                    if (vcmn_subReasonTemplateText == "Other:") {
                         if (vcmn_requestData.d.ftp_othertext != null) {
-                            vcmn_templateNote = vcmn_templateNote + "\nOther Text: " + vcmn_requestData.d.ftp_othertext;
+                            vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nOther Text: " + vcmn_requestData.d.ftp_othertext;
                         }
-                        if (vcmn_requestData.d.ftp_methodofrequest != null) {
-                            var vcmn_methodOfRequest = "";
-                            if (vcmn_requestData.d.ftp_methodofrequest.Value == 100000000) { vcmn_methodOfRequest = "Phone"; }
-                            if (vcmn_requestData.d.ftp_methodofrequest.Value == 100000001) { vcmn_methodOfRequest = "In Person"; }
-                            if (vcmn_requestData.d.ftp_methodofrequest.Value == 100000002) { vcmn_methodOfRequest = "Mail"; }
-                            if (vcmn_requestData.d.ftp_methodofrequest.Value == 100000003) { vcmn_methodOfRequest = "Internet"; }
-                            vcmn_templateNote = vcmn_templateNote + "\nMethod of Request: " + vcmn_methodOfRequest;
+                    }
+                    if (vcmn_subReasonTemplateText == "Veteran is requesting medication replacement" && vcmn_minorReasonNoteSubText == "Medication lost or stolen") {
+                        if (vcmn_requestData.d.ftp_lostorstolen != null) {
+                            vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nLost or Stolen: " + vcmn_requestData.d.ftp_lostorstolen;
                         }
-                        if (vcmn_requestData.d.ftp_age != null) {
-                            vcmn_templateNote = vcmn_templateNote + "\nAge: " + vcmn_requestData.d.ftp_age;
+                    }
+                    if (vcmn_subReasonTemplateText == "Veteran is requesting medication replacement" && vcmn_minorReasonNoteSubText == "Medication never arrived in mail. Tracking #:") {
+                        if (vcmn_requestData.d.ftp_TrackingNumber != null) {
+                            vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nTracking Number: " + vcmn_requestData.d.ftp_TrackingNumber;
                         }
-                        if (vcmn_requestData.d.ftp_pcp != null) {
-                            vcmn_templateNote = vcmn_templateNote + "\nPCP: " + vcmn_requestData.d.ftp_pcp;
+                    }
+                    if (vcmn_subReasonTemplateText == "Veteran requesting refill quantity to be changed to a _____ day supply") {
+                        //if (vcmn_requestData.d.ftp_RxRefillQuantity != null) {
+                        //    vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nRx Refill Quantity: " + vcmn_requestData.d.ftp_RxRefillQuantity;
+                        //}
+
+                        //adjusted 5/7/18 kknab
+                        if (vcmn_requestData.d.ftp_dayssupply_text != null) {
+                            //vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nRx Refill Quantity: " + vcmn_requestData.d.ftp_dayssupply_text;
+                            vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText.replace(vcmn_subReasonTemplateText, vcmn_subReasonTemplateText.replace("_____", vcmn_requestData.d.ftp_dayssupply_text));
                         }
-                        if (vcmn_requestData.d.ftp_calccrcl != null) {
-                            vcmn_templateNote = vcmn_templateNote + "\nCalc CrCl: " + vcmn_requestData.d.ftp_calccrcl;
+                    }
+                    if (vcmn_subReasonTemplateText == "Veteran requests medication copay reversal" && vcmn_minorReasonNoteSubText == "Other:") {
+                        if (vcmn_requestData.d.ftp_othercopayreversal != null) {
+                            vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nOther (copay reversal): " + vcmn_requestData.d.ftp_othercopayreversal;
                         }
-                        if (vcmn_requestData.d.ftp_LatesteGFRResult != null) {
-                            vcmn_templateNote = vcmn_templateNote + "\nLatest eGFR: " + vcmn_requestData.d.ftp_LatesteGFRResult;
+                    }
+                    if (vcmn_subReasonTemplateText == "Veteran has stopped taking the medication") {
+                        if (vcmn_requestData.d.ftp_reasonforstopping != null) {
+                            vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nReason for Stopping: " + vcmn_requestData.d.ftp_reasonforstopping;
+                        }
+                    }
+                    if ((vcmn_subReasonTemplateText == "Medication requesting early refill:" &&
+                        vcmn_minorReasonNoteSubText == "Veteran has been requiring extra medication and is taking more than prescribed (reports taking ________ tablets / capsules per day):")
+                        || (vcmn_subReasonTemplateText == "Veteran is requesting a partial fill" &&
+                            vcmn_minorReasonNoteSubText == "Veteran has been requiring extra medication and is taking more than prescribed (reports taking ________ tablets / capsules per day):")) {
+                        if (vcmn_requestData.d.ftp_QuantityReportsTaking != null) {
+                            //vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nQuantity Reports Taking: " + vcmn_requestData.d.ftp_QuantityReportsTaking;
+                            vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText.replace(vcmn_minorReasonNoteSubText, vcmn_minorReasonNoteSubText.replace("________", vcmn_requestData.d.ftp_QuantityReportsTaking));
                         }
                     }
 
-                    //If Template Text was populated, fill in additional info...
-                    if (vcmn_templateNote != '') {
-                        vcmn_templateNote = vcmn_templateNote + "\n______________________________________________________________________________________________________________________\n\n";
-                        //Is an Opioid Agreement current and onfile?
-                        if (vcmn_opioidAgreementOnfile != null) {
-                            vcmn_templateNote = vcmn_templateNote + "Consent for Long-Term Opioid Therapy for Pain:\n";
-                            if (vcmn_opioidAgreementOnfile == 100000000) {
-                                //Yes Option
-                                vcmn_templateNote = vcmn_templateNote + "[X] Yes - See Postings\n\n";
-                            }
-                            if (vcmn_opioidAgreementOnfile == 100000001) {
-                                //No Option
-                                vcmn_templateNote = vcmn_templateNote + "[X] No - Veteran does not have a signed Consent for Long-Term Opioid Therapy for pain (in Postings).\nConsent MUST be reviewed and signed as soon as possible.\n\n";
-                            }
-                        }
-                        //Is valid Urine Drug Screen on-file?
-                        if (vcmn_UDSonfile != null) {
-                            vcmn_templateNote = vcmn_templateNote + "Is valid Urine Drug Screen on-file?\n";
-                            if (vcmn_UDSonfile == 100000000) {
-                                //Yes Option
-                                vcmn_templateNote = vcmn_templateNote + "[X] Yes - See Postings\n\n";
-                            }
-                            if (vcmn_UDSonfile == 100000001) {
-                                //No Option
-                                vcmn_templateNote = vcmn_templateNote + "[X] No - Veteran does not have a valid Urine Drug Screen on-file.\n\n";
-                            }
-                        }
-                        //State Drug Monitoring Report?
-                        if (vcmn_stateDrugMonitoringReport != null) {
-                            vcmn_templateNote = vcmn_templateNote + "State Prescription Drug Monitoring Program (SPDMP) report completed in last year:\n";
-                            if (vcmn_stateDrugMonitoringReport == 100000000) {
-                                //Positive Option
-                                vcmn_templateNote = vcmn_templateNote + "[X] Positive - see SPDMP note.\n\n";
-                            }
-                            if (vcmn_stateDrugMonitoringReport == 100000001) {
-                                //Negative Option
-                                vcmn_templateNote = vcmn_templateNote + "[X] Negative.\n\n";
-                            }
-                            if (vcmn_stateDrugMonitoringReport == 100000002) {
-                                //Not on File Option
-                                vcmn_templateNote = vcmn_templateNote + "[X] None on file, Pharmacy to request.\n\n";
-                            }
-                            //Add in States (2), convert integers to state names from form's hidden state options
-                            var vcmn_usStatesOptions = Xrm.Page.getAttribute("ftp_usstatesoption").getOptions();
-                            var vcmn_stateList = "";
-                            if (vcmn_spdmpstateonfile != null) {
-                                //find text value for option
-                                $(vcmn_usStatesOptions).each(function (i, e) {
-                                    var vcmn_optionText = $(this)[0].text;
-                                    var vcmn_optionValue = $(this)[0].value;
-                                    if (vcmn_spdmpstateonfile == vcmn_optionValue) { vcmn_stateList = vcmn_optionText; }
-                                });
-                            }
-                            if (vcmn_sPDMPState2 != null) {
-                                //find text value for option
-                                $(vcmn_usStatesOptions).each(function (i, e) {
-                                    var vcmn_optionText = $(this)[0].text;
-                                    var vcmn_optionValue = $(this)[0].value;
-                                    if (vcmn_sPDMPState2 == vcmn_optionValue) { vcmn_stateList = vcmn_stateList + ", " + vcmn_optionText; }
-                                });
-                            }
-                            if (vcmn_stateList != "") {
-                                //Add states list to note
-                                vcmn_templateNote = vcmn_templateNote + "State Prescription Drug Monitoring Program for the following state(s): " + vcmn_stateList;
-                            }
-                        }
+                    //Always include last filled
+                    if (vcmn_requestData.d.ftp_LastFilled != null) {
+                        //vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nLast Filled: " + new Date(parseInt(vcmn_requestData.d.ftp_LastFilled.toString().replace("/Date(", "").replace(")/", ""), 10));
+                        var vcmn_fillDate = new Date(parseInt(vcmn_requestData.d.ftp_LastFilled.toString().replace("/Date(", "").replace(")/", ""), 10));
+                        vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nLast Filled: " +
+                            (vcmn_fillDate.getMonth() + 1).toString() + "/" + vcmn_fillDate.getDate().toString() + "/" + vcmn_fillDate.getFullYear().toString();
+                    }
 
-                        //If ftp_pickupmethod has a value
-                        if (vcmn_pickupmethod != null && vcmn_subReasonName != 'Regular' && vcmn_subReasonName != 'Requesting Hold / Unhold') {
-                            vcmn_templateNote = vcmn_templateNote + "\n______________________________________________________________________________________________________________________\n\n";
-                            vcmn_templateNote = vcmn_templateNote + "Veteran requested Method of Pick Up:  ";
-                            if (vcmn_pickupmethod == 100000000) {
-                                //Mail Option
-                                vcmn_templateNote = vcmn_templateNote + "[X] Mail. \n\n";
+                    //Do Bottom Section
+                    vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\n";
+                    if (vcmn_requestData.d.ftp_methodofrequest != null) {
+                        var vcmn_methodOfRequest = "";
+                        if (vcmn_requestData.d.ftp_methodofrequest.Value == 100000000) { vcmn_methodOfRequest = "Phone"; }
+                        if (vcmn_requestData.d.ftp_methodofrequest.Value == 100000001) { vcmn_methodOfRequest = "In Person"; }
+                        if (vcmn_requestData.d.ftp_methodofrequest.Value == 100000002) { vcmn_methodOfRequest = "Mail"; }
+                        if (vcmn_requestData.d.ftp_methodofrequest.Value == 100000003) { vcmn_methodOfRequest = "Internet"; }
+                        vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nMethod of Request: " + vcmn_methodOfRequest;
+                    }
+                    if (vcmn_requestData.d.ftp_pickupmethod != null) {
+                        var vcmn_pickupmethod = vcmn_requestData.d.ftp_pickupmethod.Value;
+                        if (vcmn_pickupmethod == 100000000) {
+                            vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nPick-Up Method: " + "Mail ";
+                        }
+                        if (vcmn_pickupmethod == 100000001) {
+                            vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nPick-Up Method: " + "Window ***** ";
+                        }
+                    }
+                    //Get veteran's current address
+                    if (vcmn_veteranId != null) {
+                        var vcmn_contactData = vcmn_getSingleEntityDataSync('ContactSet', 'Address1_Composite', vcmn_veteranId);
+                        if (vcmn_contactData != null) {
+                            if (vcmn_contactData.d.Address1_Composite != null && vcmn_contactData.d.Address1_Composite != '') {
+                                vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\n\nAddress confirmed:";
+                                vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\n" + vcmn_contactData.d.Address1_Composite;
                             }
-                            if (vcmn_pickupmethod == 100000001) {
-                                //Window Option
-                                vcmn_templateNote = vcmn_templateNote + "[X] Window. \n\n";
+                        }
+                    }
+                    if (Xrm.Page.getAttribute('ftp_callbacknumber').getValue() != null) {
+                        vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nCallback Number: " + Xrm.Page.getAttribute('ftp_callbacknumber').getValue() + "\n";
+                    }
+                    if (vcmn_requestData.d.ftp_age != null) {
+                        vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nAge: " + vcmn_requestData.d.ftp_age;
+                    }
+                    if (vcmn_requestData.d.ftp_pcp != null) {
+                        vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nPCP: " + vcmn_requestData.d.ftp_pcp;
+                    }
+                    if (vcmn_requestData.d.ftp_calccrcl != null) {
+                        vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nCalc CrCl: " + vcmn_requestData.d.ftp_calccrcl;
+                    }
+                    if (vcmn_requestData.d.ftp_LatesteGFRResult != null) {
+                        vcmn_nonNarcoticTemplateText = vcmn_nonNarcoticTemplateText + "\nLatest eGFR: " + vcmn_requestData.d.ftp_LatesteGFRResult;
+                    }
+
+                    //Write Non Narcotic Template Text as long as it is not a Triage
+                    if (vcmn_triageexpert == 'NO' || vcmn_triageexpert == null) {
+                        Xrm.Page.getAttribute("ftp_notedetail").setValue(vcmn_nonNarcoticTemplateText);
+                        Xrm.Page.getAttribute("ftp_notedetail").setSubmitMode("always");
+                    }
+                }
+                //*****NON NARCOTIC END*****
+
+                //*****STANDARD TEMPLATE START*****
+                else {
+                    if (vcmn_requestData.d.ftp_SubReasonId != null) {
+                        vcmn_subReasonId = vcmn_requestData.d.ftp_SubReasonId.Id;
+                        if (vcmn_subReasonId != null) {
+                            //Get Template Text
+                            var vcmn_subreasonData = vcmn_getSingleEntityDataSync('ftp_subreasonSet', 'ftp_notetext', vcmn_subReasonId);
+                            if (vcmn_subreasonData.d.ftp_notetext != null) {
+                                vcmn_subReasonTemplateText = vcmn_subreasonData.d.ftp_notetext;
                             }
-                            //Get veteran's current address
-                            if (vcmn_veteranId != null) {
-                                var vcmn_contactData = vcmn_getSingleEntityDataSync('ContactSet', 'Address1_Composite', vcmn_veteranId);
-                                if (vcmn_contactData != null) {
-                                    if (vcmn_contactData.d.Address1_Composite != null && vcmn_contactData.d.Address1_Composite != '') {
-                                        vcmn_templateNote = vcmn_templateNote + "Address confirmed with caller: \n";
-                                        vcmn_templateNote = vcmn_templateNote + vcmn_contactData.d.Address1_Composite + "\n";
-                                        if (Xrm.Page.getAttribute('ftp_callbacknumber').getValue() != null) {
-                                            vcmn_templateNote = vcmn_templateNote + Xrm.Page.getAttribute('ftp_callbacknumber').getValue();
-                                        }
-                                    }
+                        }
+                    }
+                    if (vcmn_requestData.d.ftp_MinorReasonId != null) {
+                        vcmn_minorReasonId = vcmn_requestData.d.ftp_MinorReasonId.Id;
+                        if (vcmn_minorReasonId != null) {
+                            //Get Template Text
+                            var vcmn_minorreasonData = vcmn_getSingleEntityDataSync('ftp_minorreasonSet', 'ftp_name, ftp_notetext', vcmn_minorReasonId);
+                            if (vcmn_minorreasonData.d.ftp_name != null) {
+                                vcmn_minorReasonTemplateText = vcmn_minorreasonData.d.ftp_name;
+                            }
+                            if (vcmn_minorreasonData.d.ftp_notetext != null) {
+                                vcmn_minorReasonNoteSubText = vcmn_minorreasonData.d.ftp_notetext;
+                            }
+                        }
+                    }
+
+                    if (vcmn_requestData.d.CustomerId != null) {
+                        vcmn_setSimpleLookupValue('ftp_patient', vcmn_requestData.d.CustomerId.LogicalName, vcmn_requestData.d.CustomerId.Id, vcmn_requestData.d.CustomerId.Name);
+                        Xrm.Page.getAttribute('ftp_patient').setSubmitMode('always');
+                        //Set as veteran id
+                        vcmn_veteranId = vcmn_requestData.d.CustomerId.Id
+                    }
+
+                    //Construct Template Note
+                    var vcmn_subReasonName = null;
+                    var vcmn_templateNote = "";
+                    var vcmn_lastFilled = "";
+                    var vcmn_quantityReportsTaking = null;
+                    var vcmn_rxNumber = null;
+                    var vcmn_rxRefillQuantity = null;
+                    var vcmn_trackingNumber = null;
+                    var vcmn_opioidAgreementOnfile = null;
+                    var vcmn_UDSonfile = null;
+                    var vcmn_stateDrugMonitoringReport = null;
+                    var vcmn_spdmpstateonfile = null;
+                    var vcmn_sPDMPState2 = null;
+                    var vcmn_pickupmethod = null;
+
+                    var vcmn_earlyRefillComment = null;
+                    var vcmn_quantityTaking = null;
+                    var vcmn_vacationStart = null;
+                    var vcmn_vacationEnd = null;
+
+                    if (vcmn_requestData.d.ftp_LastFilled != null) {
+                        //vcmn_lastFilled = new Date(parseInt(vcmn_requestData.d.ftp_LastFilled.toString().replace("/Date(", "").replace(")/", ""), 10));
+                        var vcmn_fillDate = new Date(parseInt(vcmn_requestData.d.ftp_LastFilled.toString().replace("/Date(", "").replace(")/", ""), 10));
+                        vcmn_lastFilled = (vcmn_fillDate.getMonth() + 1).toString() + "/" + vcmn_fillDate.getDate().toString() + "/" + vcmn_fillDate.getFullYear().toString();
+                    }
+                    if (vcmn_requestData.d.ftp_QuantityReportsTaking != null) { vcmn_quantityReportsTaking = vcmn_requestData.d.ftp_QuantityReportsTaking; }
+                    if (vcmn_requestData.d.ftp_RxNumber != null) { vcmn_rxNumber = vcmn_requestData.d.ftp_RxNumber; }
+                    if (vcmn_requestData.d.ftp_RxRefillQuantity != null) { vcmn_rxRefillQuantity = vcmn_requestData.d.ftp_RxRefillQuantity; }
+                    if (vcmn_requestData.d.ftp_TrackingNumber != null) { vcmn_trackingNumber = vcmn_requestData.d.ftp_TrackingNumber; }
+                    if (vcmn_requestData.d.ftp_OpiodAgreementOnfile != null) { vcmn_opioidAgreementOnfile = vcmn_requestData.d.ftp_OpiodAgreementOnfile.Value; }
+                    if (vcmn_requestData.d.ftp_UDSonfile != null) { vcmn_UDSonfile = vcmn_requestData.d.ftp_UDSonfile.Value; }
+                    if (vcmn_requestData.d.ftp_StateDrugMonitoringReport != null) { vcmn_stateDrugMonitoringReport = vcmn_requestData.d.ftp_StateDrugMonitoringReport.Value; }
+                    if (vcmn_requestData.d.ftp_spdmpstateonfile != null) { vcmn_spdmpstateonfile = vcmn_requestData.d.ftp_spdmpstateonfile.Value; }
+                    if (vcmn_requestData.d.ftp_SPDMPState2 != null) { vcmn_sPDMPState2 = vcmn_requestData.d.ftp_SPDMPState2.Value; }
+                    if (vcmn_requestData.d.ftp_pickupmethod != null) { vcmn_pickupmethod = vcmn_requestData.d.ftp_pickupmethod.Value; }
+
+                    if (vcmn_requestData.d.ftp_earlyrefillcomment != null) { vcmn_earlyRefillComment = vcmn_requestData.d.ftp_earlyrefillcomment; }
+                    if (vcmn_requestData.d.ftp_quantitytaking != null) { vcmn_quantityTaking = vcmn_requestData.d.ftp_quantitytaking; }
+                    if (vcmn_requestData.d.ftp_vacationstart != null) { vcmn_vacationStart = new Date(parseInt(vcmn_requestData.d.ftp_vacationstart.toString().replace("/Date(", "").replace(")/", ""), 10)); }
+                    if (vcmn_requestData.d.ftp_vacationend != null) { vcmn_vacationEnd = new Date(parseInt(vcmn_requestData.d.ftp_vacationend.toString().replace("/Date(", "").replace(")/", ""), 10)); }
+
+                    if (vcmn_requestData.d.ftp_SubReasonId != null) {
+                        vcmn_subReasonId = vcmn_requestData.d.ftp_SubReasonId.Id;
+                        vcmn_subReasonName = vcmn_requestData.d.ftp_SubReasonId.Name;
+
+                        if (vcmn_subReasonName == 'Regular') {
+                            vcmn_templateNote = vcmn_templateNote + "Veteran is requesting a RENEWAL." + "\n\n";
+                            vcmn_templateNote = vcmn_templateNote + "Last Filled: " + vcmn_lastFilled + "\n\n";
+                            if (vcmn_pickupmethod != null) {
+                                if (vcmn_pickupmethod == 100000000) {
+                                    vcmn_templateNote = vcmn_templateNote + "\nPick-Up Method: " + "Mail ";
+                                }
+                                if (vcmn_pickupmethod == 100000001) {
+                                    vcmn_templateNote = vcmn_templateNote + "\nPick-Up Method: " + "Window ***** ";
                                 }
                             }
+                            if (vcmn_minorReasonTemplateText != null) {
+                                vcmn_templateNote = vcmn_templateNote + vcmn_minorReasonTemplateText + "\n\n";
+                            }
+                            if (vcmn_minorReasonNoteSubText != null) {
+                                vcmn_templateNote = vcmn_templateNote + vcmn_minorReasonNoteSubText + "\n\n";
+                            }
+                            if (vcmn_subReasonTemplateText != null) {
+                                vcmn_templateNote = vcmn_templateNote + vcmn_subReasonTemplateText + "\n\n";
+                            }
                         }
-                    }
 
-                    //Write note text if not Triage:
-                    if (vcmn_triageexpert == 'NO' || vcmn_triageexpert == null) {
-                        Xrm.Page.getAttribute('ftp_notedetail').setValue(vcmn_templateNote);
-                        Xrm.Page.getAttribute('ftp_notedetail').setSubmitMode('always');
-                    }
-                }
-            }
-            //*****STANDARD TEMPLATE END*****
+                        if (vcmn_subReasonName == 'Early') {
+                            vcmn_templateNote = vcmn_templateNote + "Veteran is requesting EARLY FILL." + "\n\n";
+                            vcmn_templateNote = vcmn_templateNote + "Last Filled: " + vcmn_lastFilled + "\n\n";
+                            if (vcmn_minorReasonTemplateText != null) {
+                                vcmn_templateNote = vcmn_templateNote + vcmn_minorReasonTemplateText + "\n\n";
+                            }
 
-            //Default Diagnosis code if TAN or PHARMACY user, based on systemuser lookup
-            var vcmn_currentUserId = Xrm.Page.context.getUserId();
-            var vcmn_currentUserData = vcmn_getSingleEntityDataSync('SystemUserSet', 'msdyusd_USDConfigurationId, ftp_FacilitySiteId', vcmn_currentUserId);
-            if (vcmn_currentUserData != null) {
-                if (vcmn_currentUserData.d.msdyusd_USDConfigurationId != null) {
-                    if (vcmn_currentUserData.d.msdyusd_USDConfigurationId.Name != null) {
-                        //TAN logic
-                        if (vcmn_currentUserData.d.msdyusd_USDConfigurationId.Name == 'TAN Configuration') {
-                            //Get Default Tan Configuration from User's Facility
-                            if (vcmn_currentUserData.d.ftp_FacilitySiteId != null) {
-                                if (vcmn_currentUserData.d.ftp_FacilitySiteId.Id != null) {
-                                    var vcmn_currentUserFacilityData = vcmn_getSingleEntityDataSync('ftp_facilitySet', 'ftp_defaulttandiagnosiscode', vcmn_currentUserData.d.ftp_FacilitySiteId.Id);
-                                    if (vcmn_currentUserFacilityData != null) {
-                                        if (vcmn_currentUserFacilityData.d.ftp_defaulttandiagnosiscode != null) {
-                                            if (vcmn_currentUserFacilityData.d.ftp_defaulttandiagnosiscode.Id != null) {
-                                                //Write Diagnosis code to Progress Note Form if a Triage Note (revised 5/9-17 for workload encounter also)
-                                                //*if (vcmn_triageexpert == 'YES') {
-                                                vcmn_setSimpleLookupValue('ftp_diagnosiscode', vcmn_currentUserFacilityData.d.ftp_defaulttandiagnosiscode.LogicalName, vcmn_currentUserFacilityData.d.ftp_defaulttandiagnosiscode.Id, vcmn_currentUserFacilityData.d.ftp_defaulttandiagnosiscode.Name);
-                                                Xrm.Page.getAttribute('ftp_diagnosiscode').setSubmitMode('always');
-                                                //*}
+                            if (vcmn_quantityTaking != null) {
+                                vcmn_templateNote = vcmn_templateNote + "Quantity Taking: " + vcmn_quantityTaking + "\n\n";
+                            }
+
+                            if (vcmn_vacationStart != null && vcmn_vacationEnd != null) {
+                                vcmn_templateNote = vcmn_templateNote + "Veteran Leaving Town: " + vcmn_vacationStart + ' - ' + vcmn_vacationEnd + "\n\n";
+                            }
+
+                            if (vcmn_minorReasonNoteSubText != null) {
+                                vcmn_templateNote = vcmn_templateNote + vcmn_minorReasonNoteSubText + "\n\n";
+                            }
+                            if (vcmn_subReasonTemplateText != null) {
+                                vcmn_templateNote = vcmn_templateNote + vcmn_subReasonTemplateText + "\n\n";
+                            }
+                        }
+
+                        if (vcmn_subReasonName == 'Lost') {
+                            vcmn_templateNote = vcmn_templateNote + "Veteran claims prescriptions(s) were LOST and is requesting a new prescription/early fill." + "\n\n";
+                            if (vcmn_rxNumber != null) {
+                                vcmn_templateNote = vcmn_templateNote + "RX#: " + vcmn_rxNumber + "\n\n";
+                            }
+                            if (vcmn_rxRefillQuantity != null) {
+                                vcmn_templateNote = vcmn_templateNote + "Rx Refill Quantity: " + vcmn_rxRefillQuantity + "\n\n";
+                            }
+                            vcmn_templateNote = vcmn_templateNote + "Last Filled: " + vcmn_lastFilled + "\n\n";
+                            if (vcmn_minorReasonTemplateText != null) {
+                                vcmn_templateNote = vcmn_templateNote + vcmn_minorReasonTemplateText + "\n\n";
+                            }
+                            if (vcmn_trackingNumber != null) {
+                                vcmn_templateNote = vcmn_templateNote + "Tracking Number: " + vcmn_trackingNumber + "\n\n";
+                            }
+                            if (vcmn_minorReasonNoteSubText != null) {
+                                vcmn_templateNote = vcmn_templateNote + vcmn_minorReasonNoteSubText + "\n\n";
+                            }
+                            if (vcmn_subReasonTemplateText != null) {
+                                vcmn_templateNote = vcmn_templateNote + vcmn_subReasonTemplateText + "\n\n";
+                            }
+                        }
+
+                        if (vcmn_subReasonName == 'Stolen') {
+                            vcmn_templateNote = vcmn_templateNote + "Veteran claims prescriptions(s) were STOLEN and is requesting a new prescription/early fill." + "\n\n";
+                            vcmn_templateNote = vcmn_templateNote + "Last Filled: " + vcmn_lastFilled + "\n\n";
+                            if (vcmn_minorReasonTemplateText != null) {
+                                vcmn_templateNote = vcmn_templateNote + vcmn_minorReasonTemplateText + "\n\n";
+                            }
+                            if (vcmn_minorReasonNoteSubText != null) {
+                                vcmn_templateNote = vcmn_templateNote + vcmn_minorReasonNoteSubText + "\n\n";
+                            }
+                            if (vcmn_subReasonTemplateText != null) {
+                                vcmn_templateNote = vcmn_templateNote + vcmn_subReasonTemplateText + "\n\n";
+                            }
+                        }
+
+                        if (vcmn_subReasonName == 'Requesting Hold / Unhold') {
+                            if (vcmn_subReasonTemplateText != null) {
+                                vcmn_templateNote = vcmn_templateNote + vcmn_subReasonTemplateText + "\n\n";
+                            }
+                            if (vcmn_minorReasonTemplateText != null) {
+                                vcmn_templateNote = vcmn_templateNote + vcmn_minorReasonTemplateText + "\n\n";
+                            }
+                            if (vcmn_requestData.d.ftp_rxtype != null) {
+                                var vcmn_rxType = ""
+                                if (vcmn_requestData.d.ftp_rxtype.Value == 100000000) { vcmn_rxType = "Refill"; }
+                                if (vcmn_requestData.d.ftp_rxtype.Value == 100000001) { vcmn_rxType = "Renewal"; }
+                                vcmn_templateNote = vcmn_templateNote + "\nRx Type: " + vcmn_rxType;
+                            }
+                            vcmn_templateNote = vcmn_templateNote + "\nLast Filled: " + vcmn_lastFilled + "\n\n";
+                            if (vcmn_pickupmethod != null) {
+                                if (vcmn_pickupmethod == 100000000) {
+                                    vcmn_templateNote = vcmn_templateNote + "\nPick-Up Method: " + "Mail ";
+                                }
+                                if (vcmn_pickupmethod == 100000001) {
+                                    vcmn_templateNote = vcmn_templateNote + "\nPick-Up Method: " + "Window ***** ";
+                                }
+                            }
+                            if (vcmn_requestData.d.ftp_othertext != null) {
+                                vcmn_templateNote = vcmn_templateNote + "\nOther Text: " + vcmn_requestData.d.ftp_othertext;
+                            }
+                            if (vcmn_requestData.d.ftp_methodofrequest != null) {
+                                var vcmn_methodOfRequest = "";
+                                if (vcmn_requestData.d.ftp_methodofrequest.Value == 100000000) { vcmn_methodOfRequest = "Phone"; }
+                                if (vcmn_requestData.d.ftp_methodofrequest.Value == 100000001) { vcmn_methodOfRequest = "In Person"; }
+                                if (vcmn_requestData.d.ftp_methodofrequest.Value == 100000002) { vcmn_methodOfRequest = "Mail"; }
+                                if (vcmn_requestData.d.ftp_methodofrequest.Value == 100000003) { vcmn_methodOfRequest = "Internet"; }
+                                vcmn_templateNote = vcmn_templateNote + "\nMethod of Request: " + vcmn_methodOfRequest;
+                            }
+                            if (vcmn_requestData.d.ftp_age != null) {
+                                vcmn_templateNote = vcmn_templateNote + "\nAge: " + vcmn_requestData.d.ftp_age;
+                            }
+                            if (vcmn_requestData.d.ftp_pcp != null) {
+                                vcmn_templateNote = vcmn_templateNote + "\nPCP: " + vcmn_requestData.d.ftp_pcp;
+                            }
+                            if (vcmn_requestData.d.ftp_calccrcl != null) {
+                                vcmn_templateNote = vcmn_templateNote + "\nCalc CrCl: " + vcmn_requestData.d.ftp_calccrcl;
+                            }
+                            if (vcmn_requestData.d.ftp_LatesteGFRResult != null) {
+                                vcmn_templateNote = vcmn_templateNote + "\nLatest eGFR: " + vcmn_requestData.d.ftp_LatesteGFRResult;
+                            }
+                        }
+
+                        //If Template Text was populated, fill in additional info...
+                        if (vcmn_templateNote != '') {
+                            vcmn_templateNote = vcmn_templateNote + "\n______________________________________________________________________________________________________________________\n\n";
+                            //Is an Opioid Agreement current and onfile?
+                            if (vcmn_opioidAgreementOnfile != null) {
+                                vcmn_templateNote = vcmn_templateNote + "Consent for Long-Term Opioid Therapy for Pain:\n";
+                                if (vcmn_opioidAgreementOnfile == 100000000) {
+                                    //Yes Option
+                                    vcmn_templateNote = vcmn_templateNote + "[X] Yes - See Postings\n\n";
+                                }
+                                if (vcmn_opioidAgreementOnfile == 100000001) {
+                                    //No Option
+                                    vcmn_templateNote = vcmn_templateNote + "[X] No - Veteran does not have a signed Consent for Long-Term Opioid Therapy for pain (in Postings).\nConsent MUST be reviewed and signed as soon as possible.\n\n";
+                                }
+                            }
+                            //Is valid Urine Drug Screen on-file?
+                            if (vcmn_UDSonfile != null) {
+                                vcmn_templateNote = vcmn_templateNote + "Is valid Urine Drug Screen on-file?\n";
+                                if (vcmn_UDSonfile == 100000000) {
+                                    //Yes Option
+                                    vcmn_templateNote = vcmn_templateNote + "[X] Yes - See Postings\n\n";
+                                }
+                                if (vcmn_UDSonfile == 100000001) {
+                                    //No Option
+                                    vcmn_templateNote = vcmn_templateNote + "[X] No - Veteran does not have a valid Urine Drug Screen on-file.\n\n";
+                                }
+                            }
+                            //State Drug Monitoring Report?
+                            if (vcmn_stateDrugMonitoringReport != null) {
+                                vcmn_templateNote = vcmn_templateNote + "State Prescription Drug Monitoring Program (SPDMP) report completed in last year:\n";
+                                if (vcmn_stateDrugMonitoringReport == 100000000) {
+                                    //Positive Option
+                                    vcmn_templateNote = vcmn_templateNote + "[X] Positive - see SPDMP note.\n\n";
+                                }
+                                if (vcmn_stateDrugMonitoringReport == 100000001) {
+                                    //Negative Option
+                                    vcmn_templateNote = vcmn_templateNote + "[X] Negative.\n\n";
+                                }
+                                if (vcmn_stateDrugMonitoringReport == 100000002) {
+                                    //Not on File Option
+                                    vcmn_templateNote = vcmn_templateNote + "[X] None on file, Pharmacy to request.\n\n";
+                                }
+                                //Add in States (2), convert integers to state names from form's hidden state options
+                                var vcmn_usStatesOptions = Xrm.Page.getAttribute("ftp_usstatesoption").getOptions();
+                                var vcmn_stateList = "";
+                                if (vcmn_spdmpstateonfile != null) {
+                                    //find text value for option
+                                    $(vcmn_usStatesOptions).each(function (i, e) {
+                                        var vcmn_optionText = $(this)[0].text;
+                                        var vcmn_optionValue = $(this)[0].value;
+                                        if (vcmn_spdmpstateonfile == vcmn_optionValue) { vcmn_stateList = vcmn_optionText; }
+                                    });
+                                }
+                                if (vcmn_sPDMPState2 != null) {
+                                    //find text value for option
+                                    $(vcmn_usStatesOptions).each(function (i, e) {
+                                        var vcmn_optionText = $(this)[0].text;
+                                        var vcmn_optionValue = $(this)[0].value;
+                                        if (vcmn_sPDMPState2 == vcmn_optionValue) { vcmn_stateList = vcmn_stateList + ", " + vcmn_optionText; }
+                                    });
+                                }
+                                if (vcmn_stateList != "") {
+                                    //Add states list to note
+                                    vcmn_templateNote = vcmn_templateNote + "State Prescription Drug Monitoring Program for the following state(s): " + vcmn_stateList;
+                                }
+                            }
+
+                            //If ftp_pickupmethod has a value
+                            if (vcmn_pickupmethod != null && vcmn_subReasonName != 'Regular' && vcmn_subReasonName != 'Requesting Hold / Unhold') {
+                                vcmn_templateNote = vcmn_templateNote + "\n______________________________________________________________________________________________________________________\n\n";
+                                vcmn_templateNote = vcmn_templateNote + "Veteran requested Method of Pick Up:  ";
+                                if (vcmn_pickupmethod == 100000000) {
+                                    //Mail Option
+                                    vcmn_templateNote = vcmn_templateNote + "[X] Mail. \n\n";
+                                }
+                                if (vcmn_pickupmethod == 100000001) {
+                                    //Window Option
+                                    vcmn_templateNote = vcmn_templateNote + "[X] Window. \n\n";
+                                }
+                                //Get veteran's current address
+                                if (vcmn_veteranId != null) {
+                                    var vcmn_contactData = vcmn_getSingleEntityDataSync('ContactSet', 'Address1_Composite', vcmn_veteranId);
+                                    if (vcmn_contactData != null) {
+                                        if (vcmn_contactData.d.Address1_Composite != null && vcmn_contactData.d.Address1_Composite != '') {
+                                            vcmn_templateNote = vcmn_templateNote + "Address confirmed with caller: \n";
+                                            vcmn_templateNote = vcmn_templateNote + vcmn_contactData.d.Address1_Composite + "\n";
+                                            if (Xrm.Page.getAttribute('ftp_callbacknumber').getValue() != null) {
+                                                vcmn_templateNote = vcmn_templateNote + Xrm.Page.getAttribute('ftp_callbacknumber').getValue();
                                             }
                                         }
                                     }
-
-                                    //Match up the VHG Triage minute configuration with CPT Code
-                                    if (vcmn_triageminutes > 0) {
-                                        var vcmn_conditionalFilter = "(ftp_usertype/Id eq guid'" + vcmn_currentUserData.d.msdyusd_USDConfigurationId.Id + "') and (ftp_startminutes le " + vcmn_triageminutes + " ) and (ftp_endminutes ge " + vcmn_triageminutes + " )";
-                                        vcmn_getMultipleEntityDataAsync('ftp_cptcodeSet', 'ftp_cptcodeId, ftp_name, ftp_startminutes, ftp_endminutes', vcmn_conditionalFilter, 'ftp_startminutes', 'asc', 0, vcmn_cptCode_response, vcmn_triageminutes);
-                                    }
                                 }
                             }
                         }
-                        //Pharmacy logic
-                        if (vcmn_currentUserData.d.msdyusd_USDConfigurationId.Name == 'Pharmacy Configuration') {
-                            //Get Default Pharmacy Configuration from User's Facility
-                            if (vcmn_currentUserData.d.ftp_FacilitySiteId != null) {
-                                if (vcmn_currentUserData.d.ftp_FacilitySiteId.Id != null) {
-                                    var vcmn_currentUserFacilityData = vcmn_getSingleEntityDataSync('ftp_facilitySet', 'ftp_defaultpharmacyprimarydiagnosiscode', vcmn_currentUserData.d.ftp_FacilitySiteId.Id);
-                                    if (vcmn_currentUserFacilityData != null) {
-                                        if (vcmn_currentUserFacilityData.d.ftp_defaultpharmacyprimarydiagnosiscode != null) {
-                                            if (vcmn_currentUserFacilityData.d.ftp_defaultpharmacyprimarydiagnosiscode.Id != null) {
-                                                //Write Diagnosis code to Progress Note Form if a Triage Note (revised 5/9-17 for workload encounter also)
-                                                //*if (vcmn_triageexpert == 'YES') {
-                                                vcmn_setSimpleLookupValue('ftp_diagnosiscode', vcmn_currentUserFacilityData.d.ftp_defaultpharmacyprimarydiagnosiscode.LogicalName, vcmn_currentUserFacilityData.d.ftp_defaultpharmacyprimarydiagnosiscode.Id, vcmn_currentUserFacilityData.d.ftp_defaultpharmacyprimarydiagnosiscode.Name);
-                                                Xrm.Page.getAttribute('ftp_diagnosiscode').setSubmitMode('always');
-                                                //*}
+
+                        //Write note text if not Triage:
+                        if (vcmn_triageexpert == 'NO' || vcmn_triageexpert == null) {
+                            Xrm.Page.getAttribute('ftp_notedetail').setValue(vcmn_templateNote);
+                            Xrm.Page.getAttribute('ftp_notedetail').setSubmitMode('always');
+                        }
+                    }
+                }
+                //*****STANDARD TEMPLATE END*****
+
+                //Default Diagnosis code if TAN or PHARMACY user, based on systemuser lookup
+                var vcmn_currentUserId = Xrm.Page.context.getUserId();
+                var vcmn_currentUserData = vcmn_getSingleEntityDataSync('SystemUserSet', 'msdyusd_USDConfigurationId, ftp_FacilitySiteId', vcmn_currentUserId);
+                if (vcmn_currentUserData != null) {
+                    if (vcmn_currentUserData.d.msdyusd_USDConfigurationId != null) {
+                        if (vcmn_currentUserData.d.msdyusd_USDConfigurationId.Name != null) {
+                            //TAN logic
+                            if (vcmn_currentUserData.d.msdyusd_USDConfigurationId.Name == 'TAN Configuration') {
+                                //Get Default Tan Configuration from User's Facility
+                                if (vcmn_currentUserData.d.ftp_FacilitySiteId != null) {
+                                    if (vcmn_currentUserData.d.ftp_FacilitySiteId.Id != null) {
+                                        var vcmn_currentUserFacilityData = vcmn_getSingleEntityDataSync('ftp_facilitySet', 'ftp_defaulttandiagnosiscode', vcmn_currentUserData.d.ftp_FacilitySiteId.Id);
+                                        if (vcmn_currentUserFacilityData != null) {
+                                            if (vcmn_currentUserFacilityData.d.ftp_defaulttandiagnosiscode != null) {
+                                                if (vcmn_currentUserFacilityData.d.ftp_defaulttandiagnosiscode.Id != null) {
+                                                    //Write Diagnosis code to Progress Note Form if a Triage Note (revised 5/9-17 for workload encounter also)
+                                                    //*if (vcmn_triageexpert == 'YES') {
+                                                    vcmn_setSimpleLookupValue('ftp_diagnosiscode', vcmn_currentUserFacilityData.d.ftp_defaulttandiagnosiscode.LogicalName, vcmn_currentUserFacilityData.d.ftp_defaulttandiagnosiscode.Id, vcmn_currentUserFacilityData.d.ftp_defaulttandiagnosiscode.Name);
+                                                    //Xrm.Page.getAttribute('ftp_diagnosiscode').setSubmitMode('always');
+                                                    //*}
+                                                }
+                                            }
+                                        }
+
+                                        //Match up the VHG Triage minute configuration with CPT Code
+                                        if (vcmn_triageminutes > 0) {
+                                            var vcmn_conditionalFilter = "(ftp_usertype/Id eq guid'" + vcmn_currentUserData.d.msdyusd_USDConfigurationId.Id + "') and (ftp_startminutes le " + vcmn_triageminutes + " ) and (ftp_endminutes ge " + vcmn_triageminutes + " )";
+                                            vcmn_getMultipleEntityDataAsync('ftp_cptcodeSet', 'ftp_cptcodeId, ftp_name, ftp_startminutes, ftp_endminutes', vcmn_conditionalFilter, 'ftp_startminutes', 'asc', 0, vcmn_cptCode_response, vcmn_triageminutes);
+                                        }
+                                    }
+                                }
+                            }
+                            //Pharmacy logic
+                            if (vcmn_currentUserData.d.msdyusd_USDConfigurationId.Name == 'Pharmacy Configuration') {
+                                //Get Default Pharmacy Configuration from User's Facility
+                                if (vcmn_currentUserData.d.ftp_FacilitySiteId != null) {
+                                    if (vcmn_currentUserData.d.ftp_FacilitySiteId.Id != null) {
+                                        var vcmn_currentUserFacilityData = vcmn_getSingleEntityDataSync('ftp_facilitySet', 'ftp_defaultpharmacyprimarydiagnosiscode', vcmn_currentUserData.d.ftp_FacilitySiteId.Id);
+                                        if (vcmn_currentUserFacilityData != null) {
+                                            if (vcmn_currentUserFacilityData.d.ftp_defaultpharmacyprimarydiagnosiscode != null) {
+                                                if (vcmn_currentUserFacilityData.d.ftp_defaultpharmacyprimarydiagnosiscode.Id != null) {
+                                                    //Write Diagnosis code to Progress Note Form if a Triage Note (revised 5/9-17 for workload encounter also)
+                                                    //*if (vcmn_triageexpert == 'YES') {
+                                                    vcmn_setSimpleLookupValue('ftp_diagnosiscode', vcmn_currentUserFacilityData.d.ftp_defaultpharmacyprimarydiagnosiscode.LogicalName, vcmn_currentUserFacilityData.d.ftp_defaultpharmacyprimarydiagnosiscode.Id, vcmn_currentUserFacilityData.d.ftp_defaultpharmacyprimarydiagnosiscode.Name);
+                                                    //Xrm.Page.getAttribute('ftp_diagnosiscode').setSubmitMode('always');
+                                                    //*}
+                                                }
                                             }
                                         }
                                     }
@@ -1228,14 +1264,30 @@ function vcmn_newProgressNoteLoad_WebURL() {
         //Get regarding data
         var vcmn_requestId = Xrm.Page.getAttribute('regardingobjectid').getValue();
         if (vcmn_requestId == null) { return false; }
-        var vcmn_requestData = vcmn_getSingleEntityDataSync('IncidentSet', 'CustomerId', vcmn_requestId[0].id);
 
-        if (vcmn_requestData != null) {
-            if (vcmn_requestData.d.CustomerId != null) {
-                vcmn_veteranId = vcmn_requestData.d.CustomerId;
-                //Verify that the customerid is of type contact
-                if (vcmn_veteranId.LogicalName != 'contact') {
-                    return false;
+        if (vcmn_requestId[0].entityType === "incident") {
+            var vcmn_requestData = vcmn_getSingleEntityDataSync('IncidentSet', 'CustomerId', vcmn_requestId[0].id);
+
+            if (vcmn_requestData != null) {
+                if (vcmn_requestData.d.CustomerId != null) {
+                    vcmn_veteranId = vcmn_requestData.d.CustomerId;
+                    //Verify that the customerid is of type contact
+                    if (vcmn_veteranId.LogicalName != 'contact') {
+                        return false;
+                    }
+                }
+            }
+        }
+        else if (vcmn_requestId[0].entityType === "ftp_interaction") {
+            var vcmn_requestData = vcmn_getSingleEntityDataSync('ftp_interactionSet', 'ftp_Veteran', vcmn_requestId[0].id);
+
+            if (vcmn_requestData != null) {
+                if (vcmn_requestData.d.CustomerId != null) {
+                    vcmn_veteranId = vcmn_requestData.d.CustomerId;
+                    //Verify that the customerid is of type contact
+                    if (vcmn_veteranId.LogicalName != 'contact') {
+                        return false;
+                    }
                 }
             }
         }
@@ -1738,7 +1790,7 @@ function vcmn_cptCode_response(vcmn_cptCodeData, vcmn_lastSkip, vcmn_triageminut
         for (var i = 0; i <= vcmn_cptCodeData.d.results.length - 1; i++) {
             //Write to CRM progress note form
             vcmn_setSimpleLookupValue('ftp_cptcode', 'ftp_cptcode', vcmn_cptCodeData.d.results[i].ftp_cptcodeId, vcmn_cptCodeData.d.results[i].ftp_name);
-            Xrm.Page.getAttribute('ftp_cptcode').setSubmitMode('always');
+            //Xrm.Page.getAttribute('ftp_cptcode').setSubmitMode('always');
             break;
         }
     }
@@ -1939,8 +1991,9 @@ function vcmn_ribbonButtonSaveToVistA(cookieData) {
             vcmn_clearVistaFormNotification(vcmn_automaticViaIntegration);
             return false;
         }
-        //Verify that the regardingid is of type 'incident'
-        if (vcmn_requestId[0].entityType != 'incident') {
+        //Verify that the regardingid is of type 'incident' or 'ftp_interaction'
+        if (vcmn_requestId[0].entityType != 'incident'
+            && vcmn_requestId[0].entityType != 'ftp_interaction') {
             alert('The current progress note has an invalid regarding type, it must be of the type request/incident, the note cannot be created in VistA/CPRS!');
             VCCM.USDHelper.FireUSDEvent("ProgressNoteIntegrationEvent", ["name=CRMDataIssue", "level=Error", "automaticVIAIntegration=" + vcmn_automaticViaIntegrationString], vcmn_resetAutoIntegrationFlag);
             Xrm.Page.getControl('regardingobjectid').setFocus();
@@ -1955,16 +2008,33 @@ function vcmn_ribbonButtonSaveToVistA(cookieData) {
         var vcmn_SSN = '';
         var vcmn_DOB = '';
 
-        var vcmn_requestData = vcmn_getSingleEntityDataSync('IncidentSet', 'CustomerId', vcmn_requestId[0].id);
-        if (vcmn_requestData != null) {
-            if (vcmn_requestData.d.CustomerId != null) {
-                vcmn_veteranId = vcmn_requestData.d.CustomerId;
-                //Verify that the customerid is of type contact
-                if (vcmn_veteranId.LogicalName != 'contact') {
-                    alert('The related request has an invalid customer type, it must be of the type veteran/contact, the note cannot be created in VistA/CPRS!');
-                    VCCM.USDHelper.FireUSDEvent("ProgressNoteIntegrationEvent", ["name=CRMDataIssue", "level=Error", "automaticVIAIntegration=" + vcmn_automaticViaIntegrationString], vcmn_resetAutoIntegrationFlag);
-                    vcmn_clearVistaFormNotification(vcmn_automaticViaIntegration);
-                    return false;
+        if (vcmn_requestId[0].entityType === 'incident') {
+            var vcmn_requestData = vcmn_getSingleEntityDataSync('IncidentSet', 'CustomerId', vcmn_requestId[0].id);
+            if (vcmn_requestData != null) {
+                if (vcmn_requestData.d.CustomerId != null) {
+                    vcmn_veteranId = vcmn_requestData.d.CustomerId;
+                    //Verify that the customerid is of type contact
+                    if (vcmn_veteranId.LogicalName != 'contact') {
+                        alert('The related request has an invalid customer type, it must be of the type veteran/contact, the note cannot be created in VistA/CPRS!');
+                        VCCM.USDHelper.FireUSDEvent("ProgressNoteIntegrationEvent", ["name=CRMDataIssue", "level=Error", "automaticVIAIntegration=" + vcmn_automaticViaIntegrationString], vcmn_resetAutoIntegrationFlag);
+                        vcmn_clearVistaFormNotification(vcmn_automaticViaIntegration);
+                        return false;
+                    }
+                }
+            }
+        }
+        else {
+            var vcmn_requestData = vcmn_getSingleEntityDataSync('ftp_interactionSet', 'ftp_Veteran', vcmn_requestId[0].id);
+            if (vcmn_requestData != null) {
+                if (vcmn_requestData.d.ftp_Veteran != null) {
+                    vcmn_veteranId = vcmn_requestData.d.ftp_Veteran;
+                    //Verify that the customerid is of type contact
+                    if (vcmn_veteranId.LogicalName != 'contact') {
+                        alert('The related request has an invalid customer type, it must be of the type veteran/contact, the note cannot be created in VistA/CPRS!');
+                        VCCM.USDHelper.FireUSDEvent("ProgressNoteIntegrationEvent", ["name=CRMDataIssue", "level=Error", "automaticVIAIntegration=" + vcmn_automaticViaIntegrationString], vcmn_resetAutoIntegrationFlag);
+                        vcmn_clearVistaFormNotification(vcmn_automaticViaIntegration);
+                        return false;
+                    }
                 }
             }
         }
@@ -2001,20 +2071,38 @@ function vcmn_ribbonButtonSaveToVistA(cookieData) {
         var vcmn_veteranFirstName = '';
         var vcmn_veteranLastName = '';
         var vcmn_veteranMiddleName = '';
-
-        var vcmn_requestData = vcmn_getSingleEntityDataSync('IncidentSet', 'CustomerId', vcmn_requestId[0].id);
-        if (vcmn_requestData != null) {
-            if (vcmn_requestData.d.CustomerId != null) {
-                vcmn_veteranId = vcmn_requestData.d.CustomerId;
-                //Verify that the customerid is of type contact
-                if (vcmn_veteranId.LogicalName != 'contact') {
-                    alert('The related request has an invalid customer type, it must be of the type veteran/contact, the note cannot be created in VistA/CPRS!');
-                    VCCM.USDHelper.FireUSDEvent("ProgressNoteIntegrationEvent", ["name=CRMDataIssue", "level=Error", "automaticVIAIntegration=" + vcmn_automaticViaIntegrationString], vcmn_resetAutoIntegrationFlag);
-                    vcmn_clearVistaFormNotification(vcmn_automaticViaIntegration);
-                    return false;
+        
+        if (vcmn_requestId[0].entityType === "incident") {
+            var vcmn_requestData = vcmn_getSingleEntityDataSync('IncidentSet', 'CustomerId', vcmn_requestId[0].id);
+            if (vcmn_requestData != null) {
+                if (vcmn_requestData.d.CustomerId != null) {
+                    vcmn_veteranId = vcmn_requestData.d.CustomerId;
+                    //Verify that the customerid is of type contact
+                    if (vcmn_veteranId.LogicalName != 'contact') {
+                        alert('The related request has an invalid customer type, it must be of the type veteran/contact, the note cannot be created in VistA/CPRS!');
+                        VCCM.USDHelper.FireUSDEvent("ProgressNoteIntegrationEvent", ["name=CRMDataIssue", "level=Error", "automaticVIAIntegration=" + vcmn_automaticViaIntegrationString], vcmn_resetAutoIntegrationFlag);
+                        vcmn_clearVistaFormNotification(vcmn_automaticViaIntegration);
+                        return false;
+                    }
                 }
             }
         }
+        else if (vcmn_requestId[0].entityType === "ftp_interaction") {
+            var vcmn_requestData = vcmn_getSingleEntityDataSync('ftp_interactionSet', 'ftp_Veteran', vcmn_requestId[0].id);
+            if (vcmn_requestData != null) {
+                if (vcmn_requestData.d.ftp_Veteran != null) {
+                    vcmn_veteranId = vcmn_requestData.d.ftp_Veteran;
+                    //Verify that the customerid is of type contact
+                    if (vcmn_veteranId.LogicalName != 'contact') {
+                        alert('The related request has an invalid customer type, it must be of the type veteran/contact, the note cannot be created in VistA/CPRS!');
+                        VCCM.USDHelper.FireUSDEvent("ProgressNoteIntegrationEvent", ["name=CRMDataIssue", "level=Error", "automaticVIAIntegration=" + vcmn_automaticViaIntegrationString], vcmn_resetAutoIntegrationFlag);
+                        vcmn_clearVistaFormNotification(vcmn_automaticViaIntegration);
+                        return false;
+                    }
+                }
+            }
+        }
+
         if (vcmn_veteranId == null) {
             alert('The related request does not have a veteran/contact assigned, the note cannot be created in VistA/CPRS!');
             VCCM.USDHelper.FireUSDEvent("ProgressNoteIntegrationEvent", ["name=CRMDataIssue", "level=Error", "automaticVIAIntegration=" + vcmn_automaticViaIntegrationString], vcmn_resetAutoIntegrationFlag);
@@ -2235,19 +2323,38 @@ function vcmn_ribbonButtonSaveToVistA_with_ICN(vcmn_patientICN) {
         var vcmn_veteranLastName = '';
         var vcmn_veteranMiddleName = '';
 
-        var vcmn_requestData = vcmn_getSingleEntityDataSync('IncidentSet', 'CustomerId', vcmn_requestId[0].id);
-        if (vcmn_requestData != null) {
-            if (vcmn_requestData.d.CustomerId != null) {
-                vcmn_veteranId = vcmn_requestData.d.CustomerId;
-                //Verify that the customerid is of type contact
-                if (vcmn_veteranId.LogicalName != 'contact') {
-                    alert('The related request has an invalid customer type, it must be of the type veteran/contact, the note cannot be created in VistA/CPRS!');
-                    VCCM.USDHelper.FireUSDEvent("ProgressNoteIntegrationEvent", ["name=DataIssue", "level=Error", "automaticVIAIntegration=" + vcmn_automaticViaIntegrationString], vcmn_resetAutoIntegrationFlag);
-                    vcmn_clearVistaFormNotification(vcmn_automaticViaIntegration);
-                    return false;
+        
+        if (vcmn_requestId[0].entityType === "incident") {
+            var vcmn_requestData = vcmn_getSingleEntityDataSync('IncidentSet', 'CustomerId', vcmn_requestId[0].id);
+            if (vcmn_requestData != null) {
+                if (vcmn_requestData.d.CustomerId != null) {
+                    vcmn_veteranId = vcmn_requestData.d.CustomerId;
+                    //Verify that the customerid is of type contact
+                    if (vcmn_veteranId.LogicalName != 'contact') {
+                        alert('The related request has an invalid customer type, it must be of the type veteran/contact, the note cannot be created in VistA/CPRS!');
+                        VCCM.USDHelper.FireUSDEvent("ProgressNoteIntegrationEvent", ["name=DataIssue", "level=Error", "automaticVIAIntegration=" + vcmn_automaticViaIntegrationString], vcmn_resetAutoIntegrationFlag);
+                        vcmn_clearVistaFormNotification(vcmn_automaticViaIntegration);
+                        return false;
+                    }
                 }
             }
         }
+        else if (vcmn_requestId[0].entityType === "ftp_interaction") {
+            var vcmn_requestData = vcmn_getSingleEntityDataSync('ftp_interactionSet', 'ftp_Veteran', vcmn_requestId[0].id);
+            if (vcmn_requestData != null) {
+                if (vcmn_requestData.d.ftp_Veteran != null) {
+                    vcmn_veteranId = vcmn_requestData.d.ftp_Veteran;
+                    //Verify that the customerid is of type contact
+                    if (vcmn_veteranId.LogicalName != 'contact') {
+                        alert('The related request has an invalid customer type, it must be of the type veteran/contact, the note cannot be created in VistA/CPRS!');
+                        VCCM.USDHelper.FireUSDEvent("ProgressNoteIntegrationEvent", ["name=DataIssue", "level=Error", "automaticVIAIntegration=" + vcmn_automaticViaIntegrationString], vcmn_resetAutoIntegrationFlag);
+                        vcmn_clearVistaFormNotification(vcmn_automaticViaIntegration);
+                        return false;
+                    }
+                }
+            }
+        }
+
         if (vcmn_veteranId == null) {
             alert('The related request does not have a veteran/contact assigned, the note cannot be created in VistA/CPRS!');
             VCCM.USDHelper.FireUSDEvent("ProgressNoteIntegrationEvent", ["name=DataIssue", "level=Error", "automaticVIAIntegration=" + vcmn_automaticViaIntegrationString], vcmn_resetAutoIntegrationFlag);
@@ -2747,12 +2854,12 @@ function vcmn_prepWorkloadEncounterIntegrationStep01_response(vcmn_error, vcmn_m
 
         //Verify Diagnosis Code & Description
         var vcmn_CrmDiagnosisCode = Xrm.Page.getAttribute('ftp_diagnosiscode').getValue();
-        if (vcmn_CrmDiagnosisCode == null) {
-            alert('The Primary Diagnosis Code field is empty, the note cannot be created in VistA/CPRS!');
-            VCCM.USDHelper.FireUSDEvent("ProgressNoteIntegrationEvent", ["name=CRMDataIssue", "level=Error", "automaticVIAIntegration=" + vcmn_automaticViaIntegrationString], vcmn_resetAutoIntegrationFlag);
-            vcmn_clearVistaFormNotification(vcmn_automaticViaIntegration);
-            return false;
-        }
+        //if (vcmn_CrmDiagnosisCode == null) {
+        //    alert('The Primary Diagnosis Code field is empty, the note cannot be created in VistA/CPRS!');
+        //    VCCM.USDHelper.FireUSDEvent("ProgressNoteIntegrationEvent", ["name=CRMDataIssue", "level=Error", "automaticVIAIntegration=" + vcmn_automaticViaIntegrationString], vcmn_resetAutoIntegrationFlag);
+        //    vcmn_clearVistaFormNotification(vcmn_automaticViaIntegration);
+        //    return false;
+        //}
 
         if (vcmn_CrmDiagnosisCode != null && vcmn_CrmDiagnosisCode != '') {
             var vcmn_diagnosisData = vcmn_getSingleEntityDataSync('ftp_diagnosiscodeSet', 'ftp_description', vcmn_CrmDiagnosisCode[0].id);
@@ -4170,15 +4277,31 @@ function vcmn_ribbonButtonSaveToVistA_HistoricalTest() {
         var vcmn_SSN = '';
         var vcmn_DOB = '';
 
-        var vcmn_requestData = vcmn_getSingleEntityDataSync('IncidentSet', 'CustomerId', vcmn_requestId[0].id);
-        if (vcmn_requestData != null) {
-            if (vcmn_requestData.d.CustomerId != null) {
-                vcmn_veteranId = vcmn_requestData.d.CustomerId;
-                //Verify that the customerid is of type contact
-                if (vcmn_veteranId.LogicalName != 'contact') {
-                    alert('The related request has an invalid customer type, it must be of the type veteran/contact, the note cannot be created in VistA/CPRS!');
-                    vcmn_clearVistaFormNotification(vcmn_automaticViaIntegration);
-                    return false;
+        if (vcmn_requestId[0].entityType === "incident") {
+            var vcmn_requestData = vcmn_getSingleEntityDataSync('IncidentSet', 'CustomerId', vcmn_requestId[0].id);
+            if (vcmn_requestData != null) {
+                if (vcmn_requestData.d.CustomerId != null) {
+                    vcmn_veteranId = vcmn_requestData.d.CustomerId;
+                    //Verify that the customerid is of type contact
+                    if (vcmn_veteranId.LogicalName != 'contact') {
+                        alert('The related request has an invalid customer type, it must be of the type veteran/contact, the note cannot be created in VistA/CPRS!');
+                        vcmn_clearVistaFormNotification(vcmn_automaticViaIntegration);
+                        return false;
+                    }
+                }
+            }
+        }
+        else if (vcmn_requestId[0].entityType === "ftp_interaction") {
+            var vcmn_requestData = vcmn_getSingleEntityDataSync('ftp_interactionSet', 'ftp_Veteran', vcmn_requestId[0].id);
+            if (vcmn_requestData != null) {
+                if (vcmn_requestData.d.ftp_Veteran != null) {
+                    vcmn_veteranId = vcmn_requestData.d.ftp_Veteran;
+                    //Verify that the customerid is of type contact
+                    if (vcmn_veteranId.LogicalName != 'contact') {
+                        alert('The related request has an invalid customer type, it must be of the type veteran/contact, the note cannot be created in VistA/CPRS!');
+                        vcmn_clearVistaFormNotification(vcmn_automaticViaIntegration);
+                        return false;
+                    }
                 }
             }
         }
@@ -4216,15 +4339,31 @@ function vcmn_ribbonButtonSaveToVistA_HistoricalTest() {
         var vcmn_veteranLastName = '';
         var vcmn_veteranMiddleName = '';
 
-        var vcmn_requestData = vcmn_getSingleEntityDataSync('IncidentSet', 'CustomerId', vcmn_requestId[0].id);
-        if (vcmn_requestData != null) {
-            if (vcmn_requestData.d.CustomerId != null) {
-                vcmn_veteranId = vcmn_requestData.d.CustomerId;
-                //Verify that the customerid is of type contact
-                if (vcmn_veteranId.LogicalName != 'contact') {
-                    alert('The related request has an invalid customer type, it must be of the type veteran/contact, the note cannot be created in VistA/CPRS!');
-                    vcmn_clearVistaFormNotification(vcmn_automaticViaIntegration);
-                    return false;
+        if (vcmn_requestId[0].entityType === "incident") {
+            var vcmn_requestData = vcmn_getSingleEntityDataSync('IncidentSet', 'CustomerId', vcmn_requestId[0].id);
+            if (vcmn_requestData != null) {
+                if (vcmn_requestData.d.CustomerId != null) {
+                    vcmn_veteranId = vcmn_requestData.d.CustomerId;
+                    //Verify that the customerid is of type contact
+                    if (vcmn_veteranId.LogicalName != 'contact') {
+                        alert('The related request has an invalid customer type, it must be of the type veteran/contact, the note cannot be created in VistA/CPRS!');
+                        vcmn_clearVistaFormNotification(vcmn_automaticViaIntegration);
+                        return false;
+                    }
+                }
+            }
+        }
+        else if (vcmn_requestId[0].entityType === "ftp_interaction") {
+            var vcmn_requestData = vcmn_getSingleEntityDataSync('ftp_interactionSet', 'ftp_Veteran', vcmn_requestId[0].id);
+            if (vcmn_requestData != null) {
+                if (vcmn_requestData.d.ftp_Veteran != null) {
+                    vcmn_veteranId = vcmn_requestData.d.ftp_Veteran;
+                    //Verify that the customerid is of type contact
+                    if (vcmn_veteranId.LogicalName != 'contact') {
+                        alert('The related request has an invalid customer type, it must be of the type veteran/contact, the note cannot be created in VistA/CPRS!');
+                        vcmn_clearVistaFormNotification(vcmn_automaticViaIntegration);
+                        return false;
+                    }
                 }
             }
         }

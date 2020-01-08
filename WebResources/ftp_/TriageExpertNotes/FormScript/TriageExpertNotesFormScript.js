@@ -6,7 +6,7 @@ var tenf_crmOdataEndPoint = '/XRMServices/2011/OrganizationData.svc';
 var tenf_serverUrl = Xrm.Page.context.getClientUrl();
 
 function tenf_launchTriageExpertNotes() {
-    debugger;
+debugger;
     try {
         var tenf_triageWB = 'ftp_/TriageExpertNotes/TriageExpertNotes.html';
         var tenf_customParameters = encodeURIComponent("entityId=" + Xrm.Page.data.entity.getId() + "&entityType=" + Xrm.Page.data.entity.getEntityName() + "&primaryAtributeValue=" + Xrm.Page.data.entity.getPrimaryAttributeValue());

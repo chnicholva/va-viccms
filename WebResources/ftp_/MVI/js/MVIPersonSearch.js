@@ -25,6 +25,13 @@ var webApi;
 $(document).ready(function () {
     context = getContext();
     webApi = Xrm.WebApi;
+
+    //if (window.IsUSD){
+    //	alert("is usd");
+    //}else{
+    //	alert("is not usd");
+    //}
+
     if (webApi === undefined || webApi == null) {
         webApi = parent.Xrm.WebApi;
     }
@@ -162,7 +169,7 @@ function personSearchComplete() {
 function buildQueryFilter(field, value, and) {
     // remove unwanted characters                           
     var arr1 = ["'", "\""];
-    for (a = 0; a < arr1.length ; a++) {
+    for (a = 0; a < arr1.length; a++) {
         if (value.indexOf(arr1[a]))
             value = value.replace(arr1[a], " ");
     }
@@ -188,7 +195,8 @@ function personSearchCallBack(data) {
     //searchCallBack(data);     
     searchCallBackWithStations(data, false);
     personSearchComplete();
-;}
+    ;
+}
 
 function searchCallBack(returnData) {
     /**************
@@ -226,7 +234,7 @@ debugger;
 
             //CRMe can return result, even if just ReturnMessage that there were no results...
             //If blank\no name, we should break
-			debugger;
+            debugger;
             if (fullName.trim() == "") {
                 $("#searchResultsMessageDiv").show();
                 $("#searchResultsMessageDiv").text((returnData != null && returnData.length > 0 && returnData[0].crme_returnmessage != null) ? returnData[0].crme_returnmessage : "Your search in MVI did not find any records matching the search criteria.");
@@ -397,7 +405,7 @@ debugger;
         }
     }
     else {
-		debugger;
+        debugger;
         $("#notFoundDiv").show();
         $('div#tmpDialog').hide();
     }
@@ -409,10 +417,10 @@ debugger;
 
 // use this when you need the ability to show the additional Station/Location grid
 function searchCallBackWithStations(returnData, isEdipi) {
-	debugger;
+    debugger;
     veteranCountFromMVI = 0;
-	var noResults = false;
-	$('div#tmpDialog').show();
+    var noResults = false;
+    $('div#tmpDialog').show();
     // get the table
     var table = $("#personSearchResultsTable");
 
@@ -466,22 +474,22 @@ function searchCallBackWithStations(returnData, isEdipi) {
 
         var thead = document.createElement('thead');
         var theadRow = document.createElement('tr');
-		
-		if (veteranData != null){
-			if (veteranData.length > 0){
-				if (veteranData[0].crme_returnmessage == null){
-					$("#searchResultsMessageDiv").text("Your search in MVI found " + veteranData.length + " matching record(s)");
-					$("#searchResultsMessageDiv").show();
-				}
-			}
-		}
-	
+
+        if (veteranData != null) {
+            if (veteranData.length > 0) {
+                if (veteranData[0].crme_returnmessage == null) {
+                    $("#searchResultsMessageDiv").text("Your search in MVI found " + veteranData.length + " matching record(s)");
+                    $("#searchResultsMessageDiv").show();
+                }
+            }
+        }
+
         for (var i = 0; i < veteranData.length; i++) {
             veteranCountFromMVI++;
             var fullName = formatName(veteranData[i]);
             if (fullName === "") {
                 $("#searchResultsMessageDiv").show();
-				noResults = true;
+                noResults = true;
 
                 //  var displayMsg = "Your search in MVI did not find any records matching the search criteria.";
                 //     if (returnData[0].crme_returnmessage != null && returnData[0].crme_returnmessage != "Unknown Key Identifier| Unknown Key Identifier") {
@@ -489,7 +497,7 @@ function searchCallBackWithStations(returnData, isEdipi) {
                 //      } 
                 //     else
                 //       displayMsg = "Your search in MVI did not find any records matching the search criteria.";
-	
+
                 $("#searchResultsMessageDiv").text(returnData[0].crme_exceptionmessage);
                 $("#notFoundDiv").show();
                 $('div#tmpDialog').hide();
@@ -679,7 +687,7 @@ function searchCallBackWithStations(returnData, isEdipi) {
             row.id = "resultstable-row-" + i;
 
             //added by lucas to query station data on row doubleclick or enter key press
-            row.ondblclick = function () {
+            row.click = function () {
                 var anchorsForRow = $(this).find("a");
                 if (!!anchorsForRow && anchorsForRow.length == 1) {
                     var anchor = anchorsForRow[0];
@@ -749,8 +757,8 @@ function searchCallBackWithStations(returnData, isEdipi) {
     $("#resultsFieldSetDiv").show();
     $("#searchResultsMessageDiv").show();
     //  $("#searchResultsMessageDiv").text(displayMsg);
-	if (returnData[0].crme_returnmessage != null)
-		$("#searchResultsMessageDiv").text((returnData != null && returnData.length > 0 && returnData[0].crme_returnmessage != null && returnData[0].crme_returnmessage != "Unknown Key Identifier| Unknown Key Identifier") ? returnData[0].crme_returnmessage : (noResults ? "Your search in MVI did not find any records matching the search criteria." : ""));
+    if (returnData[0].crme_returnmessage != null)
+        $("#searchResultsMessageDiv").text((returnData != null && returnData.length > 0 && returnData[0].crme_returnmessage != null && returnData[0].crme_returnmessage != "Unknown Key Identifier| Unknown Key Identifier") ? returnData[0].crme_returnmessage : (noResults ? "Your search in MVI did not find any records matching the search criteria." : ""));
 
 }
 
@@ -815,7 +823,7 @@ function openSelectedPerson(obj) {
     var retrievedContacts = [];
     retrieveMultipleRecords(
         "contact",
-        filter, 
+        filter,
         function (retrievedRecords) {
             if (!!retrievedRecords) retrievedContacts = retrievedContacts.concat(retrievedRecords);
 
@@ -866,6 +874,27 @@ function openSelectedPerson(obj) {
                 mviDataForUSD.push("SearchedWithLastName=" + (!!lname).toString());
                 mviDataForUSD.push("SearchedWithDOB=" + (!!dobyear && dobyear != "YYYY" && dobyear != "" && !!dobmonth && dobmonth != "MM" && dobmonth != "" && !!dobday && dobday != "DD" && dobday != "").toString());
                 mviDataForUSD.push("SearchedWithSSN=" + (!!ssn).toString());
+
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                //GLM - 11/05/2019 - added for CM user story 1156381 (Facility selected during the MVI Search will be the default selection)
+                if (sessionStorage.SelectedFacilityCode == null) {
+                    sessionStorage.setItem("SelectedFacilityCode", facilityCode);
+                } else {
+                    sessionStorage.SelectedFacilityCode = facilityCode;
+                }
+
+                if (sessionStorage.SelectedFacilityName == null) {
+                    sessionStorage.setItem("SelectedFacilityName", facilityName);
+                } else {
+                    sessionStorage.SelectedFacilityName = facilityName;
+                }
+
+                if (sessionStorage.SelectedFacilityCRMID == null) {
+                    sessionStorage.setItem("SelectedFacilityCRMID", facilityId);
+                } else {
+                    sessionStorage.SelectedFacilityCRMID = facilityId;
+                }
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                 VCCM.USDHelper.CopyDataToReplacementParameters("MVI", mviDataForUSD, false);
                 //TODO VCCM.USDHelper.CopyDataToReplacementParameters("ESR", _esrDataForUSD, false);
@@ -1354,7 +1383,7 @@ function createNewVeteran() {
                 var pactTeamQueryString = "$filter=ftp_name eq 'PACT Team Not Assigned'&$select=ftp_name,ftp_pactId";
                 retrieveMultipleRecords.retrieveMultipleRecords(
                     "ftp_pact",
-                    pactTeamQueryString, 
+                    pactTeamQueryString,
                     function (retrievedRecords) {
                         if (!!retrievedRecords && retrievedRecords.length > 0) retrievedPACTTeam = retrievedRecords[0];
                         if (!!retrievedPACTTeam) {
@@ -1384,38 +1413,38 @@ function createNewVeteran() {
                         var retrievedContact = null;
                         retrieveMultipleRecords(
                             "Contact",
-                            contactQueryString, 
+                            contactQueryString,
                             function (retrievedRecords) {
                                 if (!!retrievedRecords && retrievedRecords.length > 0) { retrievedContact = retrievedRecords[0]; }
                                 if (!!retrievedContact) {
                                     updateRecord(
                                         "contact",
                                         retrievedContact.contactid,
-                                        desiredContact, 
-                                            function () {
-                                                mviDataForUSD.push("VetFullName=" + retrievedContact.fullname);
-                                                mviDataForUSD.push("VetFirstName=" + retrievedContact.firstname);
-                                                mviDataForUSD.push("VetLastName=" + retrievedContact.lastname);
-                                                mviDataForUSD.push("VetCRMContactID=" + retrievedContact.contactid);
-                                                VCCM.USDHelper.CopyDataToReplacementParameters("MVI", mviDataForUSD, false);
-                                                VCCM.USDHelper.AddFunctionToQueue(function () {
-                                                    $("#creatingVeteranTmpDialog").hide();
-                                                    //code to open VeteranAlerts web resource instead of the contact itself
-                                                    var veteranAlertsURLParameters = "originatedFromMVISearch=true"
-                                                        + "&contactid=" + retrievedContact.contactid
-                                                        + "&fullname=" + retrievedContact.fullname
-                                                        + "&firstname=" + retrievedContact.firstname
-                                                        + "&lastname=" + retrievedContact.lastname
-                                                        + "&ICN=MISSING"
-                                                        + "&nationalid=MISSING"
-                                                        + "&DFN=MISSING"
-                                                        + (mhvIDs.length > 0 ? "&MHVIDs=" + mhvIDs.join(",") : "");
-                                                    Xrm.Utility.openWebResource("ftp_/VeteranAlerts/VeteranAlerts.html", encodeURIComponent(veteranAlertsURLParameters));
-                                                });
-                                            },
-                                            function (e) {
-                                                alert("Error updating found contact to match your search terms: " + e.message);
-                                            }
+                                        desiredContact,
+                                        function () {
+                                            mviDataForUSD.push("VetFullName=" + retrievedContact.fullname);
+                                            mviDataForUSD.push("VetFirstName=" + retrievedContact.firstname);
+                                            mviDataForUSD.push("VetLastName=" + retrievedContact.lastname);
+                                            mviDataForUSD.push("VetCRMContactID=" + retrievedContact.contactid);
+                                            VCCM.USDHelper.CopyDataToReplacementParameters("MVI", mviDataForUSD, false);
+                                            VCCM.USDHelper.AddFunctionToQueue(function () {
+                                                $("#creatingVeteranTmpDialog").hide();
+                                                //code to open VeteranAlerts web resource instead of the contact itself
+                                                var veteranAlertsURLParameters = "originatedFromMVISearch=true"
+                                                    + "&contactid=" + retrievedContact.contactid
+                                                    + "&fullname=" + retrievedContact.fullname
+                                                    + "&firstname=" + retrievedContact.firstname
+                                                    + "&lastname=" + retrievedContact.lastname
+                                                    + "&ICN=MISSING"
+                                                    + "&nationalid=MISSING"
+                                                    + "&DFN=MISSING"
+                                                    + (mhvIDs.length > 0 ? "&MHVIDs=" + mhvIDs.join(",") : "");
+                                                Xrm.Utility.openWebResource("ftp_/VeteranAlerts/VeteranAlerts.html", encodeURIComponent(veteranAlertsURLParameters));
+                                            });
+                                        },
+                                        function (e) {
+                                            alert("Error updating found contact to match your search terms: " + e.message);
+                                        }
                                     );
                                 }
                             },
@@ -2238,34 +2267,34 @@ function queryESR(pSelectedVeteranElement, pCallbackFunction) {
 function retrieveActiveSettings(pCallbackFunction, pPassthroughObject, pSecondCallbackFunction) {
     var queryString = "$select=*&$filter=mcs_name eq 'Active Settings'";
     retrieveMultipleRecords(
-		"mcs_setting",
-		queryString).then(
-		function (retrievedRecords) {
-            if (typeof retrievedRecords != "undefined" && !!retrievedRecords && retrievedRecords.length == 1) retrievedSettings = retrievedRecords[0];
-            if (!!retrievedSettings) {
-                if (!(retrievedSettings.hasOwnProperty("ftp_DACURL")) || !retrievedSettings.ftp_DACURL) {
-                    alert("Could not find DAC URL in Active Settings record");
+        "mcs_setting",
+        queryString).then(
+            function (retrievedRecords) {
+                if (typeof retrievedRecords != "undefined" && !!retrievedRecords && retrievedRecords.length == 1) retrievedSettings = retrievedRecords[0];
+                if (!!retrievedSettings) {
+                    if (!(retrievedSettings.hasOwnProperty("ftp_DACURL")) || !retrievedSettings.ftp_DACURL) {
+                        alert("Could not find DAC URL in Active Settings record");
+                        return;
+                    }
+
+                    writeToConsole("got Active Settings record.");
+
+                    dacURL = retrievedSettings.ftp_DACURL;
+
+                    if (typeof pCallbackFunction == "function") {
+                        pCallbackFunction(pPassthroughObject, pSecondCallbackFunction);
+                    }
+                } //end if !!retrievedSettings
+                else {
+                    alert("Could not find Active Settings record");
                     return;
                 }
 
-                writeToConsole("got Active Settings record.");
-
-                dacURL = retrievedSettings.ftp_DACURL;
-
-                if (typeof pCallbackFunction == "function") {
-                    pCallbackFunction(pPassthroughObject, pSecondCallbackFunction);
-                }
-            } //end if !!retrievedSettings
-            else {
-                alert("Could not find Active Settings record");
-                return;
-            }
-
-		},
-		function (e) {
-		    alert("Error retrieving Active Settings!\n" + e.message);
-		} //end active settings retrieval complete callback
-	);//end active settings query
+            },
+            function (e) {
+                alert("Error retrieving Active Settings!\n" + e.message);
+            } //end active settings retrieval complete callback
+        );//end active settings query
 }
 function getDeepProperty(pPath, pObject) {
     if (!!pPath) {

@@ -59,37 +59,56 @@ function tena_formatTwoDigits(tena_numberToFormat) {
 }
 
 function tena_doComplete(event, eData) {
+    debugger;
     try {
         //window.close(); //moved lower in script
         //alert('window should have closed');
-        var tena_sessionTimeDiff = (new Date().getTime()) - tena_SessionStartDateTime.getTime();
-        var tena_sessionMinutes = (Math.floor(tena_sessionTimeDiff / 1000 / 60)) + 1; //Add by default 1 minute to account for partial minute
+        // Clean the wonky new line character
+        var newNote = '';
+        for (var i = 0; i < eData.triagenote.length; i++) {
+            //newNote += eData.triagenote.charCodeAt(i).toString() + '\r\n';
+            if (eData.triagenote.charCodeAt(i) === 10)
+                newNote += '\r\n';
+            else
+                newNote += eData.triagenote.charAt(i);
+        }
 
         //Write Triage Note Text to local storage
         var tena_currentDateTime = new Date();
-        var tena_uniqueTriageId = "TRIAGE" + tena_currentDateTime.getFullYear().toString() + tena_formatTwoDigits(tena_currentDateTime.getMonth() + 1) + 
-            tena_formatTwoDigits(tena_currentDateTime.getDate()) + tena_formatTwoDigits(tena_currentDateTime.getHours()) + 
+        var tena_uniqueTriageId = "TRIAGE" + tena_currentDateTime.getFullYear().toString() + tena_formatTwoDigits(tena_currentDateTime.getMonth() + 1) +
+            tena_formatTwoDigits(tena_currentDateTime.getDate()) + tena_formatTwoDigits(tena_currentDateTime.getHours()) +
             tena_formatTwoDigits(tena_currentDateTime.getMinutes()) + tena_formatTwoDigits(tena_currentDateTime.getSeconds());
 
-        if (tena_uniqueTriageId != null) { localStorage.setItem(tena_uniqueTriageId, eData.triagenote); }
+        if (tena_uniqueTriageId != null) { localStorage.setItem(tena_uniqueTriageId, newNote); }
 
-        //Populate values of the crm attributes to be included on the form
-        var tena_extraqs = "";
-        tena_extraqs += "subject=" + "Triage Note" + "&ftp_notedetail=" + tena_uniqueTriageId;
+        $.ajax({
+            method: "PATCH", url: "/api/data/v9.0/" + tena_regardingobjectidtype + "s(" + tena_regardingobjectid.replace(/\{|\}/gi, '') + ")", data: JSON.stringify({
+                "ftp_chiefcomplaint": eData["Chief Complaint"]
+            }), contentType: "application/json",
+            success: function (result) {
+                VCCM.USDHelper.FireUSDEvent('TriageComplete', ["ChiefComplaint=" + eData["Chief Complaint"], "TriageNote=" + tena_uniqueTriageId], function () {
+                    var tena_sessionTimeDiff = (new Date().getTime()) - tena_SessionStartDateTime.getTime();
+                    var tena_sessionMinutes = (Math.floor(tena_sessionTimeDiff / 1000 / 60)) + 1; //Add by default 1 minute to account for partial minute
 
-        tena_extraqs += "&parameter_regardingobjectid=" + tena_regardingobjectid + "&parameter_regardingobjectidname=" + tena_regardingobjectidname + "&parameter_regardingobjectidtype=" + tena_regardingobjectidtype + "&parameter_triageexpert=YES" + "&parameter_triageminutes=" + tena_sessionMinutes;
-        var tena_progressNoteUrl = tena_serverUrl + "/main.aspx?etn=" + "ftp_progressnote" + "&pagetype=entityrecord" + "&extraqs=" +
-        encodeURIComponent(tena_extraqs);  //+ "&newWindow=true";
-        var tena_progressNoteWindow = window.open(tena_progressNoteUrl, "_blank", "toolbar=no, scrollbars=yes, status=no, resizable=yes, top=1, left=1, width=1000, height=800", false);
+                    //Populate values of the crm attributes to be included on the form
+                    var tena_extraqs = "";
+                    tena_extraqs += "subject=" + "Triage Note" + "&ftp_notedetail=" + tena_uniqueTriageId;
 
-        //closing this window is not handled via an action call beneath a VHG window routing rule.  window.close() was interfering with user experience in USD
-        /* if (location.href.indexOf("Outlook15White") != -1) {
-			window.open("http://event?eventname=DoneButtonClicked");
-		}
-		else{
-			window.close();
-		} */
+                    tena_extraqs += "&parameter_regardingobjectid=" + tena_regardingobjectid + "&parameter_regardingobjectidname=" + tena_regardingobjectidname + "&parameter_regardingobjectidtype=" + tena_regardingobjectidtype + "&parameter_triageexpert=YES" + "&parameter_triageminutes=" + tena_sessionMinutes;
+                    var tena_progressNoteUrl = tena_serverUrl + "/main.aspx?etn=" + "ftp_progressnote" + "&pagetype=entityrecord" + "&extraqs=" +
+                        encodeURIComponent(tena_extraqs);  //+ "&newWindow=true";
+                    //var tena_progressNoteWindow = window.open(tena_progressNoteUrl, "_blank", "toolbar=no, scrollbars=yes, status=no, resizable=yes, top=1, left=1, width=1000, height=800", false);
 
+                    //closing this window is not handled via an action call beneath a VHG window routing rule.  window.close() was interfering with user experience in USD
+                    /* if (location.href.indexOf("Outlook15White") != -1) {
+                        window.open("http://event?eventname=DoneButtonClicked");
+                    }
+                    else{
+                        window.close();
+                    } */
+                });
+            }
+        });
     }
     catch (err) {
         alert('Triage Expert Completion Script Function Error(tena_doComplete): ' + err.message);
@@ -97,7 +116,7 @@ function tena_doComplete(event, eData) {
 }
 
 function tena_doStart() {
-	debugger;
+    debugger;
     try {
         //Get request/incident values passed from CRM to the form
         var tena_requestObject = tena_getQueryVariable("Data");
